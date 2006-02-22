@@ -27,8 +27,8 @@
 int main (int argc, char **argv)
 {
 	Q_INIT_RESOURCE(DevEditor);
-	
-	return DevQt(argc, argv)->exec();
+	DevApp app(argc, argv);	
+	return app.exec();
 }
 
 #ifdef _QOBJECT_DEVCPP_

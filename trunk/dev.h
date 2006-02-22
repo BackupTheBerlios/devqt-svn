@@ -58,9 +58,7 @@ namespace DevQt
 sources( *.cpp *.cxx *.c);;C++ headers ( *.h *.hpp);;All Files (*)";
 };
 
-#define DevQt(argc, argv)	DevApp::Init(argc, argv)
-
-#define DEV_APP DevApp::Instance()
+#define DEV_APP DevApp::instance()
 #define DEV_GUI	DevGUI::Instance()
 #define DEV_SCR DevSplash::Instance()
 

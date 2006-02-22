@@ -7,8 +7,11 @@ TARGET = devqt
 DEPENDPATH += .
 INCLUDEPATH += .
 
+MOC_DIR = .moc
+OBJECTS_DIR = .obj
+
 # Input
-HEADERS += dev.h \
+HEADERS+= dev.h \
            devapp.h \
            devdialogs.h \
            devdock.h \
@@ -40,3 +43,4 @@ SOURCES += dev.cpp \
            main.cpp
 
 RESOURCES += DevEditor.qrc
+

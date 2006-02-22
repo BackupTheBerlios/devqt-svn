@@ -36,17 +36,17 @@ class DevEditor : public QWidget
 	Q_OBJECT
 	
 	public:
-		DevEditor(QWidget *p = 0);
-		DevEditor(	const QString& s,
+		DevEditor(QWidget * p = 0);
+		DevEditor(	const QString & s,
 					DevEdit::OpenType t = DevEdit::fromString,
-					QWidget *p = 0 );
+					QWidget * p = 0 );
 		
 		QString name() const;
 		
 		QString text() const;
 		
 		QTextCursor textCursor() const;
-		const QTextDocument* document() const;
+		const QTextDocument * document() const;
 		
 		bool isUndoAvailable() const;
 		bool isRedoAvailable() const;
@@ -68,8 +68,8 @@ class DevEditor : public QWidget
 		virtual void saveAs();
 		virtual void print();
 		
-		void setFont(const QFont& f);
-		void setText(const QString& s, DevEdit::OpenType t = DevEdit::fromString);
+		void setFont(const QFont & f);
+		void setText(const QString & s, DevEdit::OpenType t = DevEdit::fromString);
 		
 		void toggleError(int line);
 		void toggleBreakPoint(int line);
@@ -90,13 +90,13 @@ class DevEditor : public QWidget
 		
 		void gotoLine(int line);
 		
-		void scrollTo(const QString &txt, const QString &first);
-		void setContext(QObject *ctx);
+		void scrollTo(const QString & txt, const QString & first);
+		void setContext(QObject * ctx);
 		
 	signals:
 		//QTextEdit signals provided for convinience :
 		void copyAvailable(bool yes); 
-		void currentCharFormatChanged(const QTextCharFormat& f); 
+		void currentCharFormatChanged(const QTextCharFormat & f); 
 		void cursorPositionChanged() ;
 		void redoAvailable(bool available);
 		void selectionChanged();
@@ -112,7 +112,7 @@ class DevEditor : public QWidget
 		void valueChanged(int value, Qt::Orientation o);
 		
 		//QStatusBar signals provided for convinience :
-		void messageChanged(const QString& message);
+		void messageChanged(const QString & message);
 		
 		//DevLineNumber signals provided for convinience :
 		void clicked(int line);
@@ -138,9 +138,9 @@ class DevEditor : public QWidget
 		
 		QTextCursor old;
 		
-		DevEdit *e;
-		QStatusBar *s;
-		DevLineNumber *l;
+		DevEdit * e;
+		QStatusBar * s;
+		DevLineNumber * l;
 		
 };
 

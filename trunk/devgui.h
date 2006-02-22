@@ -74,8 +74,6 @@ class DevGUI : public QMainWindow
 	private:
 		DevEditor* createEditor(const QString& title = QString(), bool show = true);
 		
-		QPointer<DevEditor> e;
-		
 		DevDock *Explorer, 
 			*Compiler;
 			
@@ -90,7 +88,8 @@ class DevGUI : public QMainWindow
 		DevWorkSpace *treeFiles;
 		QTreeWidget	*treeClasses;
 		
-		QAction *actionSave,
+		QAction
+			*actionSave,
 			*actionSaveAll,
 			*actionUndo,
 			*actionRedo,
@@ -100,6 +99,7 @@ class DevGUI : public QMainWindow
 			*actionCompile,
 			*actionRebuild,
 			*actionRun,
+			*actionClose,
 			*actionCmpRun,
 			*actionDebug;
 			

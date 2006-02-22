@@ -95,8 +95,9 @@ void DevGotoDialog::process()
 	}
 }
 
-DevFindDialog::DevFindDialog(QTextEdit *e)
- : QDialog(e), edit(e)
+DevFindDialog::DevFindDialog(QTextEdit *e) :
+	QDialog(e, Qt::Dialog | Qt::WindowStaysOnTopHint),
+	edit(e)
 {
 	setWindowTitle("Find text");
 	

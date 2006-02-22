@@ -429,7 +429,8 @@ void DevEdit::properties()
 
 void DevEdit::find()
 {
-	findDlg->execute();
+	//findDlg->execute();
+	findDlg->show();
 }
 
 void DevEdit::findNext()
