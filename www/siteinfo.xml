@@ -1,0 +1,31 @@
+<root>
+	<name>DevQT - a free IDE for Qt4</name>
+	<url>http://devqt.berlios.de/</url>
+	
+	<webmaster>
+		<name>Diego Iastrubni</name>
+		<email>elcuco@kde.org</email>
+		<webpage>http://devqt.berlios.de</webpage>
+	</webmaster>
+	
+	<menus>
+		<main align="orizontal" />
+		<sub  align="vertical" />
+	</menus>
+	
+	<links1>
+		<link n="Table-less"   w="0"  h="index.html" />
+		<link n="Sinorca 2.0"  w="0"  h="sinorca.html" />
+		<link n="Chill"        w="0"  h="chill.html" />
+	</links1>
+	
+	<links2 align="orizontal">
+		<link n="Trolltech"            h="http://www.trolltech.com" />
+		<link n="QtCentre"             h="http://www.qtcentre.org" />
+	</links2>
+	
+	<messages>
+		<loading>Please wait while loading page....</loading>
+		<msg404>Error while loading page, could not get page from server....</msg404>
+	</messages>
+</root>

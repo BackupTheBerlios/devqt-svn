@@ -1,0 +1,117 @@
+/* ##### Common Styles ##### */
+
+body {
+  color: black;
+  background-color: white;
+  font-family: "times new roman", times, roman, serif;
+  font-size: 12pt;
+  margin: 0;
+  padding: 0;
+}
+
+.clsSiteTitle{
+	font-size: 20pt;
+	color: blue;
+}
+
+.clsWaitingBanner
+{
+	background: #ffffe0;
+	font-size: 20px; 
+	border: 1px dotted #000000;
+	padding: 10;
+	width: 300px;
+	margin: 0 auto;
+	text-align: center;
+	vertical-align: middle;
+	border-color: #cccc00;
+}
+
+.clsError
+{
+	background: #ffb0b0;
+	font-size: 20px; 
+	border: 1px solid #000000;
+	padding: 10;
+	width: 300px;
+	margin: 0 auto;
+	text-align: center;
+	vertical-align: middle;
+	border-color: #cc3377;
+}
+
+
+/* main menu items */
+.clsMainMenuNormal
+{
+	line-height: 1.5em;
+	margin: 0 0 1em 0;
+	padding: 0 1.5ex 0 2.5mm;
+  
+	background: white;
+	
+	color: blue;
+	border: 1pt solid;
+	border-color: white;
+}
+
+.clsMainMenuNormal:hover
+{
+	background: #FFFFCC;
+	color: blue;
+	
+	border: 1pt solid;
+	border-color: #cccc00;
+	color: blue;	
+}
+
+.clsMainMenuSelected 
+{
+	margin: 0 0 1em 0;
+	padding: 0 1.5ex 0 2.5mm;
+
+	background: blue;
+	color: white;
+}
+
+/* sub menus items */
+.clsSubMenuNormal
+{ 
+	line-height: 1.5em;
+	margin: 0 0 1em ;
+	border: 1pt solid;
+	border-color: #cccc00;
+	
+	width: 90%;
+	margin: 1px;
+	text-align:center;
+	display: block;
+	
+	background: white;
+	color: blue;
+}
+
+.clsSubMenuNormal:hover
+{
+	background: #FFFFCC;
+	border: 1pt solid;
+	border-color: #cccc00;
+	color: blue;
+}
+
+.clsSubMenuSelected 
+{
+	background: blue;
+	color: #cccc00;
+}
+
+.clsSubMenuTitle
+{
+	padding: 6 1.5ex 6 2.5mm;
+	
+	color: blue;
+	background: white;
+	font-weight: bold;
+	text-align:center;
+	/*text-decoration: underline;*/
+}
