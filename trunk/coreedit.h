@@ -22,23 +22,35 @@
 **
 ****************************************************************************/
 
-#include "devmdi.h"
+#ifndef _CORE_EDIT_H_
+#define _CORE_EDIT_H_
 
-DevMDI::DevMDI(QWidget *p)
- : QTabWidget(p)
+#include "dev.h"
+
+class CoreEdit : public QTextEdit
 {
-	menu = new QMenu(this);
+	Q_OBJECT
 	
-	//menu->addAction();
-}
+	public:
+		CoreEdit(QWidget *p = 0, const QString& s = QString());
+	
+	signals:
+		//status bar signals
+		void message(const QString& msg, int p);
+		
+	protected slots:
+		void textCursorPos();
+		void docModified(bool mod);
+		
+	protected:
+		virtual void paintEvent(QPaintEvent *e);
+		virtual void keyPressEvent(QKeyEvent *e);
+		virtual void mouseMoveEvent(QMouseEvent *e);
+		virtual void mousePressEvent(QMouseEvent *e);
+		virtual void mouseReleaseEvent(QMouseEvent *e);
+		virtual void mouseDoubleClickEvent(QMouseEvent *e);
+		virtual void contextMenuEvent(QContextMenuEvent *e);
+		
+};
 
-DevMDI::~DevMDI()
-{
-	;
-}
-
-void DevMDI::contextMenuEvent(QContextMenuEvent *e)
-{
-	e->accept();
-	menu->exec(e->globalPos());
-}
+#endif

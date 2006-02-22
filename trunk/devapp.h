@@ -27,21 +27,24 @@
 
 #include "dev.h"
 
-#include "devgui.h"
-#include "devsplash.h"
+class DevGUI;
+class DevSplash;
 
 class DevApp : public QApplication
 {
 	Q_OBJECT
 	
 	public:
+		static DevApp* Instance();
+		static DevApp* Init(int argc, char **argv);
+		
+	protected:
 		DevApp(int argc, char **argv);
 		virtual ~DevApp();
 		
 	private:
 		DevGUI *gui;
-		//DevWorkSpace *dws;
-		//DevSplash *scr;
+		DevSplash *scr;
 		
 		static DevApp *_app;
 };

@@ -22,11 +22,43 @@
 **
 ****************************************************************************/
 
-#include "devapp.h"
+#include "devcorner.h"
 
-int main (int argc, char **argv)
+DevCorner::DevCorner(QWidget *p)
+ : QWidget(p)
 {
-	Q_INIT_RESOURCE(DevEditor);
+	QHBoxLayout *hbox = new QHBoxLayout;
 	
-	return DevQt(argc, argv)->exec();
+	add = new QToolButton;
+	add->setIcon(QIcon(":/add.png"));
+	add->setFixedSize(16, 16);
+	hbox->addWidget(add);
+	
+	rem = new QToolButton;
+	rem->setIcon(QIcon(":/remove.png"));
+	rem->setFixedSize(16, 16);
+	hbox->addWidget(rem);
+	
+	connect(add	, SIGNAL( clicked() ),
+			this, SIGNAL( create() ) );
+	
+	connect(rem	, SIGNAL( clicked() ),
+			this, SIGNAL( close() ) );
+	
+	hbox->setMargin(0);
+	hbox->setSpacing(0);
+	setLayout(hbox);
+	
+	show();
 }
+
+void DevCorner::added(QWidget *w, const QString& n)
+{
+	widgets.insert(w, n);
+}
+
+void DevCorner::removed(QWidget *w)
+{
+	widgets.remove(w);
+}
+

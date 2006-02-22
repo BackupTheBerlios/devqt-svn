@@ -23,6 +23,15 @@
 ****************************************************************************/
 
 #include "devapp.h"
+#include "devgui.h"
+
+#include "devdock.h"
+#include "devedit.h"
+#include "coreedit.h"
+#include "devcorner.h"
+#include "devstatus.h"
+#include "devdialogs.h"
+#include "devworkspace.h"
 
 DevGUI* DevGUI::_gui = 0;
 
@@ -36,53 +45,169 @@ DevGUI* DevGUI::Instance()
 DevGUI::DevGUI()
  : QMainWindow(0), noname_count(0)
 {
+	
+    setupMenu();
+    
 	setupFileActions();
     setupEditActions();
-    setupTextActions();
+    //setupTextActions();
     setupCompiler();
     setupExplorer();
-	
-	Editor = new DevMDI(this);
-	Editor->setWindowState(Qt::WindowMaximized);
     
-	connect(Editor, SIGNAL(currentChanged(int)),
-			this, SLOT(editorChanged()));
+	
+	Editor = new QTabWidget(this);
+	Editor->setWindowState(Qt::WindowMaximized);
+	Editor->setContextMenuPolicy(Qt::CustomContextMenu);
+	
+	connect(Editor	, SIGNAL( currentChanged(int) ),
+			this	, SLOT  ( editorChanged() ) );
+	connect(Editor	, SIGNAL( customContextMenuRequested(const QPoint&) ),
+			this	, SLOT  ( editorMenu(const QPoint&) ) );
+	
+    c = new DevCorner(Editor);
+	Editor->setCornerWidget(c, Qt::TopLeftCorner);
+    
+	connect(c	, SIGNAL( create() ),
+			this, SLOT  ( fileNew() ) );
+	connect(c	, SIGNAL( close() ),
+			this, SLOT  ( close() ) );
+	
 	setCentralWidget(Editor);
+	
+	gDlg = new DevGotoDialog(Editor);
+	fDlg = new DevFindDialog(Editor);
+	rDlg = new DevReplaceDialog(Editor);
+	pDlg = new DevPropertiesDialog(Editor);
 
 	connect(QApplication::clipboard()	, SIGNAL(dataChanged()),
 			this						, SLOT  (clipboardDataChanged()) );
 	
-	for (int i = 1; i < DEV_APP->argc(); ++i)
-		load(DEV_APP->argv()[i]);
+	s = new DevStatus;
+	setStatusBar(s);
+	
+	if (DEV_APP->argc() == 1)
+	{
+		//if (!load("deveditor.cpp"))
+		//	fileNew();
+	} else {
+		for (int i = 1; i < DEV_APP->argc(); ++i)
+			load(DEV_APP->argv()[i]);
+	}
+	
 	
 	setWindowState(Qt::WindowMaximized);
-	setWindowTitle("Dev-Qt++ 0.1.0 [*]");
+	setWindowTitle("Dev-Qt++ 0.1.0");
 	show();
 }
 
 DevGUI::~DevGUI()
 {
-	;
+	closeAll();
 }
+
+void DevGUI::setupMenu()
+{
+	menu = new QMenu(Editor);
+	
+	QAction *a;
+	
+	a = aUndo		= new QAction(QIcon(":/undo.png"), "&Undo", this);
+	a->setEnabled( false );
+	menu->addAction(a);
+	
+	a = aRedo		= new QAction(QIcon(":/redo.png"), "&Redo", this);
+	a->setEnabled( false );
+	menu->addAction(a);
+	
+	menu->addSeparator();
+    
+	a = aCut		= new QAction(QIcon(":/cut.png"), "Cu&t", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( cut() ) );
+	menu->addAction(a);
+	
+	a = aCopy		= new QAction(QIcon(":/copy.png"), "Cop&y", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( copy() ) );
+	menu->addAction(a);
+	
+	a = aPaste		= new QAction(QIcon(":/paste.png"), "&Paste", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( paste() ) );
+	menu->addAction(a);
+	
+	a = aSelectAll	= new QAction("&Select All", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( selectAll() ) );
+	menu->addAction(a);
+	
+	a = aDelete	= new QAction("&Delete", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( delSelect() ) );
+	menu->addAction(a);
+	
+	menu->addSeparator();
+	
+	a = aFind = new QAction("&Find", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( find() ) );
+	menu->addAction(a);
+	
+	a = aFindNext = new QAction("Find &Next", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( findNext() ) );
+	menu->addAction(a);
+	
+	a = aReplace = new QAction("R&eplace", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( replace() ) );
+	menu->addAction(a);
+	
+	a = aGoto = new QAction("&Goto", this);
+	connect(a		, SIGNAL( triggered() ),
+			this, SLOT  ( goTo() ) );
+	menu->addAction(a);
+	
+	menu->addSeparator();
+	
+	a = aBreakPoint = new QAction("Toggle Brea&kpoint", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( breakpoint() ) );
+	menu->addAction(a);
+	
+	menu->addSeparator();
+	
+	a = aPrint		= new QAction(QIcon(":/print.png"), "Print", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( print() ) );
+	menu->addAction(a);
+	
+	menu->addSeparator();
+	
+	a = aProp		= new QAction("Pr&operties", this);
+	connect(a	, SIGNAL( triggered() ),
+			this, SLOT	( properties() ) );
+	menu->addAction(a);
+};
 
 void DevGUI::setupFileActions()
 {
     QToolBar *tb = new QToolBar(this);
-    tb->setWindowTitle(tr("File Actions"));
+    tb->setWindowTitle("File Actions");
     addToolBar(tb);
 
-    QMenu *menu = new QMenu(tr("&File"), this);
+    QMenu *menu = new QMenu("&File", this);
     menuBar()->addMenu(menu);
 
     QAction *a;
 
-    a = new QAction(QIcon(":/new.png"), tr("&New..."), this);
+    aNew = a = new QAction(QIcon(":/new.png"), "&New...", this);
     a->setShortcut(Qt::CTRL + Qt::Key_N);
     connect(a, SIGNAL(triggered()), this, SLOT(fileNew()));
     tb->addAction(a);
     menu->addAction(a);
 
-    a = new QAction(QIcon(":/open.png"), tr("&Open..."), this);
+    aOpen = a = new QAction(QIcon(":/open.png"), "&Open...", this);
     a->setShortcut(Qt::CTRL + Qt::Key_O);
     connect(a, SIGNAL(triggered()), this, SLOT(fileOpen()));
     tb->addAction(a);
@@ -90,93 +215,101 @@ void DevGUI::setupFileActions()
 
     menu->addSeparator();
 
-    actionSave = a = new QAction(QIcon(":/save.png"), tr("&Save"), this);
+    a = aSave = new QAction(QIcon(":/save.png"), "&Save...", this);
     a->setShortcut(Qt::CTRL + Qt::Key_S);
     connect(a, SIGNAL(triggered()), this, SLOT(fileSave()));
     a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
     
-    a = new QAction(QIcon(":/save.png"), tr("Save &As..."), this);
-    connect(a, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
-    a->setEnabled(false);
-    menu->addAction(a);
-
-    menu->addSeparator();
-
-    actionSaveAll = a = new QAction(QIcon(":/saveall.png"), tr("&Save All"), this);
-    a->setShortcut(Qt::CTRL + Qt::Key_A);
+    a = aSaveAll = new QAction(QIcon(":/saveall.png"), "&Save All...", this);
     connect(a, SIGNAL(triggered()), this, SLOT(fileSaveAll()));
     tb->addAction(a);
     menu->addAction(a);
 
+    a = aSaveAs = new QAction(QIcon(":/saveas.png"), "Save &As...", this);
+    connect(a, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+    a->setEnabled(false);
+    menu->addAction(a);
     menu->addSeparator();
 
-    a = new QAction(QIcon(":/print.png"), tr("&Print..."), this);
+    a = aPrint;
     a->setShortcut(Qt::CTRL + Qt::Key_P);
-    connect(a, SIGNAL(triggered()), this, SLOT(filePrint()));
+    connect(a, SIGNAL(triggered()), this, SLOT(print()));
+    a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
 
-    actionClose = a = new QAction(QIcon(":/close.png"), tr("&Close"), this);
+    a = aClose = new QAction(QIcon(":/close.png"), "&Close", this);
     a->setShortcut(Qt::CTRL + Qt::Key_W);
-	a->setEnabled(false);
-    connect(a, SIGNAL(triggered()), this, SLOT(fileClose()));
+    connect(a, SIGNAL(triggered()), this, SLOT(close()));
+    a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
 
-    menu->addSeparator();
-
-    a = new QAction(QIcon(":/exit.png"), tr("E&xit"), this);
+    aExit = a = new QAction(QIcon(":/exit.png"), "E&xit", this);
     a->setShortcut(Qt::CTRL + Qt::Key_Q);
-    connect( a, SIGNAL(triggered()), qApp, SLOT( quit() ) );
+    connect(a	, SIGNAL( triggered() ),
+			this, SLOT  ( closeAll() ) );
+    connect(a	, SIGNAL( triggered() ),
+			qApp, SLOT  ( quit() ) );
     menu->addAction(a);
+    
+    tb->setIconSize( QSize(22, 22) );
 }
 
 void DevGUI::setupEditActions()
 {
     QToolBar *tb = new QToolBar(this);
-    tb->setWindowTitle(tr("Edit Actions"));
+    tb->setWindowTitle("Edit Actions");
     addToolBar(tb);
 
-    QMenu *menu = new QMenu(tr("&Edit"), this);
+    QMenu *menu = new QMenu("&Edit", this);
     menuBar()->addMenu(menu);
 
     QAction *a;
-    a = actionUndo = new QAction(QIcon(":/undo.png"), tr("&Undo"), this);
+    a = aUndo;
     a->setShortcut(Qt::CTRL + Qt::Key_Z);
+    a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
     
-    a = actionRedo = new QAction(QIcon(":/redo.png"), tr("&Redo"), this);
+    a = aRedo;
     a->setShortcut(Qt::CTRL + Qt::Key_Y);
+    a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
     
     menu->addSeparator();
     
-    a = actionCut = new QAction(QIcon(":/cut.png"), tr("Cu&t"), this);
+    a = aCut;
     a->setShortcut(Qt::CTRL + Qt::Key_X);
+    a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
     
-    a = actionCopy = new QAction(QIcon(":/copy.png"), tr("&Copy"), this);
+    a = aCopy;
     a->setShortcut(Qt::CTRL + Qt::Key_C);
+    a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
     
-    a = actionPaste = new QAction(QIcon(":/paste.png"), tr("&Paste"), this);
+    a = aPaste;
     a->setShortcut(Qt::CTRL + Qt::Key_V);
+    a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
-    actionPaste->setEnabled(!DevApp::clipboard()->text().isEmpty());
+    
+    tb->setIconSize( QSize(22, 22) );
 }
 
+/*
 void DevGUI::setupTextActions()
 {
+	
 	QToolBar *tb = new QToolBar(this);
 	tb->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
-	tb->setWindowTitle(tr("Format Actions"));
+	tb->setWindowTitle("Format Actions");
 	addToolBarBreak(Qt::TopToolBarArea);
 	addToolBar(tb);
 	
@@ -200,22 +333,24 @@ void DevGUI::setupTextActions()
 	connect(Size, SIGNAL(activated(const QString &)),
 			this, SLOT(textSize(const QString &)));
 	Size->setCurrentIndex(Size->findText(QString::number(DevApp::font().pointSize())));
-}
+	
+}*/
 
 void DevGUI::setupExplorer()
 {
 	
-	Explorer = new DevDock(tr("Explorer"), Qt::LeftDockWidgetArea, this);
+	Explorer = new DevDock("Explorer", Qt::LeftDockWidgetArea, this);
 	
 	tabExplorer = Explorer->Tab();
 	
 	treeFiles = new DevWorkSpace("default.dws");
-	tabExplorer->addTab(treeFiles, tr("Files"));
+	tabExplorer->addTab(treeFiles, "Files");
 	
 	treeClasses = new QTreeWidget;
 	treeClasses->setHeaderItem(new QTreeWidgetItem(QStringList("Classes : "), 
 													DevQt::classes));
-	tabExplorer->addTab(treeClasses, tr("Classes"));
+	tabExplorer->addTab(treeClasses, "Classes");
+	
 }
 
 void DevGUI::setupCompiler()
@@ -223,29 +358,30 @@ void DevGUI::setupCompiler()
 	QAction *a;
 	QToolBar *tb = new QToolBar(this);
 	tb->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
-    tb->setWindowTitle(tr("Compiler Actions"));
+    tb->setWindowTitle("Compiler Actions");
     addToolBar(tb);
     
-    QMenu *menu = new QMenu(tr("&Compile"), this);
+    QMenu *menu = new QMenu("&Compile", this);
     menuBar()->addMenu(menu);
     
-    actionCompile = a = new QAction(QIcon(":/compile.png"), tr("&Compile..."), this);
+    aCompile = a = new QAction(QIcon(":/compil.png"), "&Compile...", this);
     a->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_C);
     //connect(a, SIGNAL(triggered()), this, SLOT(projComp()));
     a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
     
-    actionCompile = a = new QAction(QIcon(":/rebuild.png"), tr("&Rebuild..."), this);
+    aRebuild = a = new QAction(QIcon(":/rebuild.png"), "&Rebuild...", this);
     a->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_A);
     //connect(a, SIGNAL(triggered()), this, SLOT(projRebuild()));
     a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
     
-	Compiler = new DevDock(tr("Compiler"), Qt::BottomDockWidgetArea, this);
+    tb->setIconSize( QSize(22, 22) );
+    
+	Compiler = new DevDock("Compiler", Qt::BottomDockWidgetArea, this);
 	tabCompiler = Compiler->Tab();
-	
 }
 
 bool DevGUI::load(const QString &f)
@@ -275,7 +411,7 @@ void DevGUI::fileNew()
 void DevGUI::fileOpen()
 {
     QStringList fl = QFileDialog::getOpenFileNames(	this,
-													tr("Open File..."),
+													"Open File...",
         											QString(),
 													DevQt::supportedFiles );
 	
@@ -283,62 +419,234 @@ void DevGUI::fileOpen()
         load(fn);
 }
 
-void DevGUI::fileSave()
+void DevGUI::fileSave(const QString& n, const QString& ext)
 {
-	DevEditor * e = qobject_cast<DevEditor *>(Editor->currentWidget());
 	if ( !e )
-        return;
-    e->save();
+		return;
+	
+	if ( n.isEmpty() && e->name().startsWith("noname_") )
+	{
+		return fileSaveAs();
+	}
+	
+	QString name(n); //get rid of const
+	
+	checkExtension(name, ext);
+	
+	QFile f(name);
+	
+	if ( !f.open(QFile::WriteOnly) )
+		return (void)QMessageBox::warning(this, "Error!",
+										  "Unable to write in file : " + name);
+	QTextStream cout(&f);
+	cout<<e->text();
+	e->setModified(false);
+    
+    e->n = name;
+    Editor->setTabText( Editor->indexOf(e), name);
+	
 }
 
 void DevGUI::fileSaveAll()
 {
-	//TODO
+	if ( !e )
+		return;
+	
+	DevEdit *se = e;
+	
+	for (int i=0; i<Editor->count(); i++)
+	{
+		e = qobject_cast<DevEdit*>(Editor->widget(i));
+		
+		if ( !e )
+			return;
+		
+		fileSave();
+	}
+	e = se;
 }
 
 void DevGUI::fileSaveAs()
 {
-	DevEditor * e = qobject_cast<DevEditor *>(Editor->currentWidget());
 	if ( !e )
         return;
-    e->saveAs();
+	
+    QString ext, name = QFileDialog::getSaveFileName(this, "Save as...",
+											QString(),
+    										DevQt::supportedFiles, &ext );
+    if ( name.isEmpty() )
+    	return;
+    
+	while ( QFile::exists(name) )
+	{
+		int state = QMessageBox::warning(this, "Warning !", 
+								"File already exists! Overwrite?",
+								QMessageBox::Ok,
+								QMessageBox::No | QMessageBox::Default,
+								QMessageBox::Cancel | QMessageBox::Escape );
+		if ( state == QMessageBox::Ok )
+			break;
+		
+		if ( state == QMessageBox::Cancel )
+			return;
+		
+		name = QFileDialog::getSaveFileName(this, "Save as...", QString(),
+    										DevQt::supportedFiles, &ext );
+	} 
+	
+	fileSave(name, ext);
 }
 
-void DevGUI::filePrint()
+void DevGUI::undo()
 {
-	DevEditor * e = qobject_cast<DevEditor *>(Editor->currentWidget());
+	if ( !e )
+        return;
+    e->undo();
+}
+
+void DevGUI::redo()
+{
+	if ( !e )
+        return;
+    e->redo();
+}
+
+void DevGUI::cut()
+{
+	if ( !e )
+        return;
+    e->cut();
+}
+
+void DevGUI::copy()
+{
+	if ( !e )
+        return;
+    e->copy();
+}
+
+void DevGUI::paste()
+{
+	if ( !e )
+        return;
+    e->paste();
+}
+
+void DevGUI::selectAll()
+{
+	if ( !e )
+        return;
+    e->selectAll();
+}
+
+void DevGUI::delSelect()
+{
+	if ( !e )
+        return;
+    e->delSelect();
+}
+
+void DevGUI::find()
+{
+	if ( !e )
+        return;
+    fDlg->execute(e->e);
+}
+
+void DevGUI::findNext()
+{
+	if ( !e )
+        return;
+    fDlg->process();
+}
+
+void DevGUI::replace()
+{
+	if ( !e )
+        return;
+    rDlg->execute(e->e);
+}
+
+void DevGUI::goTo()
+{
+	if ( !e )
+        return;
+    gDlg->execute(e->e);
+}
+
+void DevGUI::print()
+{
 	if ( !e )
         return;
     e->print();
 }
 
-void DevGUI::fileClose()
+void DevGUI::breakpoint()
 {
-	DevEditor * e = qobject_cast<DevEditor *>(Editor->currentWidget());
+	if ( !e )
+        return;
+    e->breakpoint();
+}
 
+void DevGUI::close()
+{
 	if ( !e )
 		return;
 	
-    const int pos = Editor->currentIndex();
-	const bool hadFocus = e->hasFocus();
+	maybeSave();
 	
+    const int pos = Editor->indexOf(e);
+	const bool hadFocus = (e && e->hasFocus());
+	
+	QString name = Editor->tabText(pos);
     Editor->removeTab(pos);
-	delete e;
     
-    e = qobject_cast<DevEditor*>(Editor->currentWidget());
+    e = qobject_cast<DevEdit*>(Editor->currentWidget());
+	
+    if (e && hadFocus)
+        e->setFocus();
     
-	if ( e ) {
-		if ( hadFocus )
-			e->setFocus();
-	} else {
-		actionClose->setEnabled(false);
+    if ( !e )
+    {
+		aSave->setEnabled(false);
+    	aSaveAs->setEnabled(false);
+    	aUndo->setEnabled(false);
+    	aRedo->setEnabled(false);
+		aCut->setEnabled(false);
+    	aCopy->setEnabled(false);
+    	aPaste->setEnabled(false);
+    	aPrint->setEnabled(false);
+		aClose->setEnabled(false);
+		
+		for ( int p = DevQt::General; p < DevQt::None; p++ )
+			s->message(QString(), p);
 	}
 }
 
+void DevGUI::closeAll()
+{
+	while ( e )
+		close();
+}
+
+void DevGUI::properties()
+{
+	if ( e )
+		pDlg->execute(e->name());
+}
+
+void DevGUI::clipboardDataChanged()
+{
+    aPaste->setEnabled(!QApplication::clipboard()->text().isEmpty());
+}
+
+/*
+
+TODO : make custom styling look nicer!
+
+
 void DevGUI::textFamily(const QString &f)
 {
-	DevEditor * e = qobject_cast<DevEditor *>(Editor->currentWidget());
-
     if ( !e )
         return;
     e->setFont( QFont( f, Size->currentText().toInt() ) );
@@ -346,15 +654,9 @@ void DevGUI::textFamily(const QString &f)
 
 void DevGUI::textSize(const QString &p)
 {
-	DevEditor * e = qobject_cast<DevEditor *>(Editor->currentWidget());
     if ( !e )
         return;
     e->setFont( QFont( Font->currentText(), p.toInt() ) );
-}
-
-void DevGUI::clipboardDataChanged()
-{
-    actionPaste->setEnabled(!QApplication::clipboard()->text().isEmpty());
 }
 
 void DevGUI::fontChanged(const QFont &f)
@@ -362,82 +664,123 @@ void DevGUI::fontChanged(const QFont &f)
     Font->setCurrentIndex(Font->findText(f.family()));
     Size->setCurrentIndex(Size->findText(QString::number(f.pointSize())));
 }
+*/
 
 void DevGUI::editorChanged()
 {
-	DevEditor * e = qobject_cast<DevEditor*>(Editor->currentWidget());
-
-    if ( e ) {
+	QTextDocument *doc;
+	
+    if ( e )
+	{
 		
-		const QTextDocument *doc = e->document();
+		doc = e->document();
 		
-        disconnect(doc, SIGNAL(modificationChanged(bool)),
-                   actionSave, SLOT(setEnabled(bool)));
-        disconnect(doc, SIGNAL(modificationChanged(bool)),
-                   this, SLOT(setWindowModified(bool)));
-        disconnect(doc, SIGNAL(undoAvailable(bool)),
-                   actionUndo, SLOT(setEnabled(bool)));
-        disconnect(doc, SIGNAL(redoAvailable(bool)),
-                   actionRedo, SLOT(setEnabled(bool)));
+		disconnect(doc, SIGNAL(modificationChanged(bool)),
+					aSave, SLOT(setEnabled(bool)));
+		disconnect(doc, SIGNAL(modificationChanged(bool)),
+					this, SLOT(setWindowModified(bool)));
+		disconnect(doc, SIGNAL(undoAvailable(bool)),
+					aUndo, SLOT(setEnabled(bool)));
+		disconnect(doc, SIGNAL(redoAvailable(bool)),
+					aRedo, SLOT(setEnabled(bool)));
 
-        disconnect(actionUndo, SIGNAL(triggered()), doc, SLOT(undo()));
-        disconnect(actionRedo, SIGNAL(triggered()), doc, SLOT(redo()));
+		disconnect(	aUndo, SIGNAL(triggered()),
+					doc, SLOT(undo()));
+        disconnect(	aRedo, SIGNAL(triggered()),
+					doc, SLOT(redo()));
 
-        disconnect(actionCut, SIGNAL(triggered()), e, SLOT(cut()));
-        disconnect(actionCopy, SIGNAL(triggered()), e, SLOT(copy()));
-        disconnect(actionPaste, SIGNAL(triggered()), e, SLOT(paste()));
-
-        disconnect(e, SIGNAL(copyAvailable(bool)), actionCut, SLOT(setEnabled(bool)));
-        disconnect(e, SIGNAL(copyAvailable(bool)), actionCopy, SLOT(setEnabled(bool)));
-
+		disconnect(	aCut, SIGNAL(triggered()),
+					e	, SLOT(cut()));
+		disconnect(	aCopy, SIGNAL(triggered()),
+					e, SLOT(copy()));
+		disconnect(	aPaste, SIGNAL(triggered()),
+					e, SLOT(paste()));
+		
+		disconnect(e, SIGNAL(copyAvailable(bool)), aCut, SLOT(setEnabled(bool)));
+		disconnect(e, SIGNAL(copyAvailable(bool)), aCopy, SLOT(setEnabled(bool)));
+		
+		disconnect(e, SIGNAL( message(const QString&, DevQt::StatusPurpose p) ),
+					s,SLOT  ( message(const QString&, DevQt::StatusPurpose p) ) );
     }
 
-    e = qobject_cast<DevEditor*>(Editor->currentWidget());
-    if (!e)
+    e = qobject_cast<DevEdit*>(Editor->currentWidget());
+    if ( !e )
+    {
+		aSave->setEnabled(false);
+    	aSaveAs->setEnabled(false);
+    	aUndo->setEnabled(false);
+    	aRedo->setEnabled(false);
+		aCut->setEnabled(false);
+    	aCopy->setEnabled(false);
+    	aPaste->setEnabled(false);
+    	aPrint->setEnabled(false);
+		aClose->setEnabled(false);
         return;
+	}
     
-	const QTextDocument *doc = e->document();
+	doc = e->document();
 	
-    fontChanged(doc->defaultFont());
+    //fontChanged(doc->defaultFont());
 
     connect(doc, SIGNAL(modificationChanged(bool)),
-            actionSave, SLOT(setEnabled(bool)));
-    connect(doc, SIGNAL(modificationChanged(bool)),
-            this, SLOT(setWindowModified(bool)));
+            aSave, SLOT(setEnabled(bool)));
+    
+    connect(doc	, SIGNAL(modificationChanged(bool)),
+            this, SLOT(editorModified(bool)));
+    
     connect(doc, SIGNAL(undoAvailable(bool)),
-            actionUndo, SLOT(setEnabled(bool)));
+            aUndo, SLOT(setEnabled(bool)));
     connect(doc, SIGNAL(redoAvailable(bool)),
-            actionRedo, SLOT(setEnabled(bool)));
+            aRedo, SLOT(setEnabled(bool)));
 
-    setWindowModified(e->isModified());
-    actionSave->setEnabled(doc->isModified());
-    actionUndo->setEnabled(doc->isUndoAvailable());
-    actionRedo->setEnabled(doc->isRedoAvailable());
+    e->setWindowModified(e->isModified());
+    aSave->setEnabled(doc->isModified());
+    aUndo->setEnabled(doc->isUndoAvailable());
+    aRedo->setEnabled(doc->isRedoAvailable());
+    
+    aPrint->setEnabled(true);
+	aClose->setEnabled(true);
+    aSaveAs->setEnabled(true);
 
-    connect(actionUndo, SIGNAL(triggered()), doc, SLOT(undo()));
-    connect(actionRedo, SIGNAL(triggered()), doc, SLOT(redo()));
+    connect(aUndo, SIGNAL( triggered() ), e, SLOT( undo() ) );
+    connect(aRedo, SIGNAL( triggered() ), e, SLOT( redo() ) );
 
     const bool selection = e->textCursor().hasSelection();
-    actionCut->setEnabled(selection);
-    actionCopy->setEnabled(selection);
+    aCut->setEnabled(selection);
+    aCopy->setEnabled(selection);
+    
+    aPaste->setEnabled(!QApplication::clipboard()->text().isEmpty());
 
-    connect(actionCut, SIGNAL(triggered()), e, SLOT(cut()));
-    connect(actionCopy, SIGNAL(triggered()), e, SLOT(copy()));
-    connect(actionPaste, SIGNAL(triggered()), e, SLOT(paste()));
+    connect(aCut, SIGNAL(triggered()), e, SLOT(cut()));
+    connect(aCopy, SIGNAL(triggered()), e, SLOT(copy()));
+    connect(aPaste, SIGNAL(triggered()), e, SLOT(paste()));
 
-    connect(e, SIGNAL(copyAvailable(bool)), actionCut, SLOT(setEnabled(bool)));
-    connect(e, SIGNAL(copyAvailable(bool)), actionCopy, SLOT(setEnabled(bool)));
+    connect(e, SIGNAL(copyAvailable(bool)), aCut, SLOT(setEnabled(bool)));
+    connect(e, SIGNAL(copyAvailable(bool)), aCopy, SLOT(setEnabled(bool)));
+    
+    connect(e, SIGNAL( message(const QString&, int) ),
+			s, SLOT  ( message(const QString&, int) ) );
+	
+    s->message("Text : Row 0, Column 0", (int)DevQt::TextCursor);
+	s->message("Mouse : Row 0, Column 0", (int)DevQt::MouseCursor);
+	s->message("Insert", (int)DevQt::TypingMode);
+	s->message(QString::number(DevQt::lines(e->document())), (int)DevQt::Lines);
+	
+	e->e->setFocus();
 }
 
-DevEditor* DevGUI::createEditor(const QString &title, bool show)
+DevEdit* DevGUI::createEditor(const QString &title, bool show)
 {
-    QString stitle(title.isEmpty()
-			? QString(tr("noname_%1")).arg(++noname_count)
-			: title);
-				
-	DevEditor *edit = new DevEditor(stitle, DevEdit::fromFile);
-	actionClose->setEnabled(true);
+	DevEdit *edit;
+	QString stitle;
+	
+	if ( title.isEmpty() )
+		stitle = "noname_" + QString::number(++noname_count, 10);
+	else
+		stitle = title;
     
+    edit = new DevEdit(stitle, DevEdit::file);
+	
 	if ( !show )
 		return edit;
 	
@@ -445,6 +788,75 @@ DevEditor* DevGUI::createEditor(const QString &title, bool show)
     Editor->setCurrentIndex(tab);
     Editor->show();
     
-    edit->setFocus();
     return edit;
+}
+
+void DevGUI::editorMenu(const QPoint& pos)
+{
+	if ( !e )
+		return;
+	
+	menu->exec(Editor->mapToGlobal(pos));
+}
+
+void DevGUI::editorModified(bool mod)
+{
+	if ( !e )
+		return;
+	
+	const int i = Editor->indexOf(e);
+	QString n = Editor->tabText(i);
+	const bool end = n.endsWith(" [*]");
+	
+	if ( mod )
+	{
+		if ( !end )
+			n += " [*]";
+	} else {
+		if ( end )
+			n = n.left( n.length()-4 );
+	}
+	
+	Editor->setTabText(i, n);
+}
+
+void DevGUI::maybeSave()
+{
+	if ( !e->isModified() )
+		return;
+	
+	int s = QMessageBox::warning(this, "Warning",
+								"Document has been modified.\nDo you want to save it?",
+								QMessageBox::Yes | QMessageBox::Default,
+								QMessageBox::No | QMessageBox::Escape );
+	if ( s == QMessageBox::Yes )
+		fileSave();
+	
+}
+
+void DevGUI::checkExtension(QString& f, const QString& ext)
+{
+	int count=1;
+	QString e, fn = f.section('/', -1);
+	if ( !fn.contains('.') )
+	{
+		while (1)
+		{
+            e = ext.section(" *", count, count);
+            count++;
+			if ( e.isNull() )
+			    break;
+            if ( e.endsWith(')') )
+                e.resize(e.size()-1);
+			if ( fn.contains(e) )
+				return;
+		}
+		f += ext.section(" *", 1, 1);
+	}
+}
+
+void DevGUI::closeEvent(QCloseEvent *e)
+{
+	closeAll();
+	e->accept();
 }

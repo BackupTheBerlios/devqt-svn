@@ -239,14 +239,14 @@ const char* CppHighlighter::kwds[CppHighlighter::keywords] =
 	"dynamic_cast", "static_cast", "const_cast", "reinterpret_cast"
 };
 
-CppHighlighter::CppHighlighter(QTextEdit *parent, bool cl)
- : DevHighlighter(parent), colorbgs(cl)
+CppHighlighter::CppHighlighter(QTextEdit *parent)
+ : DevHighlighter(parent)
 {
 	setupData();
 }
 
-CppHighlighter::CppHighlighter(QTextDocument *parent, bool cl)
- : DevHighlighter(parent), colorbgs(cl)
+CppHighlighter::CppHighlighter(QTextDocument *parent)
+ : DevHighlighter(parent)
 {
 	setupData();
 }
@@ -254,7 +254,6 @@ CppHighlighter::CppHighlighter(QTextDocument *parent, bool cl)
 CppHighlighter::~CppHighlighter()
 {
 	fmts.clear();		//clear words' formats informations
-	bgds.clear();		//clear lines' backgrounds inforamtions
 }
 
 void CppHighlighter::setupData()
@@ -280,59 +279,11 @@ void CppHighlighter::setupData()
 	f.setFontItalic(true);
 	fmts[comment] = f;
 	
-	bgds.resize(4);
-	
-	bgds[None]			= QBrush(Qt::transparent, Qt::SolidPattern);
-	
-	bgds[Current] 		= QBrush(	QColor(0x00, 0xf0, 0xff, 0x3a),
-									Qt::SolidPattern);
-
-	bgds[Error] 		= QBrush(Qt::darkRed, Qt::SolidPattern);
-	
-	bgds[BreakPoint] 	= QBrush(Qt::red, Qt::SolidPattern);
-}
-
-void CppHighlighter::colorLines(bool yes)
-{
-	colorbgs = yes;
 }
 
 void CppHighlighter::highlightBlock(QTextBlock& b)
 {
 	b.setUserState( process(b.text()) );
-	
-	
-	if ( !colorbgs )		//skip line highlighting if wanted
-		return;
-	
-	QTextCursor cur = QTextCursor(b);
-	BlockData *dat = BlockData::data(b);
-	QTextBlockFormat fmt = b.blockFormat();
-	
-	if ( !dat )
-	{
-		dat = new BlockData;
-		b.setUserData(dat);
-	}
-	
-	if ( dat->s & BlockData::Error )
-	{
-		fmt.setBackground(bgds[Error]);
-	}
-	else if ( dat->s & BlockData::BreakPoint )
-	{
-		fmt.setBackground(bgds[BreakPoint]);
-	}
-	else
-	{
-		fmt.clearBackground();
-		cur.setBlockFormat(fmt);
-		return;
-	}
-	
-	setFormat(0, b.text().count(), Qt::white);
-	cur.setBlockFormat(fmt);
-	
 }
 
 /*
@@ -382,7 +333,7 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 			} while ( text.at(i-1)=='\\' );
 			
 			setFormat(0, i+1, fmts[quote]);
-			i--;
+			//i--;
 			break;
 			
 		default:
@@ -455,6 +406,22 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 			
 			return preprocessor;
 		}
+		else if ( c=='\'' )
+		{
+			do
+			{
+				i = text.indexOf("\'", ++i);
+					
+				if ( i == -1 )
+				{
+					setFormat(n, len-n, fmts[quote]);
+					
+					return normal;
+				}
+			} while ( text.at(i-1)=='\\' );
+			
+			setFormat(n, i-n+1, fmts[quote]);
+		}
 		else if ( c=='\"' )
 		{
 			do
@@ -479,18 +446,19 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 			do
 			{
 				c = str[++i];
-			} while ( c.isLetter() );
+			} while ( c.isLetterOrNumber() );
 			
 			s = QString(str+n, i-n);
 			
-			for (int i=0; i<keywords; i++)
+			for (int j=0; j<keywords; j++)
 			{
-				if ( s != kwds[i] )
-				continue;
+				if ( s != kwds[j] )
+					continue;
 				
 				setFormat(n, s.count(), fmts[keyword]);
 				break;
 			}
+			i--;
 		}
 		else if ( c.isNumber() )
 		{
@@ -514,10 +482,13 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 					);
 			
 			s = QString(str+n, i-n);
+			i--;
+			
 			if (base == 10 && (
 				(s.count('e', Qt::CaseInsensitive)>1) || 
 				(s.count('f', Qt::CaseInsensitive)>1)  ) )
 				continue;
+			
 			setFormat(n, s.count(), fmts[number]);
 		}
 	}

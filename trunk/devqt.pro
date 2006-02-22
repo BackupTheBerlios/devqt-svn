@@ -4,43 +4,41 @@
 
 TEMPLATE = app
 TARGET = devqt
-DEPENDPATH += .
-INCLUDEPATH += .
 
-MOC_DIR = .moc
-OBJECTS_DIR = .obj
+MOC_DIR = tmp/moc
+OBJECTS_DIR = tmp/obj
+RCC_DIR = tmp/rcc
 
 # Input
-HEADERS+= dev.h \
+HEADERS += dev.h \
            devapp.h \
            devdialogs.h \
            devdock.h \
-           deveditor.h \
            devedit.h \
+           coreedit.h \
            devlinenumber.h \
            devgui.h \
            devhighlighter.h \
            devsplash.h \
            devstatus.h \
+           devcorner.h \
            devproject.h \
-           devmdi.h \
            devworkspace.h
 
 SOURCES += dev.cpp \
            devapp.cpp \
            devdialogs.cpp \
            devdock.cpp \
-           deveditor.cpp \
            devedit.cpp \
+           coreedit.cpp \
            devlinenumber.cpp \
            devgui.cpp \
            devhighlighter.cpp \
            devsplash.cpp \
            devstatus.cpp \
+           devcorner.cpp \
            devproject.cpp \
-           devmdi.cpp \
            devworkspace.cpp \
            main.cpp
 
 RESOURCES += DevEditor.qrc
-

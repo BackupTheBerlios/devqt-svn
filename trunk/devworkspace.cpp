@@ -24,9 +24,15 @@
 
 #include "devworkspace.h"
 
+#include "devgui.h"
+#include "devedit.h"
+#include "devproject.h"
+
 DevWorkSpace::DevWorkSpace(QString name, QWidget *parent)
  : QTreeWidget(parent), n(name)
 {
+	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	
 	setHeaderItem(new QTreeWidgetItem(	QStringList("WorkSpace : "),
 										DevQt::classes) );
 	
@@ -170,10 +176,10 @@ void DevWorkSpace::focus(QTreeWidgetItem *i, int c)
 	if ( !f )
 		return;
 	
-	DevEditor *e = f->e;
+	DevEdit *e = f->e;
 	
 	if ( !e )
-		e = DEV_GUI->createEditor(f->n, false);
+		return (void)(f->e = DEV_GUI->createEditor(f->n, true));
 	
 	if ( (index=edit->indexOf(e)) == -1 )
 		index = edit->addTab(e, QFileInfo(f->n).fileName());
@@ -181,8 +187,6 @@ void DevWorkSpace::focus(QTreeWidgetItem *i, int c)
 	edit->setCurrentIndex(index);
 	edit->show();
 	e->setFocus();
-	
-	f->e = e;
 }
 
 void DevWorkSpace::deletion(AbstractFile *o)

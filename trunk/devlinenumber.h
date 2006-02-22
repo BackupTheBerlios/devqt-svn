@@ -27,14 +27,12 @@
 
 #include "dev.h"
 
-#include "devedit.h"
-
 class DevLineNumber : public QWidget
 {
 	Q_OBJECT
     
 	public:
-		DevLineNumber(DevEdit *editor, QWidget *parent = 0);
+		DevLineNumber(QTextEdit *editor, QWidget *parent = 0);
 
 	signals:
 		void clicked(int line);
@@ -45,7 +43,7 @@ class DevLineNumber : public QWidget
 		virtual void mousePressEvent(QMouseEvent *e);
 
 	private:
-		DevEdit *editor;
+		QPointer<QTextEdit> editor;
 };
 
 #endif

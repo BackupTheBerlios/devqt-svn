@@ -24,246 +24,133 @@
 
 #include "devedit.h"
 
+#include "coreedit.h"
+#include "devstatus.h"
+#include "devlinenumber.h"
+#include "devhighlighter.h"
+
 /*
 
-DevEdit : the editor itself with custom context menu, indentation...
+DevEdit : THE ultimate text editor!!! ;-)
 
 */
 
-DevEdit::DevEdit(QWidget *parent)
- : QTextEdit(parent)
+DevEdit::DevEdit(QWidget *p)
+ : QWidget(p)
 {
-	//disable wrapping!!!
-	setLineWrapMode(NoWrap);
-	
-	//setup default syntax highlighter
-	hl = new CppHighlighter(this, true);
-	
-	//cursor stuffs
-	prev = textCursor();
-	connect(document()	, SIGNAL( cursorPositionChanged(const QTextCursor&) ),
-			this		, SLOT( highlight(const QTextCursor&) ) );
-	
-	//setup utility dialogs
-	gotoDlg		= new DevGotoDialog(this);
-	findDlg 	= new DevFindDialog(this);
-	replaceDlg 	= new DevReplaceDialog(this);
-    
-	connect(gotoDlg	, SIGNAL( color(QTextCursor&) ),
-			this	, SLOT  ( highlight(const QTextCursor&) ) );
-	connect(findDlg	, SIGNAL( color(QTextCursor&) ),
-			this	, SLOT  ( highlight(const QTextCursor&) ) );
-	connect(replaceDlg	, SIGNAL( color(QTextCursor&) ),
-			this		, SLOT  ( highlight(const QTextCursor&) ) );
-	
-	//setup context menu
-	menu = new QMenu(this);
-	
-	QAction *a;
-	
-	a = aUndo		= new QAction("&Undo", this);
-	connect(a			, SIGNAL( triggered() ),
-			document()	, SLOT( undo() ) );
-	connect(document()	, SIGNAL( undoAvailable(bool) ),
-			a			, SLOT( setEnabled(bool) ) );
-	a->setEnabled( document()->isUndoAvailable() );
-	menu->addAction(a);
-	
-	a = aRedo		= new QAction("&Redo", this);
-	connect(a			, SIGNAL( triggered() ),
-			document()	, SLOT( redo() ) );
-	connect(document()	, SIGNAL( redoAvailable(bool) ),
-			a			, SLOT( setEnabled(bool) ) );
-	a->setEnabled( document()->isRedoAvailable() );
-	menu->addAction(a);
-	
-	menu->addSeparator();
-	
-	a = aCut		= new QAction("Cu&t", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( cut() ) );
-	menu->addAction(a);
-	
-	a = aCopy		= new QAction("Cop&y", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( copy() ) );
-	menu->addAction(a);
-	
-	a = aPaste		= new QAction("&Paste", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( customPaste() ) );
-	menu->addAction(a);
-	
-	a = aSelectAll	= new QAction("&Select All", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( selectAll() ) );
-	menu->addAction(a);
-	
-	a = aDelete	= new QAction("&Delete", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( delSelect() ) );
-	menu->addAction(a);
-	
-	menu->addSeparator();
-	
-	a = aFind = new QAction("&Find", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( find() ) );
-	menu->addAction(a);
-	
-	a = aFindNext = new QAction("Find &Next", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( findNext() ) );
-	menu->addAction(a);
-	
-	a = aReplace = new QAction("R&eplace", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( replace() ) );
-	menu->addAction(a);
-	
-	a = aGoto = new QAction("&Goto", this);
-	connect(a		, SIGNAL( triggered() ),
-			gotoDlg , SLOT  ( execute() ) );
-	menu->addAction(a);
-	
-	menu->addSeparator();
-	
-	a = aBreakPoint = new QAction("Toggle Brea&kpoint", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( toggleBPt() ) );
-	menu->addAction(a);
-	
-	menu->addSeparator();
-	
-	a = aLoad		= new QAction("&Load", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( load() ) );
-	menu->addAction(a);
-	
-	a = aSave		= new QAction("&Save", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( save() ) );
-	menu->addAction(a);
-	
-	a = aSaveAs		= new QAction("Save as", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( saveAs() ) );
-	menu->addAction(a);
-	
-	a = aPrint		= new QAction("Print", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( print() ) );
-	menu->addAction(a);
-	
-	menu->addSeparator();
-	
-	a = aProp		= new QAction("Pr&operties", this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( properties() ) );
-	menu->addAction(a);
-    
-	//allow mouse tracking for statusbar maintenance
-	setMouseTracking(true);
-	
-	//scrollbars stuffs (QTextEdit seem to forget adjusting them sometimes)
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	setup();
 }
 
-DevEdit::~DevEdit()
+DevEdit::DevEdit(const QString& s, DevEdit::OpenType t, QWidget *p)
+ : QWidget(p)
 {
-	delete hl;
-	delete menu;
+	setup();
+	
+	setText(s, t);
+}
+
+void DevEdit::setup()
+{
+	// setup widgets
+	e = new CoreEdit;
+	l = new DevLineNumber(e);
+	
+	//setup layout
+	QGridLayout *grid = new QGridLayout;
+	
+	grid->addWidget(l,  0, 0, 48,  1);
+	grid->addWidget(e,  0, 1, 48, 63);
+	
+	//apply layout
+	setLayout(grid);
+	
+	//setup editor properties
+	setFont( QFont("Courier New", 10) );
+	
+	hl = new CppHighlighter(e);//, true);
+	
+	//setup internal connections
+	connect(l	, SIGNAL( clicked(QTextCursor&) ),
+			this, SLOT  ( toggleBreakPoint(QTextCursor&) ) );
+	
+	connect(e	, SIGNAL( message(const QString&, int) ),
+			this, SIGNAL( message(const QString&, int) ) );
+	
+	connect(this, SIGNAL( needUndo() ),
+			e	, SLOT  ( undo() ) );
+	
+	connect(this, SIGNAL( needRedo() ),
+			e	, SLOT  ( redo() ) );
+	
+	//setup custom connections (external purpose but specific to DevEdit)
+	
+	
+	//setup external purpose connections, i.e. signals wrappers
+	connect(e	, SIGNAL( copyAvailable(bool) ), 
+			this, SIGNAL( copyAvailable(bool) ) );
+	connect(e	, SIGNAL( currentCharFormatChanged(const QTextCharFormat&) ), 
+			this, SIGNAL( currentCharFormatChanged(const QTextCharFormat&) ) );
+	connect(e	, SIGNAL( cursorPositionChanged() ), 
+			this, SIGNAL( cursorPositionChanged() ) );
+	connect(e	, SIGNAL( redoAvailable(bool) ), 
+			this, SIGNAL( redoAvailable(bool) ) );
+	connect(e	, SIGNAL( selectionChanged() ), 
+			this, SIGNAL( selectionChanged() ) );
+	connect(e	, SIGNAL( textChanged() ), 
+			this, SIGNAL( textChanged() ) );
+	connect(e	, SIGNAL( undoAvailable(bool) ), 
+			this, SIGNAL( undoAvailable(bool) ) );
+	
+	connect(e->horizontalScrollBar(), SIGNAL( actionTriggered(int) ),
+			this, SLOT( h_actionTriggered(int) ) );
+	connect(e->horizontalScrollBar(), SIGNAL( rangeChanged(int, int) ),
+			this, SLOT( h_rangeChanged(int, int) ) );
+	connect(e->horizontalScrollBar(), SIGNAL( sliderMoved(int) ),
+			this, SLOT( h_sliderMoved(int) ) );
+	connect(e->horizontalScrollBar(), SIGNAL( sliderPressed() ),
+			this, SLOT( h_sliderPressed() ) );
+	connect(e->horizontalScrollBar(), SIGNAL( sliderReleased() ),
+			this, SLOT( h_sliderReleased() ) );
+	connect(e->horizontalScrollBar(), SIGNAL( valueChanged(int) ),
+			this, SLOT( h_valueChanged(int) ) );
+	
+	connect(e->verticalScrollBar(), SIGNAL( actionTriggered(int) ),
+			this, SLOT( v_actionTriggered(int) ) );
+	connect(e->verticalScrollBar(), SIGNAL( rangeChanged(int, int) ),
+			this, SLOT( v_rangeChanged(int, int) ) );
+	connect(e->verticalScrollBar(), SIGNAL( sliderMoved(int) ),
+			this, SLOT( v_sliderMoved(int) ) );
+	connect(e->verticalScrollBar(), SIGNAL( sliderPressed() ),
+			this, SLOT( v_sliderPressed() ) );
+	connect(e->verticalScrollBar(), SIGNAL( sliderReleased() ),
+			this, SLOT( v_sliderReleased() ) );
+	connect(e->verticalScrollBar(), SIGNAL( valueChanged(int) ),
+			this, SLOT( v_valueChanged(int) ) );
+	
+	connect(l	, SIGNAL( clicked(int) ),
+			this, SIGNAL( clicked(int) ) );
+	
 }
 
 QString DevEdit::name() const
 {
-	return _name;
+	return n;
 }
 
-void DevEdit::load()
+QString DevEdit::text() const
 {
-	if ( document()->isModified() )
-		save();
-	
-	QString f = QFileDialog::getOpenFileName(	this,
-												"Open File...",
-												QString(),
-												DevQt::supportedFiles );
-	
-    if ( !f.isEmpty() )
-        setText(f, fromFile);
+	return e->toPlainText();
 }
 
-void DevEdit::save()
+void DevEdit::setText(const QString& s, DevEdit::OpenType t)
 {
-	QString ext;
-	
-	if ( QFile::exists(_name) )
+	if ( t == string )
 	{
-		int state = QMessageBox::warning(this,
-									"Warning !", 
-									"File already exists! Overwrite?",
-									QMessageBox::Ok,
-									QMessageBox::No,
-									QMessageBox::Cancel );
-		if ( state == QMessageBox::Cancel )
-			return;
-		
-		if ( state == QMessageBox::No )
-			_name = QFileDialog::getSaveFileName( 	this,
-													"Save as...",
-													_name, 
-													DevQt::supportedFiles,
-													&ext);
-	} else if ( _name.startsWith("noname_") ) {
-		return saveAs();
+		e->setPlainText(s);
 	}
-	
-	if ( _name.isEmpty() )
-		return;
-	
-	checkExtension(_name, ext);
-	
-	QFile f(_name);
-	
-	if ( !f.open(QFile::WriteOnly) )
-		return (void)QMessageBox::warning(this, "Error!",
-										  "Unable to write in file : "+_name );
-	QTextStream cout(&f);
-	cout<<document()->toPlainText();
-	document()->setModified(false);
-}
-
-void DevEdit::saveAs()
-{
-	_name = QFileDialog::getSaveFileName( 	this, "Save as...",
-        									_name, DevQt::supportedFiles);
-	save();
-}
-
-void DevEdit::print()
-{
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setFullPage(true);
-
-    QPrintDialog *dlg = new QPrintDialog(&printer, this);
-    if (dlg->exec() == QDialog::Accepted)
+	else if ( t == file )
 	{
-        document()->print(&printer);
-    }
-    delete dlg;
-}
-
-void DevEdit::setText(const QString& s, OpenType t)
-{
-	if ( t == fromString )
-	{
-		setPlainText(s);
-	}
-	else if ( t == fromFile )
-	{
-		_name = s;
+		n = s;
 		
 		if ( !QFile::exists(s) )
 			return;
@@ -274,62 +161,131 @@ void DevEdit::setText(const QString& s, OpenType t)
 			return (void)QMessageBox::warning(	this,
 												"Error!", 
 												"Unable to read file : "
-												+ _name );
+												+ n );
 		
-		setPlainText( f.readAll() );
+		e->setPlainText( f.readAll() );
 	}
 }
 
-void DevEdit::checkExtension(QString& f, QString& ext)
+void DevEdit::setFont(const QFont& f)
 {
-	int count=1;
-	QString e, fn = f.section('/', -1);
-	if ( !fn.contains('.') )
+	e->document()->setDefaultFont(f);
+	
+	//temporary tab work around
+	e->setTabStopWidth(4*QFontMetrics(f).width(' '));
+}
+
+QTextDocument* DevEdit::document() const
+{
+	return e->document();
+}
+
+QTextCursor DevEdit::textCursor() const
+{
+	return e->textCursor();
+}
+
+bool DevEdit::isUndoAvailable() const
+{
+	return e->document()->isUndoAvailable();
+}
+
+bool DevEdit::isRedoAvailable() const
+{
+	return e->document()->isRedoAvailable();
+}
+
+void DevEdit::undo()
+{
+	emit needUndo();
+}
+
+void DevEdit::redo()
+{
+	emit needRedo();
+}
+
+void DevEdit::cut()
+{
+	e->cut();
+}
+
+void DevEdit::copy()
+{
+	e->copy();
+}
+
+void DevEdit::paste()
+{
+	e->paste();
+}
+
+void DevEdit::selectAll()
+{
+	e->selectAll();
+}
+
+void DevEdit::delSelect()
+{
+	e->textCursor().removeSelectedText();
+}
+
+void DevEdit::print()
+{
+	QPrinter printer(QPrinter::HighResolution);
+    printer.setFullPage(true);
+
+    QPrintDialog *dlg = new QPrintDialog(&printer, this);
+    if (dlg->exec() == QDialog::Accepted)
 	{
-		while (1)
-		{
-            e = ext.section(" *", count, count);
-            count++;
-			if ( e.isNull() )
-			    break;
-            if ( e.endsWith(')') )
-                e.resize(e.size()-1);
-			if ( fn.contains(e) )
-				return;
-		}
-		f += ext.section(" *", 1, 1);
-	}
+        e->document()->print(&printer);
+    }
+    delete dlg;
 }
 
-int DevEdit::line(const QTextBlock& b)
+void DevEdit::breakpoint()
 {
-	return DevQt::line(document(), b);
-}
-
-int DevEdit::count()
-{
-	return DevQt::lines(document());
-}
-
-QObject* DevEdit::contextObject() const
-{
-	return context;
-}
-
-void DevEdit::setContextObject(QObject *o)
-{
-	context = o;
-}
-
-void DevEdit::toggleBPt()
-{
-	QTextCursor c( textCursor() );
+	QTextCursor c( e->textCursor() );
 	toggleBreakPoint(c);
+}
+
+void DevEdit::find()
+{
+	//e->find();
+}
+
+void DevEdit::findNext()
+{
+	//e->findNext();
+}
+
+void DevEdit::replace()
+{
+	//e->replace();
+}
+
+void DevEdit::goTo()
+{
+	//e->gotoDlg->execute();
+}
+
+void DevEdit::indent()
+{
+	;
+}
+
+void DevEdit::scrollTo(const QString &txt, const QString &first)
+{
+	//e->scrollTo(txt, first);
+}
+
+void DevEdit::readSettings()
+{
 }
 
 void DevEdit::toggleBreakPoint(int line)
 {
-	QTextCursor cur = DevQt::gotoLine(document(), line);
+	QTextCursor cur = DevQt::gotoLine(e->document(), line);
 	if ( cur.isNull() )
 		return;
 	
@@ -351,15 +307,15 @@ void DevEdit::toggleBreakPoint(QTextCursor& cur)
 	}
 	dat->s ^= BlockData::BreakPoint;
 
-	document()->markContentsDirty(blk.position(), blk.text().count());
+	e->document()->markContentsDirty(blk.position(), blk.text().count());
 	
 	cur.movePosition(QTextCursor::StartOfBlock);
-	setTextCursor(cur);
+	e->setTextCursor(cur);
 }
 
 void DevEdit::toggleError(int line)
 {
-	QTextCursor cur = DevQt::gotoLine(document(), line);
+	QTextCursor cur = DevQt::gotoLine(e->document(), line);
 	if ( cur.isNull() )
 		return;
 	toggleError(cur);
@@ -381,175 +337,91 @@ void DevEdit::toggleError(QTextCursor& cur)
 	
 	dat->s |= BlockData::Error;
 	
-	document()->markContentsDirty(blk.position(), blk.text().count());
+	e->document()->markContentsDirty(blk.position(), blk.text().count());
 	
 	cur.movePosition(QTextCursor::StartOfBlock);
-	setTextCursor(cur);
+	e->setTextCursor(cur);
 }
 
-void DevEdit::clearError()
+void DevEdit::setModified(bool b)
 {
-	BlockData *dat;
-	
-	for (QTextBlock blk = document()->begin();
-		blk.isValid(); blk = blk.next())
-	{
-		if ( !(dat = BlockData::data(blk)) )
-			continue;
-		
-		if ( dat->s & BlockData::Error )
-		{
-			dat->s &= ~BlockData::Error;
-			document()->markContentsDirty(blk.position(), blk.text().count());
-		}
-	}
+	e->document()->setModified(b);
 }
 
-void DevEdit::customPaste()
+bool DevEdit::isModified() const
 {
-	QTextCursor cur, qcur = cur = textCursor();
-	QString		txt = QApplication::clipboard()->text();
-
-	cur.insertText(txt);
-	
-	qcur.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-	document()->markContentsDirty(qcur.selectionStart(), txt.count());
-	
-	setTextCursor(qcur);
+	return e->document()->isModified();
 }
 
-void DevEdit::delSelect()
+int DevEdit::lines()
 {
-	textCursor().removeSelectedText();
+	return DevQt::lines(e->document());
 }
 
-void DevEdit::properties()
+int DevEdit::count()
 {
+	return DevQt::lines(e->document());
 }
 
-void DevEdit::find()
+//  protected slots for signal wrapping
+
+void DevEdit::h_actionTriggered(int action)
 {
-	//findDlg->execute();
-	findDlg->show();
+	emit actionTriggered(action, Qt::Horizontal);
 }
 
-void DevEdit::findNext()
+void DevEdit::h_rangeChanged(int min, int max)
 {
-	findDlg->process();
+	emit rangeChanged(min, max, Qt::Horizontal);
 }
 
-void DevEdit::replace()
+void DevEdit::h_sliderMoved(int value)
 {
-	replaceDlg->execute();
+	emit sliderMoved(value, Qt::Horizontal);
 }
 
-void DevEdit::indent()
+void DevEdit::h_sliderPressed()
 {
+	emit sliderPressed(Qt::Horizontal);
 }
 
-void DevEdit::scrollTo(const QString &txt, const QString &first)
+void DevEdit::h_sliderReleased()
 {
+	emit sliderReleased(Qt::Horizontal);
 }
 
-void DevEdit::highlight()
+void DevEdit::h_valueChanged(int value)
 {
-	viewport()->update();
+	emit valueChanged(value, Qt::Horizontal);
 }
 
-/*
-
-custom events handlers
-
-*/
-
-void DevEdit::contextMenuEvent(QContextMenuEvent *e)
+void DevEdit::v_actionTriggered(int action)
 {
-	e->accept();
-	
-	highlight();
-	
-	menu->exec(e->globalPos());
+	emit actionTriggered(action, Qt::Vertical);
 }
 
-void DevEdit::mouseMoveEvent(QMouseEvent *e)
+void DevEdit::v_rangeChanged(int min, int max)
 {
-	const QFontMetrics fm(document()->defaultFont());
-	QString col("  Column : "), row("  Row : "), line;
-	const QPoint p = viewport()->mapFromGlobal(e->globalPos());
-	
-	QTextCursor cur = cursorForPosition(p);
-	
-	int x, y = this->line(cur.block());
-	
-	if ( y != -1 )
-	{
-		line = cur.block().text();
-		x = line.length()+1;
-		
-		do
-		{
-			if ( (fm.width(line, --x) - fm.charWidth(line, x)) < p.x() )
-				break;
-		} while ( x > 0 );
-		
-		col += QString::number(x);
-		row += QString::number(y);
-	}
-	else
-	{
-		col += QString::number(-1);
-		row += QString::number(-1);
-	}
-	
-	statusChanged( col + row );
-	
-	if ( e->buttons() != Qt::NoButton )
-	{
-		highlight();
-	}
-	
-	QTextEdit::mouseMoveEvent(e);
+	emit rangeChanged(min, max, Qt::Vertical);
 }
 
-
-void DevEdit::mousePressEvent(QMouseEvent *e)
+void DevEdit::v_sliderMoved(int value)
 {
-	highlight();
-	
-	QTextEdit::mousePressEvent(e);
+	emit sliderMoved(value, Qt::Vertical);
 }
 
-void DevEdit::mouseReleaseEvent(QMouseEvent *e)
+void DevEdit::v_sliderPressed()
 {
-	highlight();
-	
-	QTextEdit::mouseReleaseEvent(e);
+	emit sliderPressed(Qt::Vertical);
 }
 
-void DevEdit::mouseDoubleClickEvent(QMouseEvent *e)
+void DevEdit::v_sliderReleased()
 {
-	highlight();
-	
-	QTextEdit::mouseDoubleClickEvent(e);
+	emit sliderReleased(Qt::Vertical);
 }
 
-void DevEdit::keyPressEvent(QKeyEvent *e)
+void DevEdit::v_valueChanged(int value)
 {
-	QTextEdit::keyPressEvent(e);
-	
-	highlight();
+	emit valueChanged(value, Qt::Vertical);
 }
 
-void DevEdit::paintEvent(QPaintEvent *event)
-{
-	QPainter painter(viewport());
-	QRect r(0,
-			cursorRect().y(),
-			viewport()->width(),
-			QFontMetrics(document()->defaultFont()).lineSpacing()
-			);
-	painter.fillRect(r, QColor(0x00, 0xff, 0xff, 0x30));
-	painter.end();
-	
-	QTextEdit::paintEvent(event);
-}

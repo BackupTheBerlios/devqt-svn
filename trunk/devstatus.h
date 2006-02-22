@@ -33,17 +33,14 @@ class DevStatus : public QStatusBar
 	
 	public:
 		DevStatus(QWidget *p = 0);
-		DevStatus(	const QString& s,
-					Qt::Alignment a = Qt::AlignRight,
-					QWidget *p = 0);
 		
 		virtual ~DevStatus();
 		
 	public slots:
-		void message(const QString& s, Qt::Alignment a = Qt::AlignRight);
+		void message(const QString& s, int p = DevQt::General);
 		
 	private:
-		QLabel *l;
+		QVector<QLabel*> v;
 		
 };
 

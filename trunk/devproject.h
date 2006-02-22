@@ -27,7 +27,7 @@
 
 #include "dev.h"
 
-#include "deveditor.h"
+class DevEdit;
 
 class AbstractFile : public QObject
 {
@@ -75,11 +75,11 @@ class DevFile : public AbstractFile
 	friend class DevWorkSpace;
 	
 	public:
-		DevFile(const QString& name, DevEditor *edit);
+		DevFile(const QString& name, DevEdit *edit);
 		virtual ~DevFile();
 		
 	protected:
-		DevEditor *e;
+		DevEdit *e;
 };
 
 class DevFolder : public AbstractFile

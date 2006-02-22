@@ -24,8 +24,8 @@
 
 #include "devdialogs.h"
 
-DevGotoDialog::DevGotoDialog(QTextEdit *e)
- : QDialog(e), edit(e)
+DevGotoDialog::DevGotoDialog(QWidget *p)
+ : QDialog(p)
 {
 	setWindowTitle("Goto line");
 	
@@ -65,21 +65,21 @@ DevGotoDialog::~DevGotoDialog()
 {
 }
 
-void DevGotoDialog::execute()
+void DevGotoDialog::execute(QTextEdit *e)
 {
+	if ( !e )
+		return;
+	edit = e;
+	
 	line->setMaximum( DevQt::lines(edit->document()) );
-	QRect r = edit->geometry();
-	
-	int x = (r.width()-width())>>1;
-	int y = (r.height()-height())>>1;
-	
-	move(x, y);		//dialog is centered inside text edit
 	
 	exec();
 }
 
 void DevGotoDialog::process()
 {
+	if ( !edit )
+		return;
 	QTextBlock blk;
 	int i=1, n = line->value();
 	
@@ -95,9 +95,8 @@ void DevGotoDialog::process()
 	}
 }
 
-DevFindDialog::DevFindDialog(QTextEdit *e) :
-	QDialog(e, Qt::Dialog | Qt::WindowStaysOnTopHint),
-	edit(e)
+DevFindDialog::DevFindDialog(QWidget *p)
+ : QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint)
 {
 	setWindowTitle("Find text");
 	
@@ -184,23 +183,23 @@ DevFindDialog::~DevFindDialog()
 	f.clear();
 }
 
-void DevFindDialog::execute()
+void DevFindDialog::execute(QTextEdit *e)
 {
-	QTextCursor cur = edit->textCursor();
+	if ( !e )
+		return;
+	edit = e;
+	
+	QTextCursor cur = e->textCursor();
 	text->setText( cur.selectedText() );
-	
-	QRect r = edit->geometry();
-	
-	int x = (r.width()-width())>>1;
-	int y = (r.height()-height())>>1;
-	
-	move(x, y);		//dialog is centered inside text edit
 	
 	exec();
 }
 
 void DevFindDialog::setVars()
 {
+	if ( !edit )
+		return;
+	
 	/*
 	setup internal vars used for find and find next
 	*/
@@ -245,6 +244,9 @@ void DevFindDialog::setVars()
 
 void DevFindDialog::process()
 {
+	if ( !edit )
+		return;
+	
 	int i;
 	QTextCursor cur(edit->document());
 	
@@ -288,8 +290,8 @@ void DevFindDialog::process()
 		pos	= i + f.count();
 }
 
-DevReplaceDialog::DevReplaceDialog(QTextEdit *e)
- : QDialog(e), edit(e)
+DevReplaceDialog::DevReplaceDialog(QWidget *p)
+ : QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint)
 {
 	setWindowTitle("Replace text");
 	
@@ -394,23 +396,23 @@ DevReplaceDialog::~DevReplaceDialog()
 	r.clear();
 }
 
-void DevReplaceDialog::execute()
+void DevReplaceDialog::execute(QTextEdit *e)
 {
-	QTextCursor cur = edit->textCursor();
+	if ( !e )
+		return;
+	
+	edit = e;
+	QTextCursor cur = e->textCursor();
 	find->setText( cur.selectedText() );
-	
-	QRect r = edit->geometry();
-	
-	int x = (r.width()-width())>>1;
-	int y = (r.height()-height())>>1;
-	
-	move(x, y);		//dialog is centered inside text edit
 	
 	exec();
 }
 
 void DevReplaceDialog::setVars()
 {
+	if ( !edit )
+		return;
+	
 	/*
 	setup internal vars used for find and find next
 	*/
@@ -455,6 +457,9 @@ void DevReplaceDialog::setVars()
 
 void DevReplaceDialog::process()
 {
+	if ( !edit )
+		return;
+	
 	int i;
 	QTextCursor cur(edit->document());
 	
@@ -527,6 +532,27 @@ void DevReplaceDialog::process()
 
 void DevReplaceDialog::all()
 {
+	if ( !edit )
+		return;
+	
 	while ( !abort )
 		process();
+}
+
+DevPropertiesDialog::DevPropertiesDialog(QWidget *p)
+ : QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint)
+{
+	;
+}
+
+DevPropertiesDialog::~DevPropertiesDialog()
+{
+	;
+}
+
+void DevPropertiesDialog::execute(const QString& n)
+{
+	name = n;
+	
+	exec();
 }

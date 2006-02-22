@@ -24,21 +24,34 @@
 
 #include "devapp.h"
 
-DevApp::DevApp(int argc, char **argv) :
-	QApplication(argc, argv),
-	gui(DEV_GUI)
+#include "devgui.h"
+#include "devsplash.h"
+
+DevApp* DevApp::_app = 0;
+
+DevApp* DevApp::Instance()
+{
+	return _app;
+}
+
+DevApp* DevApp::Init(int argc, char **argv)
+{
+	if (_app != 0)
+		delete _app;
+	_app = new DevApp(argc, argv);
+	return _app;
+}
+
+DevApp::DevApp(int argc, char **argv)
+ : QApplication(argc, argv)
 {
 	setStyle( new QPlastiqueStyle );
 	setPalette( style()->standardPalette() );
-	//scr = DEV_SCR;
-	//dws = DEV_DWS;
-	//gui = DEV_GUI;
+	
+	gui = DEV_GUI;
 }
 
 DevApp::~DevApp()
 {
-	//delete dws;
-	//delete scr;
-	delete gui;
 }
 

@@ -24,6 +24,8 @@
 
 #include "devproject.h"
 
+#include "devedit.h"
+
 AbstractFile::AbstractFile(const QString& name)
  : n(name), f(abstract)
 {
@@ -35,7 +37,7 @@ AbstractFile::AbstractFile(const QString& name)
 	m->addAction(a);
 	m->addSeparator();
 	
-	aDel = new QAction( QIcon( ":/remove.png" ), "&Delete", this);
+	aDel = new QAction( QIcon( ":/remove.png" ), "Re&move", this);
 	connect(aDel, SIGNAL( triggered() ),
 			this, SLOT  ( del() ) );
 	
@@ -75,7 +77,7 @@ void AbstractFile::ren()
 	emit rename(this);
 }
 
-DevFile::DevFile(const QString& name, DevEditor *edit)
+DevFile::DevFile(const QString& name, DevEdit *edit)
  : AbstractFile(name), e(edit)
 {
 	f = file;
@@ -151,13 +153,60 @@ void DevProject::setup(const QString& data)
 	
 	while ( i<lines.count() )
 	{
-		
-		if ( lines[i].startsWith("#") || lines[i].isEmpty() )
+		QString line = lines[i];
+		if ( line.startsWith("#") || line.isEmpty() )
 		{
 			i++;
 			continue;
 		}
-		words = lines[i].split(QRegExp("\\s"), QString::SkipEmptyParts);
+		
+		words.clear();
+		
+		QChar c;
+		bool isVar;
+		const QChar *l = line.data();
+		int n = -1, count = line.count();
+		
+		while ( n < count )
+		{
+			do
+			{
+				c = l[++n];
+			} while ( c.isSpace() && (n < count) );
+			
+			isVar = false;
+			int j = n;
+						
+			while ((!c.isSpace() && (n < count ) &&
+					(c != '~') && (c != '-') && (c != '{') &&
+					(c != '}') && (c != '[') && (c != ']') &&
+					(c != ':') && (c != '!') && (c != '=') &&
+					(c != '*') && (c != '+') ) ||
+					( (c == '(') && (c == ')') && isVar )  )
+			{
+				if ( isVar && ( (c == ')') || (c == '}') || (c == ']') ) )
+					isVar = false;
+				if ( c == '$' )
+					isVar = true;
+				c = l[++n];
+			}
+			
+			if ( n != j )
+				words<<QString(l+j, n-j);
+			
+			if ( (c == '*') || (c == '+') ||
+				 (c == '-') || (c == '~') ) {
+				if ( l[n] == '=' )
+					words<<QString(c)+=l[++n];
+			} else if ( (c == '{') || (c == '}') ||
+						(c == '(') || (c == ')') ||
+						(c == '[') || (c == ']') ||
+						(c == ':') || (c == '!') ||
+						(c == '=') ) {
+				words<<c;
+			}
+		}
+		
 		j = 0;
 		
 		if ( !multi )
@@ -268,9 +317,10 @@ void DevProject::insert(QStringList& l, const QString& s, bool u, bool f)
 	{
 		QString prefix(s.mid(0, i)), suffix(s.mid(i+2));
 		
-		if ( suffix.startsWith('(') )
+		if ( suffix.startsWith('(') || suffix.startsWith('{') )
 			suffix.remove(0, 1);
-		if ( suffix.endsWith(')') )
+			
+		if ( suffix.endsWith(')') || suffix.endsWith('}') )
 			suffix.chop(1);
 		
 		iterator iter = find(suffix);

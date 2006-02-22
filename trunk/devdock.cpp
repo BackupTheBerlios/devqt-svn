@@ -8,7 +8,7 @@
 **
 ****************************************************************************/
 
-#include "devapp.h"
+#include "devdock.h"
 
 DevDock::DevDock(	const QString& name, 
 					Qt::DockWidgetArea area, 
@@ -16,7 +16,7 @@ DevDock::DevDock(	const QString& name,
 					Qt::WFlags f)
     : QDockWidget(p, f)
 {
-	setFeatures(QDockWidget::AllDockWidgetFeatures);
+	setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 	
 	//setObjectName(name);
     setWindowTitle(name);
@@ -72,7 +72,8 @@ DevDock::DevDock(	const QString& name,
    	bottomAction->setCheckable(true);
    	connect(bottomAction, SIGNAL(triggered(bool)), SLOT(placeBottom(bool)));
     
-    if ( area & 3 ) {
+    if ( area & 3 )
+	{
 		allowedAreasActions->addAction(allowLeftAction);
 		allowedAreasActions->addAction(allowRightAction);
     	
@@ -80,7 +81,8 @@ DevDock::DevDock(	const QString& name,
     	areaActions->addAction(rightAction);
 	}
 	
-	if ( area & 12 ) {
+	if ( area & 12 )
+	{
 		allowedAreasActions->addAction(allowTopAction);
 		allowedAreasActions->addAction(allowBottomAction);
     	

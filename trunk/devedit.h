@@ -27,112 +27,143 @@
 
 #include "dev.h"
 
-#include "devdialogs.h"
-#include "devhighlighter.h"
+class CoreEdit;
+class DevStatus;
+class DevLineNumber;
+class DevHighlighter;
 
-class DevEdit : public QTextEdit
+class DevEdit : public QWidget
 {
 	Q_OBJECT
 	
-	friend class DevEditor;
+	friend class DevGUI;
 	
 	public:
 		enum OpenType
 		{
-			fromString,
-			fromFile
+			string,
+			file
 		};
 		
-		DevEdit(QWidget *parent = 0);
-		virtual ~DevEdit();
+		DevEdit(QWidget *p = 0);
+		DevEdit(const QString& s,
+				OpenType t = string,
+				QWidget *p = 0 );
 		
 		QString name() const;
 		
-		int count();						//return number of lines
-		int line(const QTextBlock& b);		//line number of block
+		QString text() const;
 		
+		QTextCursor textCursor() const;
+		QTextDocument* document() const;
+		
+		bool isUndoAvailable() const;
+		bool isRedoAvailable() const;
+
 		void indent();
+		void readSettings();
+
+		//void clearError();
+		//void clearStackFrame();
 		
-		QObject* contextObject() const;
+		bool isModified() const;
+		
+		int count();						//return number of lines
+		int lines();						//do the same!!!
 		
 	public slots:
-		virtual void load();
-		virtual void save();
-		virtual void saveAs();
-		virtual void print();
+		
+		void setFont(const QFont& f);
+		void setText(const QString& s, OpenType t = string);
+		
+		void setModified(bool b);
+		
+		void undo();
+		void redo();
+		
+		void cut();
+		void copy();
+		void paste();
+		void selectAll();
+		void delSelect();
 		
 		void find();
 		void findNext();
 		void replace();
+		void goTo();
 		
-		void setText(const QString& s, OpenType t = fromString);
+		void print();
 		
-		void scrollTo(const QString &txt, const QString &first);
-		void setContextObject(QObject *o);
+		void breakpoint();
 		
+		/*!
+		
+		Low-level slots
+		
+		*/
 		void toggleError(int line);
 		void toggleError(QTextCursor& cur);
 		void toggleBreakPoint(int line);
 		void toggleBreakPoint(QTextCursor& cur);
 		
-		void clearError();
+		void scrollTo(const QString &txt, const QString &first);
 		
 	signals:
-		void propertiesRequested();
-		void statusChanged(const QString& s);
-
-	protected:
-		virtual void paintEvent(QPaintEvent* e);
-		virtual void keyPressEvent(QKeyEvent *e);
-		virtual void mouseMoveEvent(QMouseEvent *e);
-		virtual void mousePressEvent(QMouseEvent *e);
-		virtual void mouseReleaseEvent(QMouseEvent *e);
-		virtual void mouseDoubleClickEvent(QMouseEvent *e);
-		virtual void contextMenuEvent(QContextMenuEvent *e);
+		//status bar signals
+		void message(const QString& msg, int p);
+		
+		//internal purpose signals
+		void needUndo();
+		void needRedo();
+		
+		//QTextEdit signals provided for convinience :
+		void copyAvailable(bool yes); 
+		void currentCharFormatChanged(const QTextCharFormat& f); 
+		void cursorPositionChanged() ;
+		void redoAvailable(bool available);
+		void selectionChanged();
+		void textChanged();
+		void undoAvailable(bool available);
+		
+		//QTextEdit's scrollbars' signals wrapper :
+		void actionTriggered(int action, Qt::Orientation o);
+		void rangeChanged(int min, int max, Qt::Orientation o);
+		void sliderMoved(int value, Qt::Orientation o);
+		void sliderPressed(Qt::Orientation o);
+		void sliderReleased(Qt::Orientation o);
+		void valueChanged(int value, Qt::Orientation o);
+		
+		//DevLineNumber signals provided for convinience :
+		void clicked(int line);
 		
 	protected slots:
-		void customPaste();
-		void delSelect();
-		void toggleBPt();
-		void properties();
 		
-		void highlight();
+		//used to wrap scrollbars' signals
+		void h_actionTriggered(int action);
+		void h_rangeChanged(int min, int max);
+		void h_sliderMoved(int value);
+		void h_sliderPressed();
+		void h_sliderReleased();
+		void h_valueChanged(int value);
 		
-	private slots:
+		void v_actionTriggered(int action);
+		void v_rangeChanged(int min, int max);
+		void v_sliderMoved(int value);
+		void v_sliderPressed();
+		void v_sliderReleased();
+		void v_valueChanged(int value);
 		
-		void checkExtension(QString& f, QString& ext);
 		
 	private:
-		QMenu *menu;
+		void setup();
 		
-		QAction *aCut,
-			*aCopy,
-			*aPaste,
-			*aSelectAll,
-			*aDelete,
-			*aUndo,
-			*aRedo,
-			*aFind,
-			*aFindNext,
-			*aReplace,
-			*aGoto,
-			*aBreakPoint,
-			*aLoad,
-			*aSave,
-			*aSaveAs,
-			*aPrint,
-			*aProp;
-
-		DevHighlighter	*hl;
-		QPointer<QObject> context;
+		QString n;
 		
-		QString _name;
+		QTextEdit *e;
+		DevLineNumber *l;
 		
-		QTextCursor prev;
-		
-		DevGotoDialog *gotoDlg;
-		DevFindDialog *findDlg;
-		DevReplaceDialog *replaceDlg;
+		DevHighlighter *hl;
 };
 
 #endif
+

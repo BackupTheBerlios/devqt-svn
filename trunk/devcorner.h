@@ -22,27 +22,31 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_MDI_H_
-#define _DEV_MDI_H_
+#ifndef _DEV_CORNER_H_
+#define _DEV_CORNER_H_
 
 #include "dev.h"
 
-class DevMDI : public QTabWidget
+class DevCorner : public QWidget
 {
 	Q_OBJECT
 	
 	public:
-		DevMDI(QWidget *p = 0);
-		virtual ~DevMDI();
+		DevCorner(QWidget *p = 0);
 		
-	protected:
-		virtual void contextMenuEvent(QContextMenuEvent *e);
+	signals:
+		void create();
+		void close();
+		
+	public slots:
+		void removed(QWidget *w);
+		void added(QWidget *w, const QString& n);
 		
 	private:
-		QMenu *menu;
+		QToolButton *add, *rem;
 		
-		QAction *aClose,
-			*aCloseAll;
-};
+		QHash<QWidget*, QString> widgets;
+		
+};	
 
 #endif

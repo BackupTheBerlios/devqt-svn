@@ -27,10 +27,10 @@
 
 #include "dev.h"
 
-#include "deveditor.h"
-#include "devproject.h"
-
-class DevGUI;
+class AbstractFile;
+class DevFile;
+class DevFolder;
+class DevProject;
 
 typedef QHash<QTreeWidgetItem*, AbstractFile*> DevMap;
 
@@ -76,7 +76,5 @@ class DevWorkSpace : public QTreeWidget, protected DevMap
 		QTreeWidgetItem *root;
 		QList<DevProject*> projects;
 };
-
-#include "devgui.h"
 
 #endif

@@ -44,6 +44,17 @@ namespace DevQt
 		form
 	};
 	
+	enum StatusPurpose
+	{
+		General,
+		MouseCursor,
+		TextCursor,
+		Modification,
+		TypingMode,
+		Lines,
+		None
+	};
+	
 	QChar charFromCursor(QTextCursor cursor, QTextCursor::MoveOperation op);
 
 	QTextCursor gotoLine(const QTextDocument *d, int n);
@@ -58,7 +69,31 @@ namespace DevQt
 sources( *.cpp *.cxx *.c);;C++ headers ( *.h *.hpp);;All Files (*)";
 };
 
-#define DEV_APP DevApp::instance()
+struct BlockData : public QTextBlockUserData
+{
+	enum InternalState
+	{
+		None		= 0x00,
+		Error 		= 0x01,
+		Current 	= 0x02,
+		BreakPoint 	= 0x04
+	};
+	
+	typedef QFlags<InternalState> State;
+	
+	static BlockData *data(const QTextBlock& block)
+	{ return static_cast<BlockData *>(block.userData()); }
+	void setToBlock(QTextBlock& block)
+	{ block.setUserData(this); }
+	
+	inline BlockData() : s(None) {}
+	
+	State s;
+};
+
+#define DevQt(argc, argv)	DevApp::Init(argc, argv)
+
+#define DEV_APP DevApp::Instance()
 #define DEV_GUI	DevGUI::Instance()
 #define DEV_SCR DevSplash::Instance()
 

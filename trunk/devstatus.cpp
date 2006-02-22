@@ -27,31 +27,43 @@
 DevStatus::DevStatus(QWidget *p)
  : QStatusBar(p)
 {
-	l = new QLabel;
-	l->setIndent(2);
-	l->setMargin(2);
-	addPermanentWidget(l);
-}
-
-DevStatus::DevStatus(const QString& s, Qt::Alignment a, QWidget *p)
- : QStatusBar(p)
-{
-	l = new QLabel(s);
-	l->setIndent(2);
-	l->setMargin(2);
-	l->setAlignment(a);
-	addPermanentWidget(l);
+	QLabel *l;
+	
+	for ( int p = DevQt::General; p < DevQt::None; p++ )
+	{
+		l = new QLabel;
+		l->setIndent(2);
+		l->setMargin(2);
+		l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+		l->setFrameStyle(QFrame::Sunken | QFrame::StyledPanel);
+		l->setFixedWidth(fontMetrics().width("XXXXXXXXXXXXXXXXXXXXXXX"));
+		addWidget(l);
+		v.prepend(l);
+	}
+	
+	connect(this, SIGNAL( messageChanged(const QString&) ),
+			this, SLOT  ( clearMessage() ) );
 }
 
 DevStatus::~DevStatus()
 {
-	removeWidget(l);
-	delete l;
+	foreach(QLabel *l, v)
+	{
+		removeWidget(l);
+		delete l;
+	}
+	v.clear();
 }
 
-void DevStatus::message(const QString& s, Qt::Alignment a)
+void DevStatus::message(const QString& s, int p)
 {
-	l->setText(s);
-	l->setAlignment(a);
+	if ( p >= DevQt::None )
+		return;
+	
+	QLabel *l;
+	
+	if ( (l = v[p]) )
+		l->setText(s);
+	
 }
 	

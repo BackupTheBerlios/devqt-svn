@@ -85,13 +85,10 @@ class CppHighlighter : public DevHighlighter
 	Q_OBJECT
 	
 	public:
-		CppHighlighter(QTextEdit *parent, bool cl = false);
-		CppHighlighter(QTextDocument *parent, bool cl = false);
+		CppHighlighter(QTextEdit *parent);
+		CppHighlighter(QTextDocument *parent);
 		
 		~CppHighlighter();
-		
-	public slots:
-		void colorLines(bool yes);
 		
 	protected:
 		enum Options
@@ -99,13 +96,6 @@ class CppHighlighter : public DevHighlighter
 			keywords = 61,
 		};
 		
-		enum LineState
-		{
-			None,
-			Error,
-			Current,
-			BreakPoint
-		};
 		
 		virtual void highlightBlock(QTextBlock& b);
 		virtual BlockState process(const QString& text);
@@ -113,32 +103,8 @@ class CppHighlighter : public DevHighlighter
 		void setupData();
 		
 	private:
-		bool colorbgs;
     	static const char *kwds[];
     	QVector<QTextCharFormat> fmts;
-		QVector<QBrush> bgds;
-};
-
-struct BlockData : public QTextBlockUserData
-{
-	enum InternalState
-	{
-		None		= 0x00,
-		Error 		= 0x01,
-		Current 	= 0x02,
-		BreakPoint 	= 0x04
-	};
-	
-	typedef QFlags<InternalState> State;
-	
-	static BlockData *data(const QTextBlock& block)
-	{ return static_cast<BlockData *>(block.userData()); }
-	void setToBlock(QTextBlock& block)
-	{ block.setUserData(this); }
-	
-	inline BlockData() : s(None) {}
-	
-	State s;
 };
 
 #endif

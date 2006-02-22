@@ -32,11 +32,11 @@ class DevGotoDialog : public QDialog
 	Q_OBJECT
 	
 	public:
-		DevGotoDialog(QTextEdit *e);
+		DevGotoDialog(QWidget *p);
 		virtual ~DevGotoDialog();
 		
 	public slots:
-		void execute();
+		void execute(QTextEdit *e);
 		
 	protected slots:
 		void process();
@@ -56,11 +56,11 @@ class DevFindDialog : public QDialog
 	Q_OBJECT
 	
 	public:
-		DevFindDialog(QTextEdit *e);
+		DevFindDialog(QWidget *p = 0);
 		virtual ~DevFindDialog();
 		
 	public slots:
-		void execute();
+		void execute(QTextEdit *e);
 		void process();
 		
 	signals:
@@ -70,12 +70,12 @@ class DevFindDialog : public QDialog
 		void setVars();
 		
 	private:
+		QPointer<QTextEdit> edit;
+		
 		bool bw, ww;
 		QString s, f;
 		int absPos, pos;
 		Qt::CaseSensitivity cs;
-		
-		QPointer<QTextEdit> edit;
 		
 		QLineEdit *text;
 		QCheckBox *sensitive, *bound;
@@ -88,11 +88,11 @@ class DevReplaceDialog : public QDialog
 	Q_OBJECT
 	
 	public:
-		DevReplaceDialog(QTextEdit *e);
+		DevReplaceDialog(QWidget *p = 0);
 		virtual ~DevReplaceDialog();
 		
 	public slots:
-		void execute();
+		void execute(QTextEdit *e);
 		
 	protected slots:
 		void process();
@@ -105,12 +105,12 @@ class DevReplaceDialog : public QDialog
 		void setVars();
 		
 	private:
+		QPointer<QTextEdit> edit;
+		
 		QString s, f, r;
 		Qt::CaseSensitivity cs;
 		bool bw, ww, pr, abort;
 		int absPos, pos, displace, count;
-		
-		QPointer<QTextEdit> edit;
 		
 		QLineEdit *find, *replace;
 		QPushButton *b_accept, *b_all, *b_cancel;
@@ -118,50 +118,21 @@ class DevReplaceDialog : public QDialog
 		QRadioButton *global, *selection, *forward, *backward, *cursor, *whole;
 };
 
-#ifdef _DEV_DEBUG_
-class DevDebug : public QDialog
+class DevPropertiesDialog : public QDialog
 {
 	Q_OBJECT
 	
 	public:
-		DevDebug(const QString& s1, const QString& s2)
-		{
-			QHBoxLayout *h = new QHBoxLayout;
-			QVBoxLayout *v = new QVBoxLayout;
-			
-			lbl1 = new QLabel("first text log");
-			log1 = new QTextEdit;
-			log1->setPlainText(s1);
-			v->addWidget(lbl1);
-			v->addWidget(log1);
-			
-			lbl2 = new QLabel("second text log");
-			log2 = new QTextEdit;
-			log2->setPlainText(s2);
-			v->addWidget(lbl2);
-			v->addWidget(log2);
-			
-			accept = new QPushButton("&Ok");
-			connect(accept	, SIGNAL( clicked() ),
-					this	, SLOT  ( accept()  ) );
-			cancel = new QPushButton("&Cancel");
-			connect(cancel	, SIGNAL( clicked() ),
-					this	, SLOT  ( reject()  ) );
-			h->addWidget(accept);
-			h->addWidget(cancel);
-			v->addLayout(h);
-			
-			setLayout(v);
-		}
+		DevPropertiesDialog(QWidget *p = 0);
+		virtual ~DevPropertiesDialog();
 		
-	protected:
-		;
+	public slots:
+		void execute(const QString& n);
 		
 	private:
-		QLabel *lbl1, *lbl2;
-		QTextEdit *log1, *log2;
-		QPushButton *accept, *cancel;
+		QString name;
+		
 };
-#endif
+
 
 #endif

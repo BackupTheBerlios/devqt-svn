@@ -34,7 +34,7 @@ React to left clicks and draws breakpoints img and so on...
 
 */
 
-DevLineNumber::DevLineNumber(DevEdit *_editor, QWidget *parent)
+DevLineNumber::DevLineNumber(QTextEdit *_editor, QWidget *parent)
     : QWidget(parent), editor(_editor)
 {
     if ( !editor )
@@ -116,12 +116,10 @@ void DevLineNumber::mousePressEvent(QMouseEvent *e)
 	
 	clicked(c);
 	
-	int i = editor->line(c.block());
+	int i = DevQt::line(editor->document(), c.block());
 	
-	if ( i==-1 )
-		return;
-	
-	clicked(i);
+	if ( i!=-1 )
+		clicked(i);
 	
 	update(); //update widget
 }

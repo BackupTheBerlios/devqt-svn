@@ -27,10 +27,15 @@
 
 #include "dev.h"
 
-#include "devmdi.h"
-#include "devdock.h"
-#include "deveditor.h"
-#include "devworkspace.h"
+class DevDock;
+class DevEdit;
+class CoreEdit;
+class DevCorner;
+class DevStatus;
+class DevGotoDialog;
+class DevFindDialog;
+class DevReplaceDialog;
+class DevPropertiesDialog;
 
 class DevGUI : public QMainWindow
 {
@@ -46,62 +51,115 @@ class DevGUI : public QMainWindow
 		DevGUI();
 		virtual ~DevGUI();
 		
-		void setupFileActions();
-		void setupEditActions();
-		void setupTextActions();
-		void setupCompiler();
-		void setupExplorer();
-		
 		bool load(const QString &f);
 		bool loadProject(const QString &f);
+		
+		virtual void closeEvent(QCloseEvent *e);
 		
 	protected slots:
 		void fileNew();
 		void fileOpen();
-		void fileSave();
+		void fileSave(const QString& n = QString(), const QString& ext = QString());
 		void fileSaveAs();
 		void fileSaveAll();
-		void filePrint();
-		void fileClose();
 		
-		void textFamily(const QString &f);
-		void textSize(const QString &p);
+		void undo();
+		void redo();
+		
+		void cut();
+		void copy();
+		void paste();
+		void selectAll();
+		void delSelect();
+		
+		void print();
+		
+		void find();
+		void findNext();
+		void replace();
+		void goTo();
+		
+		void breakpoint();
+		
+		void close();
+		void closeAll();
+		
+		void properties();
+		
+		//void textFamily(const QString &f);
+		//void textSize(const QString &p);
 		
 		void editorChanged();
 		void clipboardDataChanged();
-		void fontChanged(const QFont &f);
+		//void fontChanged(const QFont &f);
+		
+		void editorModified(bool mod);
+		void editorMenu(const QPoint& pos);
 		
 	private:
-		DevEditor* createEditor(const QString& title = QString(), bool show = true);
+		void setupFileActions();
+		void setupEditActions();
+		//void setupTextActions();
+		void setupCompiler();
+		void setupExplorer();
+		void setupMenu();
+		
+		void maybeSave();
+		
+		void checkExtension(QString& f, const QString& ext);
+		
+		DevEdit* createEditor(const QString& title = QString(), bool show = true);
+		
+		QPointer<DevEdit> e;
+		
+		QMenu *menu;
+		DevStatus *s;
+		DevCorner *c;
+		
+		DevGotoDialog *gDlg;
+		DevFindDialog *fDlg;
+		DevReplaceDialog *rDlg;
+		DevPropertiesDialog *pDlg;
 		
 		DevDock *Explorer, 
 			*Compiler;
-			
-		DevMDI *Editor;
 		
-		QTabWidget *tabExplorer,
+		QTabWidget *Editor,
+			*tabExplorer,
 			*tabCompiler;
 		
-		QComboBox *Font,
-			*Size;
+		//QComboBox *Font,
+		//	*Size;
 		
 		DevWorkSpace *treeFiles;
 		QTreeWidget	*treeClasses;
 		
-		QAction
-			*actionSave,
-			*actionSaveAll,
-			*actionUndo,
-			*actionRedo,
-        	*actionCut,
-        	*actionCopy,
-			*actionPaste,
-			*actionCompile,
-			*actionRebuild,
-			*actionRun,
-			*actionClose,
-			*actionCmpRun,
-			*actionDebug;
+		QAction *aNew,
+			*aOpen,
+			*aSave,
+			*aSaveAs,
+			*aSaveAll,
+			*aFind,
+			*aFindNext,
+			*aReplace,
+			*aGoto,
+			*aBreakPoint,
+			*aProp,
+			*aDelete,
+			*aSelectAll,
+			*aPrint,
+			*aClose,
+			*aExit,
+			*aUndo,
+			*aRedo,
+        	*aCut,
+        	*aCopy,
+			*aPaste,
+			*aCompile,
+			*aRebuild,
+			*aRun,
+			*aCmpRun,
+			*aDebug;
 			
 		long noname_count;
 			
