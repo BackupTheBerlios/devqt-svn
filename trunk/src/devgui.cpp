@@ -45,6 +45,9 @@ DevGUI* DevGUI::Instance()
 DevGUI::DevGUI()
  : QMainWindow(0), noname_count(0)
 {
+	Editor = new QTabWidget(this);
+	Editor->setWindowState(Qt::WindowMaximized);
+	Editor->setContextMenuPolicy(Qt::CustomContextMenu);
 	
     setupMenu();
     
@@ -54,10 +57,6 @@ DevGUI::DevGUI()
     setupCompiler();
     setupExplorer();
     
-	
-	Editor = new QTabWidget(this);
-	Editor->setWindowState(Qt::WindowMaximized);
-	Editor->setContextMenuPolicy(Qt::CustomContextMenu);
 	
 	connect(Editor	, SIGNAL( currentChanged(int) ),
 			this	, SLOT  ( editorChanged() ) );

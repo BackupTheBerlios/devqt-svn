@@ -36,6 +36,7 @@ class DevGotoDialog;
 class DevFindDialog;
 class DevReplaceDialog;
 class DevPropertiesDialog;
+class DevWorkSpace;
 
 class DevGUI : public QMainWindow
 {
