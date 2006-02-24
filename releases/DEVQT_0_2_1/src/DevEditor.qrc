@@ -1,0 +1,46 @@
+<RCC>
+    <qresource prefix="/" >
+        <file alias="ok.png">images/ok.png</file>
+        <file alias="cancel.png">images/cancel.png</file>
+        <file alias="settings.png">images/settings.png</file>
+        <file alias="qt.png">images/qt.png</file>
+        <file alias="assistant.png">images/assistant.png</file>
+        <file alias="designer.png">images/designer.png</file>
+        <file alias="linguist.png">images/linguist.png</file>
+        <file alias="splash.png">images/splash.png</file>
+        <file alias="break.png">images/break.png</file>
+        <file alias="error.png">images/error.png</file>
+		<file alias="copy.png">images/editcopy.png</file>
+		<file alias="cut.png">images/editcut.png</file>
+		<file alias="paste.png">images/editpaste.png</file>
+		<file alias="redo.png">images/editredo.png</file>
+		<file alias="undo.png">images/editundo.png</file>
+		<file alias="new.png">images/filenew.png</file>
+		<file alias="open.png">images/open.png</file>
+		<file alias="reopen.png">images/reopen.png</file>
+		<file alias="print.png">images/fileprint.png</file>
+		<file alias="save.png">images/filesave.png</file>
+		<file alias="close.png">images/fileclose.png</file>
+		<file alias="saveall.png">images/filesaveall.png</file>
+		<file alias="saveas.png">images/filesaveas.png</file>
+		<file alias="remove.png">images/remove.png</file>
+		<file alias="add.png">images/add.png</file>
+		<file alias="closetab.png">images/closetab.png</file>
+		<file alias="addtab.png">images/addtab.png</file>
+		<file alias="edit.png">images/edit.png</file>
+		<file alias="file.png">images/file.png</file>
+		<file alias="folder.png">images/folder.png</file>
+		<file alias="folder_new.png">images/folder_new.png</file>
+		<file alias="exit.png">images/exit.png</file>
+		<file alias="project.png">images/project.png</file>
+		<file alias="find.png">images/find.png</file>
+		<file alias="goto.png">images/goto.png</file>
+		<file alias="next.png">images/next.png</file>
+		<file alias="replace.png">images/replace.png</file>
+		<file alias="compile.png">images/compile.png</file>
+		<file alias="exec.png">images/exec.png</file>
+		<file alias="rebuild.png">images/rebuild.png</file>
+		<file alias="explorer.png">images/explorer.png</file>
+		<file alias="compiler.png">images/compile.png</file>
+    </qresource>
+</RCC>
