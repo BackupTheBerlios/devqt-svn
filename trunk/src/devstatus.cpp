@@ -26,7 +26,14 @@
 
 #include "devgui.h"
 
-char *statusBarTooltips[] =  { "General", "Mouse cursor", "Text cursor", "Modification", "Typing mode", "line" };
+char *statusBarTooltips[] =  { 
+	"Number of lines in this document",
+	"Typing mode - Insert or overide",
+	"Modification state of the document",
+	"Text cursor position",
+	"Mouse cursor position (in document coordinates)",
+	"line" 
+};
 
 DevStatus::DevStatus(QWidget *p)
  : QStatusBar(p)
