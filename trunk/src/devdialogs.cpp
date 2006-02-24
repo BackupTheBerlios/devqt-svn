@@ -33,32 +33,32 @@ DevGotoDialog::DevGotoDialog(QWidget *p)
 			this, SLOT  ( process()  ) );
 	
 	QLabel *lbl;
-	QHBoxLayout *hb = new QHBoxLayout;
-	QVBoxLayout *vc = new QVBoxLayout, *vb = new QVBoxLayout;
+	QVBoxLayout *vb = new QVBoxLayout;
+	QHBoxLayout *hc = new QHBoxLayout, *hb = new QHBoxLayout;
 	
 	lbl = new QLabel("New line");
-	vc->addWidget(lbl);
+	hc->addWidget(lbl);
 	
 	line = new QSpinBox;
 	line->setMinimum(1);
-	vc->addWidget(line);
+	hc->addWidget(line);
 	
 	//vc->setSizeConstraint(QLayout::SetMaximumSize);
 	
 	b_accept = new QPushButton("&Goto");
 	connect(b_accept, SIGNAL( clicked() ),
 			this	, SLOT  ( accept() ) );
-	vb->addWidget(b_accept);
+	hb->addWidget(b_accept);
 	
 	b_cancel = new QPushButton("&Cancel");
 	connect(b_cancel, SIGNAL( clicked() ),
 			this	, SLOT  ( reject() ) );
-	vb->addWidget(b_cancel);
+	hb->addWidget(b_cancel);
 	
-	hb->addLayout(vc);
-	hb->addLayout(vb);
+	vb->addLayout(hc);
+	vb->addLayout(hb);
 	
-	setLayout(hb);
+	setLayout(vb);
 }
 
 DevGotoDialog::~DevGotoDialog()
@@ -99,9 +99,6 @@ DevFindDialog::DevFindDialog(QWidget *p)
  : QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint)
 {
 	setWindowTitle("Find text");
-	
-	connect(this, SIGNAL( accepted() ),
-			this, SLOT  ( setVars() ) );
 	
 	QLabel *lbl;
 	QGroupBox *g;
@@ -166,12 +163,12 @@ DevFindDialog::DevFindDialog(QWidget *p)
 	
 	b_accept = new QPushButton("&Find");
 	connect(b_accept, SIGNAL( clicked() ),
-			this	, SLOT  ( accept() ) );
+			this	, SLOT  ( setVars() ) );
 	l->addWidget(b_accept, 7, 0, 1, 1);
 	
 	b_cancel = new QPushButton("&Cancel");
 	connect(b_cancel, SIGNAL( clicked() ),
-			this	, SLOT  ( reject() ) );
+			this	, SLOT  ( hide() ) );
 	l->addWidget(b_cancel, 7, 3, 1, 1);
 	
 	setLayout(l);
@@ -192,13 +189,15 @@ void DevFindDialog::execute(QTextEdit *e)
 	QTextCursor cur = e->textCursor();
 	text->setText( cur.selectedText() );
 	
-	exec();
+	show();
 }
 
 void DevFindDialog::setVars()
 {
 	if ( !edit )
 		return;
+	
+	hide();
 	
 	/*
 	setup internal vars used for find and find next
@@ -295,9 +294,6 @@ DevReplaceDialog::DevReplaceDialog(QWidget *p)
 {
 	setWindowTitle("Replace text");
 	
-	connect(this, SIGNAL( accepted() ),
-			this, SLOT  ( setVars() ) );
-	
 	QLabel *lbl;
 	QGroupBox *g;
 	QVBoxLayout *b;
@@ -369,21 +365,19 @@ DevReplaceDialog::DevReplaceDialog(QWidget *p)
 	
 	b_accept = new QPushButton("&Ok");
 	connect(b_accept, SIGNAL( clicked() ),
-			this	, SLOT  ( accept() ) );
+			this	, SLOT  ( setVars() ) );
 	connect(b_accept, SIGNAL( clicked() ),
 			this	, SLOT  ( process() ) );
 	l->addWidget(b_accept, 9, 0, 1, 1);
 	
 	b_all = new QPushButton("&Replace all");
 	connect(b_all	, SIGNAL( clicked() ),
-			this	, SLOT  ( accept() ) );
-	connect(b_all	, SIGNAL( clicked() ),
 			this	, SLOT  ( all() ) );
 	l->addWidget(b_all, 9, 1, 1, 1);
 	
 	b_cancel = new QPushButton("&Cancel");
 	connect(b_cancel, SIGNAL( clicked() ),
-			this	, SLOT  ( reject() ) );
+			this	, SLOT  ( hide() ) );
 	l->addWidget(b_cancel, 9, 3, 1, 1);
 	
 	setLayout(l);
@@ -405,7 +399,7 @@ void DevReplaceDialog::execute(QTextEdit *e)
 	QTextCursor cur = e->textCursor();
 	find->setText( cur.selectedText() );
 	
-	exec();
+	show();
 }
 
 void DevReplaceDialog::setVars()
@@ -459,6 +453,8 @@ void DevReplaceDialog::process()
 {
 	if ( !edit )
 		return;
+	
+	hide();
 	
 	int i;
 	QTextCursor cur(edit->document());
@@ -539,8 +535,19 @@ void DevReplaceDialog::all()
 		process();
 }
 
+DevAboutDialog::DevAboutDialog(QWidget *p)
+ : QDialog(p)
+{
+	;
+}
+
+DevAboutDialog::~DevAboutDialog()
+{
+	;
+}
+
 DevPropertiesDialog::DevPropertiesDialog(QWidget *p)
- : QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint)
+ : QDialog(p)
 {
 	;
 }

@@ -22,28 +22,57 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_STATUS_H_
-#define _DEV_STATUS_H_
+#ifndef _DEV_SCOPE_H_
+#define _DEV_SCOPE_H_
 
 #include "dev.h"
 
-class DevStatus : public QStatusBar
+#ifdef _ORDERED_
+typedef QMap<int, QString> DevValues;
+#else
+typedef QStringList DevValues;
+#endif
+
+class DevVariable : public QHash<QString, DevValues>
 {
-	Q_OBJECT
+	public:
+		DevVariable();
+};
+
+
+typedef QHash<QString, DevVariable>	DevVarsMap;
+
+class DevScope;
+class DevProject;
+typedef QHash<QString, DevScope*> 	DevScopeMap;
+
+
+class DevScope : public DevVarsMap
+{
+	friend class DevProject;
+	friend class DevWorkSpace;
 	
 	public:
-		DevStatus(QWidget *p = 0);
-		virtual ~DevStatus();
+		DevScope(DevProject *project, DevScope *parent = 0);
+		virtual ~DevScope();
 		
-		void connection();
+		DevProject* project() const;
 		
-	public slots:
-		void message(const QString& s, int p = DevQt::General);
+		DevScope* parent() const;
+		DevScope* nested(const QString& name);
+		
+		void scopes(QStringList& l, const QString& prefix = QString());
+		
+		QString content(int indent);
+		
+		void calculate(const QString& var, QStringList& l);
+		void content(const QString& var, QStringList& l);
 		
 	private:
-		QVector<QLabel*> v;
-		QPushButton *explorer, *compiler;
+		DevScope *par;
+		DevProject *pro;
 		
+		DevScopeMap nest;
 };
 
 #endif

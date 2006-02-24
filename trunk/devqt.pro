@@ -5,6 +5,8 @@
 TEMPLATE = app
 TARGET = devqt
 INCLUDEPATH += . src 
+TRANSLATIONS = translations/fr_FR.ts
+
 
 
 MOC_DIR = tmp/moc
@@ -25,7 +27,9 @@ HEADERS += src/dev.h \
            src/devstatus.h \
            src/devcorner.h \
            src/devproject.h \
-           src/devworkspace.h
+           src/devworkspace.h  \
+           src/devscope.h  \
+	   src/devsettings.h
 
 SOURCES += src/dev.cpp \
            src/devapp.cpp \
@@ -41,6 +45,8 @@ SOURCES += src/dev.cpp \
            src/devcorner.cpp \
            src/devproject.cpp \
            src/devworkspace.cpp \
-           src/main.cpp
+           src/devscope.cpp  \
+	   src/devsettings.cpp \
+           src/main.cpp \
 	   
 RESOURCES += src/DevEditor.qrc

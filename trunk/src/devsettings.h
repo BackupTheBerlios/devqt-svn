@@ -22,28 +22,55 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_STATUS_H_
-#define _DEV_STATUS_H_
+#ifndef _DEV_SETTINGS_H_
+#define _DEV_SETTINGS_H_
 
 #include "dev.h"
 
-class DevStatus : public QStatusBar
+class DevEdit;
+
+class DevSettings : public QSettings
 {
 	Q_OBJECT
 	
+	friend class DevApp;
+	
 	public:
-		DevStatus(QWidget *p = 0);
-		virtual ~DevStatus();
 		
-		void connection();
+		enum Settings
+		{
+			maxProjects = 5,
+			maxFiles = 15
+		};
+		
+		static DevSettings* Instance();
+		
+		QMenu* recent();
+		void applyFormat(DevEdit *e);
 		
 	public slots:
-		void message(const QString& s, int p = DevQt::General);
+		void execute();
+		void addRecent(const QString& n, bool project = false);
+		
+	protected slots:
+		void recent(QAction *a);
+		void clearRecents();
+		
+	protected:
+		DevSettings(QWidget *p = 0);
+		virtual ~DevSettings();
 		
 	private:
-		QVector<QLabel*> v;
-		QPushButton *explorer, *compiler;
+		QHash<QAction*, QString> recents;
 		
+		QDialog *dlg;
+		
+		QMenu *m;
+		QAction *aClear;
+		QPushButton *b_Valid, *b_Cancel, *b_Default;
+		
+		static DevSettings *inst;
 };
+
 
 #endif

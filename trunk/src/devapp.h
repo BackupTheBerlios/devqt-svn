@@ -29,6 +29,7 @@
 
 class DevGUI;
 class DevSplash;
+class DevSettings;
 
 class DevApp : public QApplication
 {
@@ -45,6 +46,7 @@ class DevApp : public QApplication
 	private:
 		DevGUI *gui;
 		DevSplash *scr;
+		DevSettings *set;
 		
 		static DevApp *_app;
 };

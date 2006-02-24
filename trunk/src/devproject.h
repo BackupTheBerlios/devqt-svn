@@ -27,11 +27,15 @@
 
 #include "dev.h"
 
+#include "devscope.h"
+
 class DevEdit;
 
 class AbstractFile : public QObject
 {
 	Q_OBJECT
+	
+	friend class DevWorkSpace;
 	
 	public:
 		enum FileFlag
@@ -39,7 +43,8 @@ class AbstractFile : public QObject
 			abstract,
 			file,
 			folder,
-			project
+			project,
+			scope
 		};
 		
 		AbstractFile(const QString& name);
@@ -104,25 +109,55 @@ class DevFolder : public AbstractFile
 		
 };
 
-typedef QHash<QString, QStringList> DevProjectVars;
-
-class DevProject : public DevFolder, protected DevProjectVars
+class DevDirectory : public DevFolder
 {
 	Q_OBJECT
 	
+	friend class DevWorkSpace;
+	
 	public:
+		DevDirectory(const QString& name);
+		virtual ~DevDirectory();
+		
+};
+
+class DevProject : 	public DevFolder
+{
+	Q_OBJECT
+	
+	friend class DevGUI;
+	friend class DevWorkSpace;
+	
+	public:
+		enum ParsingState
+		{
+			None				= 0x00,		//nothing special
+			MultiLineVariable	= 0x01,		//multiline variable assignement
+			SingleLineScope		= 0x02,		//single line scope
+			MultiLineScope		= 0x04,		//multiline scope
+			NegatedScope		= 0x08		//negated scope (not implemented yet)
+		};
+		
+		typedef QFlags<ParsingState> ParserState;
+		
 		DevProject(const QString& name);
 		virtual ~DevProject();
 		
+		QString content();
+		
+		QStringList scopes();
 		QStringList content(const QString& var, bool files = false);
 		
 	protected:
 		void setup(const QString& data);
 		
+		void close(DevScope *s);
+		
+		void recurse(const DevScope *p, const QString& v, QStringList& l, bool f);
 		void insert(QStringList& l, const QString& s, bool u, bool f);
 		
 	private:
-		;
+		DevScope *global;
 };
 
 #endif

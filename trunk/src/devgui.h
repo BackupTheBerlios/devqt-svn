@@ -32,17 +32,20 @@ class DevEdit;
 class CoreEdit;
 class DevCorner;
 class DevStatus;
+class DevWorkSpace;
 class DevGotoDialog;
 class DevFindDialog;
+class DevAboutDialog;
 class DevReplaceDialog;
 class DevPropertiesDialog;
-class DevWorkSpace;
 
 class DevGUI : public QMainWindow
 {
 	Q_OBJECT
 	
 	friend class DevApp;
+	friend class DevStatus;
+	friend class DevSettings;
 	friend class DevWorkSpace;
 	
 	public:
@@ -52,8 +55,13 @@ class DevGUI : public QMainWindow
 		DevGUI();
 		virtual ~DevGUI();
 		
-		bool load(const QString &f);
-		bool loadProject(const QString &f);
+		bool load(const QString& f);
+		bool loadProject(const QString& f);
+		/*
+		bool loadUI(const QString& f);
+		bool loadQRC(const QString& f);
+		bool loadTemplate(const QString& f);
+		*/
 		
 		virtual void closeEvent(QCloseEvent *e);
 		
@@ -63,6 +71,24 @@ class DevGUI : public QMainWindow
 		void fileSave(const QString& n = QString(), const QString& ext = QString());
 		void fileSaveAs();
 		void fileSaveAll();
+		
+		void projectNew();
+		void projectSave();
+		void projectSaveAs();
+		
+		/*
+		void uiNew();
+		void uiSave();
+		void uiSaveAs();
+		
+		void qrcNew();
+		void qrcSave();
+		void qrcSaveAs();
+		
+		void templateNew();
+		void templateSave();
+		void templateSaveAs();
+		*/
 		
 		void undo();
 		void redo();
@@ -87,22 +113,43 @@ class DevGUI : public QMainWindow
 		
 		void properties();
 		
-		//void textFamily(const QString &f);
-		//void textSize(const QString &p);
+		void compile();
+		void compileCur();
+		void run();
+		void params();
+		
+		void compRun();
+		void rebuild();
+		void syntax();
+		
+		void clean();
+		
+		void aboutQt();
+		void QtAssistant();
 		
 		void editorChanged();
 		void clipboardDataChanged();
-		//void fontChanged(const QFont &f);
 		
 		void editorModified(bool mod);
 		void editorMenu(const QPoint& pos);
 		
+	private slots:
+		void changeProject(const QString& f);
+		
+		void hideCompiler();
+		void hideExplorer();
+		
 	private:
 		void setupFileActions();
 		void setupEditActions();
-		//void setupTextActions();
+		void setupSearchActions();
+		void setupHelpActions();
+		void setupProjectActions();
+		void setupSettings();
+		
 		void setupCompiler();
 		void setupExplorer();
+		
 		void setupMenu();
 		
 		void maybeSave();
@@ -115,11 +162,14 @@ class DevGUI : public QMainWindow
 		
 		QMenu *menu;
 		DevStatus *s;
-		DevCorner *c;
 		
-		DevGotoDialog *gDlg;
-		DevFindDialog *fDlg;
-		DevReplaceDialog *rDlg;
+		QToolButton *add, *rem;
+		
+		DevGotoDialog 	*gDlg;
+		DevFindDialog 	*fDlg;
+		DevAboutDialog 	*aDlg;
+		
+		DevReplaceDialog 	*rDlg;
 		DevPropertiesDialog *pDlg;
 		
 		DevDock *Explorer, 
@@ -132,14 +182,23 @@ class DevGUI : public QMainWindow
 		//QComboBox *Font,
 		//	*Size;
 		
-		DevWorkSpace *treeFiles;
+		QComboBox *project,
+			*config;
+		
+		DevWorkSpace *workspace;
 		QTreeWidget	*treeClasses;
 		
-		QAction *aNew,
+		QAction *aNewFile,
+			*aNewProject,
+			*aNewTemplate,
+			*aNewUI,
+			*aNewQRC,
 			*aOpen,
 			*aSave,
 			*aSaveAs,
 			*aSaveAll,
+			*aSaveProject,
+			*aSaveProjectAs,
 			*aFind,
 			*aFindNext,
 			*aReplace,
@@ -150,6 +209,8 @@ class DevGUI : public QMainWindow
 			*aSelectAll,
 			*aPrint,
 			*aClose,
+			*aCloseAll,
+			*aCloseProject,
 			*aExit,
 			*aUndo,
 			*aRedo,
@@ -157,10 +218,18 @@ class DevGUI : public QMainWindow
         	*aCopy,
 			*aPaste,
 			*aCompile,
-			*aRebuild,
+			*aCompileCur,
 			*aRun,
-			*aCmpRun,
-			*aDebug;
+			*aParams,
+			*aCompRun,
+			*aRebuild,
+			*aSyntax,
+			*aClean,
+			*aSettings,
+			*aAboutQt,
+			*aQtAssistant,
+			*aAboutDevQt,
+			*aDevQtAssistant;
 			
 		long noname_count;
 			

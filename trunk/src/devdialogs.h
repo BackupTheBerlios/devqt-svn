@@ -118,6 +118,19 @@ class DevReplaceDialog : public QDialog
 		QRadioButton *global, *selection, *forward, *backward, *cursor, *whole;
 };
 
+class DevAboutDialog : public QDialog
+{
+	Q_OBJECT
+	
+	public:
+		DevAboutDialog(QWidget *p = 0);
+		virtual ~DevAboutDialog();
+		
+	
+	private:
+		;
+};
+
 class DevPropertiesDialog : public QDialog
 {
 	Q_OBJECT

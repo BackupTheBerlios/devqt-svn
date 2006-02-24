@@ -31,6 +31,8 @@ class DevSplash : public QSplashScreen
 {
 	Q_OBJECT
 	
+	friend class DevApp;
+	
 	public:
 		static DevSplash* Instance();
 		

@@ -31,17 +31,11 @@ AbstractFile::AbstractFile(const QString& name)
 {
 	m = new QMenu;
 	
-	QAction *a = new QAction(name, this);
-	a->setEnabled(false);
-	
-	m->addAction(a);
-	m->addSeparator();
-	
-	aDel = new QAction( QIcon( ":/remove.png" ), "Re&move", this);
+	aDel = new QAction( QIcon( ":/remove.png" ), tr("Re&move"), this);
 	connect(aDel, SIGNAL( triggered() ),
 			this, SLOT  ( del() ) );
 	
-	aRen = new QAction( QIcon( ":/edit.png" ), "&Rename", this);
+	aRen = new QAction( QIcon( ":/edit.png" ), tr("&Rename"), this);
 	connect(aRen, SIGNAL( triggered() ),
 			this, SLOT  ( ren() ) );
 	
@@ -50,6 +44,7 @@ AbstractFile::AbstractFile(const QString& name)
 AbstractFile::~AbstractFile()
 {
 	n.clear();
+	delete m;
 }
 
 AbstractFile::FileFlag AbstractFile::flag() const
@@ -82,7 +77,13 @@ DevFile::DevFile(const QString& name, DevEdit *edit)
 {
 	f = file;
 	
+	QAction *a = new QAction(QString( tr("file : ") ) + name, this);
+	a->setEnabled(false);
+	
+	m->addAction(a);
+	m->addSeparator();
 	m->addAction(aDel);
+	m->addAction(aRen);
 }
 
 DevFile::~DevFile()
@@ -95,14 +96,20 @@ DevFolder::DevFolder(const QString& name)
 {
 	f = folder;
 	
-	aSub = new QAction( QIcon( ":/folder_new.png" ), "&Subdir", this);
+	aSub = new QAction( QIcon( ":/folder_new.png" ), tr("&Subdir"), this);
 	connect(aSub, SIGNAL( triggered() ),
 			this, SLOT  ( sub() ) );
 	
-	aNew = new QAction( QIcon( ":/add.png" ), "&New file", this);
+	aNew = new QAction( QIcon( ":/add.png" ), tr("&New file"), this);
 	connect(aNew, SIGNAL( triggered() ),
 			this, SLOT  ( add() ) );
 	
+	
+	QAction *a = new QAction(QString( tr("folder : ") ) + name, this);
+	a->setEnabled(false);
+	
+	m->addAction(a);
+	m->addSeparator();
 	m->addAction(aSub);
 	m->addAction(aNew);
 	m->addSeparator();
@@ -125,47 +132,72 @@ void DevFolder::add()
 	emit addFile(this);
 }
 
+DevDirectory::DevDirectory(const QString& name)
+ : DevFolder(name)
+{
+	f = scope;
+	
+	QAction *a = new QAction(QString( tr("scope : ") ) + name, this);
+	a->setEnabled(false);
+	
+	m->addAction(a);
+	m->addSeparator();
+	m->addAction(aSub);
+	m->addAction(aNew);
+}
+
+DevDirectory::~DevDirectory()
+{
+	;
+}
+
 DevProject::DevProject(const QString& name)
  : DevFolder(name)
 {
 	f = project;
 	
+	aDel->setIcon( QIcon(":/close.png") );
+	aDel->setText( tr("&Close") );
+	
+	global = new DevScope(this, 0);
+	
 	QFile f(name);
 	
-	if ( f.open(QFile::ReadOnly) )
+	if ( f.open(QFile::ReadOnly | QFile::Text) )
 		setup( f.readAll() );
 }
 
 DevProject::~DevProject()
 {
-	;
+	delete global;
 }
 
 void DevProject::setup(const QString& data)
 {
+	ParserState state = None;
+	DevScope *scope = global;
+	
+	QChar c;
 	int i=0, j;
-	iterator it;
-	bool multi = false;
 	QString var, tmp, op;
 	QStringList lines, words, dest;
+	
+	QStack<int> nest_len;
 	
 	lines = data.split('\n');
 	
 	while ( i<lines.count() )
 	{
-		QString line = lines[i];
+		QString line = lines[i++];
+		
 		if ( line.startsWith("#") || line.isEmpty() )
-		{
-			i++;
 			continue;
-		}
 		
 		words.clear();
 		
-		QChar c;
-		bool isVar;
+		bool isVar = false;
 		const QChar *l = line.data();
-		int n = -1, count = line.count();
+		int n = -1, count = line.count(), paren = 0;
 		
 		while ( n < count )
 		{
@@ -174,30 +206,56 @@ void DevProject::setup(const QString& data)
 				c = l[++n];
 			} while ( c.isSpace() && (n < count) );
 			
+			if ( n >= count )
+				break;
+			
 			isVar = false;
 			int j = n;
 						
-			while ((!c.isSpace() && (n < count ) &&
-					(c != '~') && (c != '-') && (c != '{') &&
-					(c != '}') && (c != '[') && (c != ']') &&
-					(c != ':') && (c != '!') && (c != '=') &&
-					(c != '*') && (c != '+') ) ||
-					( (c == '(') && (c == ')') && isVar )  )
+			do
 			{
-				if ( isVar && ( (c == ')') || (c == '}') || (c == ']') ) )
-					isVar = false;
-				if ( c == '$' )
+				if ( c.isSpace() )
+					break;
+				else if ( c == '$' )
 					isVar = true;
+				else if ( (c == '(') || (c == '{') || (c == '[') )
+				{
+					if ( isVar )
+						paren++;
+					else
+						break;
+				} else if ( (c == ')') || (c == '}') || (c == ']') ) {
+					if ( isVar )
+					{
+						if ( paren )
+							paren--;
+						else
+							QMessageBox::warning(0, "Parsing error : ", "Wrong parenthesis use!");
+						
+						if ( !paren )
+							isVar = false;
+					} else {
+						break;
+					}
+				} else if ( (c == '~') || (c == '-') || (c == '+') ||
+							(c == ':') || (c == '=') || (c == '*') ||
+							(c == '#')  ) {
+					break;
+				}
+				
 				c = l[++n];
-			}
+			} while ( n < count );
 			
 			if ( n != j )
 				words<<QString(l+j, n-j);
 			
-			if ( (c == '*') || (c == '+') ||
-				 (c == '-') || (c == '~') ) {
-				if ( l[n] == '=' )
-					words<<QString(c)+=l[++n];
+			if ( c == '#' )
+			{
+				break;
+			} else 	if ((c == '*') || (c == '+') ||
+				 		(c == '-') || (c == '~') ) {
+				if ( l[n+1] == '=' )
+					words<<QString(c)+l[++n];
 			} else if ( (c == '{') || (c == '}') ||
 						(c == '(') || (c == ')') ||
 						(c == '[') || (c == ']') ||
@@ -209,105 +267,184 @@ void DevProject::setup(const QString& data)
 		
 		j = 0;
 		
-		if ( !multi )
+		if ( words.isEmpty() )
+			continue;
+		
+		//QMessageBox::warning(0, "words", words.join("\n"));
+		
+		if ( !scope )
+			scope = global;
+		
+		if ( state & MultiLineVariable )
+			state &= ~MultiLineVariable;
+		else
 		{
-			if ( words.count()<3 )
+			if ( words[j] == "}" )
 			{
-				i++;
+				if ( nest_len.isEmpty() )
+					QMessageBox::warning(0, "Parser error : ",
+										"No scope to close on line : " + 
+										QString::number(i));
+				else
+				{
+					for ( int n = nest_len.pop(); n && scope; n--)
+					{
+						DevScope *temp = scope->parent();
+						scope = temp;
+					}
+					
+					state &= ~( SingleLineScope | MultiLineScope );
+				}
+				
+			} else if ( ((j+1) < words.count()) &&
+						((words[j+1] == ":") || (words[j+1] == "{")) ) {
+				tmp = words[++j];
+				
+				DevScope *temp = scope->nested(words[j-1]);
+				scope = temp;
+				
+				if ( tmp == ":")
+				{
+					int n = 1;
+					
+					if ( (words[j+2] == ":") || (words[j+2] == "{") )
+					{
+						j++;
+						do
+						{
+							DevScope *temp = scope->nested(words[j]);
+							scope = temp;
+							j++;
+							n++;
+						} while ( (words[j+2] == ":") || (words[j+2] == "{") );
+						
+						nest_len.push(n);
+						
+						if ( words[j] == "{" )
+						{
+							state |= MultiLineScope;
+							continue;
+						}
+					}
+					state |= SingleLineScope;
+					j++;
+				} else if ( tmp == "{" ) {
+					nest_len.push(1);
+					state |= MultiLineScope;
+					continue;
+				} else {
+					continue;
+				}
+			}
+			
+			if ( (j+2) >= words.count() )
+				continue;
+			
+			var = words[j].toUpper();
+			
+			op = words[++j];
+			j++;
+			
+			if ( op == "(" )
+			{
+				//QMessageBox::warning(0, "function encountered", var);
 				continue;
 			}
 			
-			dest.clear();
-			var = words[0].toUpper();
-			
-			if ( (it = find(var)) != end() )
-				dest = *it;
-			
-			op = words[1];
-			j = 2;
-			
-			if ( op == "=" )
-				dest.clear();
-		} else {
-			multi = false;
+			if ( !scope )
+				scope = global;
+				
+			dest = (*scope)[var].value(op);
 		}
 		
-		if ( (op == "=") || (op == "+=") )
+		while ( j < words.count() )
 		{
-			while ( j<words.count() )
+			tmp = words[j++];
+			
+			if ( (j == words.count()) && (tmp == "\\") )
 			{
-				tmp = words[j++];
-				
-				if ( (j==words.count()) && (tmp=="\\") )
-				{
-					multi = true;
-					break;
-				}
-				dest<<tmp;
+				state |= MultiLineVariable;
+				break;
 			}
-		} else if ( op == "-=" ) {
-			while ( j<words.count() )
+			
+			if ( tmp == "}" )
 			{
-				tmp = words[j++];
-				
-				if ( (j==words.count()) && (tmp=="\\") )
+				if ( nest_len.isEmpty() )
+					QMessageBox::warning(0, "Parser error : ",
+										"No scope to close on line : " + 
+										QString::number(i));
+				else
 				{
-					multi = true;
-					break;
+					for ( int n = nest_len.pop(); n && scope; n--)
+					{
+						DevScope *temp = scope->parent();
+						scope = temp;
+					}
 				}
-				dest.removeAll(tmp);
+				state &= ~( SingleLineScope | MultiLineScope );
+				break;
 			}
-		} else if ( op == "*=" ) {
-			while ( j<words.count() )
-			{
-				tmp = words[j++];
-				
-				if ( (j==words.count()) && (tmp=="\\") )
-				{
-					multi = true;
-					break;
-				}
-				if ( !dest.contains(tmp) )
-					dest<<tmp;
-			}
-		} else if ( op == "~=" ) {
-			while ( j<words.count() )
-			{
-				tmp = words[j++];
-				
-				if ( (j==words.count()) && (tmp=="\\") )
-				{
-					multi = true;
-					break;
-				}
-			}
-		} else {
-			QMessageBox::warning(0, "Parsing error", QString("Unknown operator: ")+op);
+			
+			//QMessageBox::warning(0, "", tmp);
+			dest<<tmp;
 		}
 		
-		i++;
-		
-		if ( multi )
+		if ( state & MultiLineVariable )
 			continue;
 		
-		QHash<QString, QStringList>::insert(var, dest);
+		(*scope)[var][op] = dest;
+		
+		if ( state & SingleLineScope )
+		{
+			DevScope *temp = scope->parent();
+			scope = temp;
+			
+			state &= ~SingleLineScope;
+		}
+		
 	}
+	
+}
+
+QString DevProject::content()
+{
+	QString s;
+	
+	s += "################################\n";
+	s += "#                              #\n";
+	s += "#  Project generated by DevQt  #\n";
+	s += "#                              #\n";
+	s += "################################\n";
+	s += "\n";
+	
+	s += global->content(0);
+	
+	return s;
 }
 
 QStringList DevProject::content(const QString& var, bool files)
 {
-	iterator i = find(var);
-	
-	if ( i == end() )
-		return QStringList();
-	
-	QString v;
 	QStringList l;
 	
-	foreach(v, *i)
-		insert(l, v, true, files);
+	recurse(global, var, l, files);
 	
 	return l;
+}
+
+void DevProject::recurse(const DevScope *p, const QString& v, QStringList& l, bool f)
+{
+	DevVariable var = (*p)[v];
+	QStringList list;
+	
+	list<<var.value("=");
+	list<<var.value("+=");
+	list<<var.value("*=");
+	
+	foreach (QString s, list)
+		insert(l, s, true, f);
+		
+	foreach (const DevScope *s, p->nest.values())
+		recurse(s, v, l, f);
 }
 
 void DevProject::insert(QStringList& l, const QString& s, bool u, bool f)
@@ -322,16 +459,11 @@ void DevProject::insert(QStringList& l, const QString& s, bool u, bool f)
 			
 		if ( suffix.endsWith(')') || suffix.endsWith('}') )
 			suffix.chop(1);
-		
-		iterator iter = find(suffix);
-		
-		if ( iter == end() )
-			return;
 			
-		QStringList list = *iter;
+		QStringList list = content(suffix, f);
 		
-		for (int i=0; i<list.count(); i++)
-			insert(l, prefix+list[i], u, f);
+		foreach (QString var, list)
+			insert(l, prefix+var, u, f);
 		
 	} else {
 		if ( u && l.contains(s) )
@@ -342,4 +474,17 @@ void DevProject::insert(QStringList& l, const QString& s, bool u, bool f)
 		else
 			l<<s;
 	}
+}
+
+QStringList DevProject::scopes()
+{
+	QStringList l;
+	
+	l<<"all";
+	global->scopes(l);
+	
+	foreach (QString s, content("CONFIG", false))
+		l.removeAll(s);
+	
+	return l;
 }

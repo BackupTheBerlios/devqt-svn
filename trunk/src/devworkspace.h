@@ -27,14 +27,14 @@
 
 #include "dev.h"
 
-class AbstractFile;
-class DevFile;
-class DevFolder;
-class DevProject;
+#include "devproject.h"
 
-typedef QHash<QTreeWidgetItem*, AbstractFile*> DevMap;
+typedef QHash<QTreeWidgetItem*, AbstractFile*> 	DevTreeMap;
+typedef QHash<QString, DevProject*>				DevProjectMap;
 
-class DevWorkSpace : public QTreeWidget, protected DevMap
+class DevWorkSpace : 	public QTreeWidget,
+						protected DevTreeMap,
+						public DevProjectMap
 {
 	Q_OBJECT
 	
@@ -44,21 +44,26 @@ class DevWorkSpace : public QTreeWidget, protected DevMap
 		DevWorkSpace(QString name = QString(), QWidget *p = 0);
 		virtual ~DevWorkSpace();
 		
+		DevProject* find(const QString& n);
+		AbstractFile* find(QTreeWidgetItem *i);
+		
 	public slots:
 		void loadWorkSpace(const QString& name);
 		
-		void addProject(const QString& name);
+		bool addProject(const QString& name);
 		
 		/*
-		void addFolder(	const QString& name,
+		bool addFolder(	const QString& name,
 						const QString& project);
 		
-		void addFile(	const QString& name,
+		bool addFile(	const QString& name,
 						const QString& project,
 						const QString& folder);
 		*/
 		
-		void newProject(const QString& name);
+		bool newProject(const QString& name);
+		
+		void rename(AbstractFile *f, const QString& name);
 		
 	protected slots:
 		void deletion(AbstractFile *o);
@@ -71,10 +76,11 @@ class DevWorkSpace : public QTreeWidget, protected DevMap
 	protected:
 		virtual void contextMenuEvent(QContextMenuEvent *e);
 		
+	private:
+		void createNested(	DevScope *s, const QStringList& vars, 
+							const QStringList& cfg, QTreeWidgetItem *i);
+		
 		QString n;
-		iterator iter;
-		QTreeWidgetItem *root;
-		QList<DevProject*> projects;
 };
 
 #endif

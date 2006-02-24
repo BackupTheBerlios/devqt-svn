@@ -24,6 +24,8 @@
 
 #include "devstatus.h"
 
+#include "devgui.h"
+
 DevStatus::DevStatus(QWidget *p)
  : QStatusBar(p)
 {
@@ -36,10 +38,16 @@ DevStatus::DevStatus(QWidget *p)
 		l->setMargin(2);
 		l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 		l->setFrameStyle(QFrame::Sunken | QFrame::StyledPanel);
-		l->setFixedWidth(fontMetrics().width("XXXXXXXXXXXXXXXXXXXXXXX"));
+		l->setMinimumWidth(fontMetrics().width("XXXXXX"));
 		addWidget(l);
 		v.prepend(l);
 	}
+	
+	explorer = new QPushButton(QIcon(":/explorer.png"), tr("Explorer"));
+	addPermanentWidget(explorer);
+	
+	compiler = new QPushButton(QIcon(":/compiler.png"), tr("Compiler"));
+	addPermanentWidget(compiler);
 	
 	connect(this, SIGNAL( messageChanged(const QString&) ),
 			this, SLOT  ( clearMessage() ) );
@@ -53,6 +61,15 @@ DevStatus::~DevStatus()
 		delete l;
 	}
 	v.clear();
+}
+
+void DevStatus::connection()
+{
+	connect(explorer, SIGNAL( clicked() ),
+			DEV_GUI	, SLOT  ( hideExplorer() ) );
+	
+	connect(compiler, SIGNAL( clicked() ),
+			DEV_GUI	, SLOT  ( hideCompiler() ) );
 }
 
 void DevStatus::message(const QString& s, int p)

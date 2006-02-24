@@ -335,6 +335,42 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 			setFormat(0, i+1, fmts[quote]);
 			//i--;
 			break;
+		
+		case preprocessor :
+			
+			setFormat(0, len, fmts[preprocessor]);
+			
+			while ( i<len )
+			{
+				if ( (i = text.indexOf('/', i)) == -1 )
+					break;
+				n = i;
+				switch ( text.at(++i).toLatin1() )
+				{
+					case '/':
+						setFormat(n, len-n, fmts[comment]);
+						
+						return normal;
+						
+					case '*':
+						i = text.indexOf("*/", ++i);
+						
+						if ( i == -1 )
+						{
+							setFormat(n, len-n, fmts[comment]);
+							
+							return comment;
+						}
+						
+						setFormat(n, i-n+2, fmts[comment]);
+						break;
+				}
+			}
+			
+			if ( str[len-1] == '\\' )
+				return preprocessor;
+			
+			return normal;
 			
 		default:
 			i = -1;
@@ -404,7 +440,10 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 				}
 			} 
 			
-			return preprocessor;
+			if ( str[len-1] == '\\' )
+				return preprocessor;
+			else
+				return normal;
 		}
 		else if ( c=='\'' )
 		{
@@ -441,12 +480,12 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 			
 			setFormat(n, i-n+1, fmts[quote]);
 		}
-		else if ( c.isLetter() )
+		else if ( c.isLetter() || (c == '_') )
 		{
 			do
 			{
 				c = str[++i];
-			} while ( c.isLetterOrNumber() );
+			} while ( c.isLetterOrNumber() || (c == '_') );
 			
 			s = QString(str+n, i-n);
 			

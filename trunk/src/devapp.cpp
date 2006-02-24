@@ -26,6 +26,8 @@
 
 #include "devgui.h"
 #include "devsplash.h"
+#include "devstatus.h"
+#include "devsettings.h"
 
 DevApp* DevApp::_app = 0;
 
@@ -45,10 +47,44 @@ DevApp* DevApp::Init(int argc, char **argv)
 DevApp::DevApp(int argc, char **argv)
  : QApplication(argc, argv)
 {
-	setStyle( new QPlastiqueStyle );
-	setPalette( style()->standardPalette() );
+	// Setup global app style
+	#ifdef WIN32
+	setStyle("plastique");
+	setPalette(style()->standardPalette());
+	#endif
 	
+	// Setup app stuffs needed for QSettings use
+	setApplicationName("DevQt");
+	setOrganizationName("FullMetalCoder");
+	setOrganizationDomain("http://devqt.berlios.de/");
+	
+	
+	// Setup splash screen
+	scr = DevSplash::Instance();
+	
+	// Setup Locale Language
+	scr->showMessage("Initializing langage...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	
+	QTranslator *translator = new QTranslator(this);
+	
+	QString lang = QLocale::system().name();
+	translator->load(lang, QFileInfo(*argv).path()+"/translations/");
+	installTranslator(translator);
+	
+	// Get back app settings
+	scr->showMessage("Getting back settings...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	
+	set = DEV_SETTINGS;
+	
+	// Setup main window
+	scr->showMessage("Initializing UI...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	gui = DEV_GUI;
+	gui->s->connection();
+	
+	
+	scr->showMessage("DevQt initialized.", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	
+	gui->show();
 }
 
 DevApp::~DevApp()

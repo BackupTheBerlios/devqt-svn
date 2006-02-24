@@ -41,7 +41,8 @@ namespace DevQt
 		source,
 		header,
 		resource,
-		form
+		form,
+		folder,
 	};
 	
 	enum StatusPurpose
@@ -66,7 +67,12 @@ namespace DevQt
 	bool isNumber(char c, char base);
 	
 	static const QString supportedFiles = "DevQt projects ( *.pro);;C++ \
-sources( *.cpp *.cxx *.c);;C++ headers ( *.h *.hpp);;All Files (*)";
+source files( *.cpp *.cxx *.c);;C++ header files ( *.h *.hpp);;All Files (*)";
+
+	static const QString extFiles = "C++ sources( *.cpp *.cxx *.c);;C++ headers \
+( *.h *.hpp);;All Files (*)";
+
+	static const QString extProjects = "DevQt projects ( *.pro);;All Files (*)";
 };
 
 struct BlockData : public QTextBlockUserData
@@ -96,5 +102,6 @@ struct BlockData : public QTextBlockUserData
 #define DEV_APP DevApp::Instance()
 #define DEV_GUI	DevGUI::Instance()
 #define DEV_SCR DevSplash::Instance()
+#define DEV_SETTINGS DevSettings::Instance()
 
 #endif
