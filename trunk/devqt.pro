@@ -4,41 +4,43 @@
 
 TEMPLATE = app
 TARGET = devqt
+INCLUDEPATH += . src 
+
 
 MOC_DIR = tmp/moc
 OBJECTS_DIR = tmp/obj
 RCC_DIR = tmp/rcc
 
 # Input
-HEADERS += dev.h \
-           devapp.h \
-           devdialogs.h \
-           devdock.h \
-           devedit.h \
-           coreedit.h \
-           devlinenumber.h \
-           devgui.h \
-           devhighlighter.h \
-           devsplash.h \
-           devstatus.h \
-           devcorner.h \
-           devproject.h \
-           devworkspace.h
+HEADERS += src/dev.h \
+           src/devapp.h \
+           src/devdialogs.h \
+           src/devdock.h \
+           src/devedit.h \
+           src/coreedit.h \
+           src/devlinenumber.h \
+           src/devgui.h \
+           src/devhighlighter.h \
+           src/devsplash.h \
+           src/devstatus.h \
+           src/devcorner.h \
+           src/devproject.h \
+           src/devworkspace.h
 
-SOURCES += dev.cpp \
-           devapp.cpp \
-           devdialogs.cpp \
-           devdock.cpp \
-           devedit.cpp \
-           coreedit.cpp \
-           devlinenumber.cpp \
-           devgui.cpp \
-           devhighlighter.cpp \
-           devsplash.cpp \
-           devstatus.cpp \
-           devcorner.cpp \
-           devproject.cpp \
-           devworkspace.cpp \
-           main.cpp
-
-RESOURCES += DevEditor.qrc
+SOURCES += src/dev.cpp \
+           src/devapp.cpp \
+           src/devdialogs.cpp \
+           src/devdock.cpp \
+           src/devedit.cpp \
+           src/coreedit.cpp \
+           src/devlinenumber.cpp \
+           src/devgui.cpp \
+           src/devhighlighter.cpp \
+           src/devsplash.cpp \
+           src/devstatus.cpp \
+           src/devcorner.cpp \
+           src/devproject.cpp \
+           src/devworkspace.cpp \
+           src/main.cpp
+	   
+RESOURCES += src/DevEditor.qrc
