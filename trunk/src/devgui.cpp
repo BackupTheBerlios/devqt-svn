@@ -1058,8 +1058,8 @@ void DevGUI::editorChanged()
 		disconnect(e, SIGNAL(copyAvailable(bool)), aCut, SLOT(setEnabled(bool)));
 		disconnect(e, SIGNAL(copyAvailable(bool)), aCopy, SLOT(setEnabled(bool)));
 		
-		disconnect(e, SIGNAL( message(const QString&, DevQt::StatusPurpose p) ),
-					s,SLOT  ( message(const QString&, DevQt::StatusPurpose p) ) );
+		// WTF? no such slot... FMT, to be removed...?
+		// disconnect(e, SIGNAL( message(const QString&, DevQt::StatusPurpose p) ), s,SLOT  ( message(const QString&, DevQt::StatusPurpose p) ) );
     }
 
     e = qobject_cast<DevEdit*>(Editor->currentWidget());
