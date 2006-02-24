@@ -24,66 +24,34 @@
 
 #include "devstatus.h"
 
-#include "devgui.h"
-
-char *statusBarTooltips[] =  { "General", "Mouse cursor", "Text cursor", "Modification", "Typing mode", "line" };
-
 DevStatus::DevStatus(QWidget *p)
  : QStatusBar(p)
 {
-	QLabel *l;
-	
-	for ( int p = DevQt::General; p < DevQt::None; p++ )
-	{
-		l = new QLabel;
-		l->setIndent(2);
-		l->setMargin(2);
-		l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-		l->setFrameStyle(QFrame::Sunken | QFrame::StyledPanel);
-		l->setMinimumWidth(fontMetrics().width("XXXXXX"));
-		l->setToolTip( tr(statusBarTooltips[p]) );
-		addWidget(l);
-		v.prepend(l);
-	}
-	
-	explorer = new QPushButton(QIcon(":/explorer.png"), tr("Explorer"));
-	addPermanentWidget(explorer);
-	
-	compiler = new QPushButton(QIcon(":/compiler.png"), tr("Compiler"));
-	addPermanentWidget(compiler);
-	
-	connect(this, SIGNAL( messageChanged(const QString&) ),
-			this, SLOT  ( clearMessage() ) );
+	l = new QLabel;
+	l->setIndent(2);
+	l->setMargin(2);
+	addPermanentWidget(l);
+}
+
+DevStatus::DevStatus(const QString& s, Qt::Alignment a, QWidget *p)
+ : QStatusBar(p)
+{
+	l = new QLabel(s);
+	l->setIndent(2);
+	l->setMargin(2);
+	l->setAlignment(a);
+	addPermanentWidget(l);
 }
 
 DevStatus::~DevStatus()
 {
-	foreach(QLabel *l, v)
-	{
-		removeWidget(l);
-		delete l;
-	}
-	v.clear();
+	removeWidget(l);
+	delete l;
 }
 
-void DevStatus::connection()
+void DevStatus::message(const QString& s, Qt::Alignment a)
 {
-	connect(explorer, SIGNAL( clicked() ),
-			DEV_GUI	, SLOT  ( hideExplorer() ) );
-	
-	connect(compiler, SIGNAL( clicked() ),
-			DEV_GUI	, SLOT  ( hideCompiler() ) );
-}
-
-void DevStatus::message(const QString& s, int p)
-{
-	if ( p >= DevQt::None )
-		return;
-	
-	QLabel *l;
-	
-	if ( (l = v[p]) )
-		l->setText(s);
-	
+	l->setText(s);
+	l->setAlignment(a);
 }
 	
