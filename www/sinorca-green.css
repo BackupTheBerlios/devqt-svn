@@ -19,7 +19,7 @@
 
 body {
   color: black;
-  background-color: rgb(240,240,240);
+  /*background-color: rgb(230,255,208);*/
   font-family: verdana, helvetica, arial, sans-serif;
   font-size: 71%;  /* Enables font size scaling in MSIE */
   margin: 0;
@@ -51,7 +51,7 @@ acronym, .titleTip {
 
 .superHeader {
   color: white;
-  background-color: rgb(100,135,220);
+  background-color: rgb(125,156,40);
   height: 2em;
 }
 
@@ -81,8 +81,8 @@ acronym, .titleTip {
 }
 
 .midHeader {
-  color: rgb(39,78,144);
-  background-color: rgb(140,170,230);
+  color: rgb(51,90,13);
+  background-color: rgb(166,206,57);
 }
 
 .headerTitle {
@@ -94,13 +94,13 @@ acronym, .titleTip {
 
 .subHeader {
   color: white;
-  background-color: rgb(0,51,153);
+  background-color: rgb(125,156,40);
   margin: 0;
   padding: 1ex 1ex 1ex 1.5mm;
 }
 
 .subHeader a {
-  color: white;
+	color: rgb(50,50,50);
   background-color: transparent;
   text-decoration: none;
   font-weight: bold;
@@ -114,7 +114,8 @@ acronym, .titleTip {
 
 .superHeader .highlight, .subHeader .highlight, .subHeader .clsMainMenuSelected
 {
-  color: rgb(253,160,91);
+  /*color: rgb(140,180,46);*/
+  color: rgb(51,156,13);
   background-color: transparent;
 }
 
@@ -126,6 +127,7 @@ acronym, .titleTip {
   float: left;
   clear: left;
   border-right: 1px solid rgb(153,153,153);
+  background: rgb(230,255,208);
 }
 
 #side-bar div {
@@ -169,7 +171,7 @@ acronym, .titleTip {
 
 #side-bar a:hover {
   color: white;
-  background-color: rgb(100,135,220);
+  background-color: rgb(125,156,40);
   text-decoration: none;
 }
 
@@ -227,8 +229,8 @@ acronym, .titleTip {
 }
 
 #main-copy h1 {
-  color: white;
-  background-color: rgb(100,135,220);
+  color: rgb(51,90,13);
+  background-color: rgb(166,206,57);
   font-size: 100%;
   font-weight: bold;
   margin: 3em 0 0 0;
@@ -285,7 +287,7 @@ dd {
 
 #footer {
   color: white;
-  background-color: rgb(100,135,220);
+  background-color: rgb(125,156,40);
   font-size: 91%;
   margin: 0;
   padding: 1em 2.5mm 2.5ex 2.5mm;
