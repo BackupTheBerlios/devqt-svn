@@ -1,0 +1,10 @@
+	11 Feb 2006; Cesar
+	Fixed find dialog beeing modal
+	Fixed line numbers and cursor position mess
+	Disposed of some memory leaks
+	*.o files now go to .obj, moc-related ones go to .moc
+	Fixed file actions behaviour
+
+	09 Feb 2006; fullmetalcoder
+	Initial version
+
