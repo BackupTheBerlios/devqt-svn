@@ -257,20 +257,20 @@ void DevGUI::setupFileActions()
     sub->addAction(a);
     
 	a = aNewUI = new QAction(QIcon(":/ui.png"), tr("&User Interface"), this);
-    connect(a	, SIGNAL( triggered() ),
-			this, SLOT  ( uiNew() ) );
+	// TODO: slot not implemented yet
+	// connect(a, SIGNAL( triggered() ), this, SLOT  ( uiNew() ) );
     sub->addAction(a);
     
 	a = aNewQRC = new QAction(QIcon(":/qrc.png"), tr("&Resource"), this);
-    connect(a	, SIGNAL( triggered() ),
-			this, SLOT  ( qrcNew() ) );
+	// TODO: slot not implemented yet
+	// connect(a, SIGNAL( triggered() ), this, SLOT  ( qrcNew() ) );
     sub->addAction(a);
     
     sub->addSeparator();
     
 	a = aNewTemplate = new QAction(QIcon(":/new.png"), tr("&Template"), this);
-    connect(a	, SIGNAL( triggered() ),
-			this, SLOT  ( templateNew() ) );
+	// TODO: slot not implemented yet
+	// connect(a, SIGNAL( triggered() ), this, SLOT(templateNew()) );
     sub->addAction(a);
     
     menu->addMenu(sub);
@@ -298,7 +298,7 @@ void DevGUI::setupFileActions()
     
     a = aSaveAll = new QAction(QIcon(":/saveall.png"), tr("Sa&ve All..."), this);
     connect(a	, SIGNAL( triggered() ),
-			this, SLOT( ileSaveAll() ) );
+			this, SLOT( fileSaveAll() ) );
     tb->addAction(a);
     menu->addAction(a);
 
