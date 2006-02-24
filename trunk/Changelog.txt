@@ -1,5 +1,33 @@
+ 23 February 2006 : Official beta 2
+	- implemented the Damn Best Project Parser Ever!!! It took me a whole WE and now handles everything:
+		* scopes : all syntaxes (single line, multiline, mixed) and nested
+		* folders (which are nothing but special scopes)
+		* variables : all operators and nested (using "$$")
+	- added a splash nice screen
+	- added support for translations (only a minimalistic french one is provided but feel free to add others!)
+	- added project saving
+	- added two buttons in the status bar for hidding/showing dock wigets
+	- added help menu
+		* about Qt
+		* Qt Assistant
+		* about DevQt (TODO...)
+		* Help on DevQt (may wait a very long time...)
+	- started settings use :
+		* added "reopen" action : 5 most recent projects and 15 most recents files (out of project)
+		* added a basic (non working) customization dialog
+	- find & replace dialogs aren't modals anymore (also removed stay on top hint)
+	- corner widget split in two part, modified icons and size of the toolbuttons.
+	- fixed toolbar size, should now fit in every resolution
+	- fixed a few highlighting bugs
+	- fixed a parser bug : space(s) after the last operand of an assignement operator added an empty string
+	- modified parser behaviour at variable level for more flexibility (each operator has its own QStringList)
+	- plastique isn't used as default style anymore (except under Win32 whose native style is definitely ugly!)
+	- changed a few icons
+	- improved action enabling/disabling depending to openned file or projects
+
+
  16 February 2006 : first open release that features kind of a roadmap
-	- find & replace dialogs aren't modals anymore (Thanks a lot to Cesar)
+	- find & replace dialogs use the damn useful stay on top (Thanks a lot to Cesar)
 	- added a corner widget for the tabwidget, 2 buttons :
 		* '+' creates anew empty editor
 		* '-' deletes the current active editor (close it actually)
@@ -15,8 +43,7 @@
 		it wouldn't display the given text but may disturb the display of labels)
 	- fixed undo/redo : for an unknown and weird reason, breakpoints and errors broke it
 	- fixed 2 highlighting bug reported by DAMN! I CAN'T REMEMBER HIS NAME...
-	- fixed an unreported highlighting bug :
-	comments directly preceded by letters or numbers were not highlighted
+	- fixed an unreported highlighting bug : comments directly preceded by letters or numbers weren't highlighted
 	- fixed icon size troubles
 	- improved project files (.pro) handling
 	- improved save mechanism (prompt at close, save only if modified...)
