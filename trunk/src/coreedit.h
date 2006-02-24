@@ -27,6 +27,8 @@
 
 #include "dev.h"
 
+class QColor;
+
 class CoreEdit : public QTextEdit
 {
 	Q_OBJECT
@@ -41,16 +43,17 @@ class CoreEdit : public QTextEdit
 	protected slots:
 		void textCursorPos();
 		void docModified(bool mod);
+		void setMarkCurrentLine( bool enable );
+		void setCurrentLineColor( QColor color );
 		
 	protected:
 		virtual void paintEvent(QPaintEvent *e);
 		virtual void keyPressEvent(QKeyEvent *e);
 		virtual void mouseMoveEvent(QMouseEvent *e);
-		virtual void mousePressEvent(QMouseEvent *e);
-		virtual void mouseReleaseEvent(QMouseEvent *e);
-		virtual void mouseDoubleClickEvent(QMouseEvent *e);
 		virtual void contextMenuEvent(QContextMenuEvent *e);
 		
+		bool markCurrentLine;
+		QColor currentLineColor;
 };
 
 #endif

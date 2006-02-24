@@ -31,32 +31,70 @@ CoreEdit::CoreEdit(QWidget *p, const QString& s)
 	setLineWrapMode(NoWrap);
 	setWordWrapMode(QTextOption::NoWrap);
 	
+	markCurrentLine  = true;
+ 	currentLineColor = QColor(0x00, 0xff, 0xff, 0x30);
+
+	// this will disable the pasting of richtext (line copying
+	// html from a browser and pasting it on the editor)
+	setAcceptRichText(false);
 	setPlainText(s);
 	
-	connect(this, SIGNAL( cursorPositionChanged() ),
-			this, SLOT  ( textCursorPos() ) );
+	connect( this, SIGNAL(cursorPositionChanged()), this, SLOT  (textCursorPos()));
+	connect( document(), SIGNAL(modificationChanged(bool)),	this, SLOT  ( docModified(bool)));
+}
+
+void CoreEdit::textCursorPos()
+{
+	QTextCursor c = textCursor();
+	QTextBlock b = c.block();
 	
-	connect(document()	, SIGNAL( modificationChanged(bool) ),
-			this		, SLOT  ( docModified(bool) ) );
+	int x = c.position() - b.position();
+	int y = DevQt::line(document(), b);
+
+	message( QString(tr("Text: Row %1 Column %2").arg(x).arg(y)), (int)DevQt::TextCursor);
 	
+	viewport()->update();
 }
 
-void CoreEdit::mousePressEvent(QMouseEvent *e)
+void CoreEdit::docModified( bool mod )
 {
-	viewport()->update();
-	QTextEdit::mousePressEvent(e);
+	if (mod)
+		message( tr("Modified"), (int)DevQt::Modification);
+	else
+		message( "", (int)DevQt::Modification);
 }
 
-void CoreEdit::mouseReleaseEvent(QMouseEvent *e)
+void CoreEdit::setMarkCurrentLine( bool enable )
 {
+	markCurrentLine = enable;
 	viewport()->update();
-	QTextEdit::mouseReleaseEvent(e);
 }
 
-void CoreEdit::mouseDoubleClickEvent(QMouseEvent *e)
+void CoreEdit::setCurrentLineColor( QColor color )
 {
-	viewport()->update();
-	QTextEdit::mouseDoubleClickEvent(e);
+	currentLineColor = color;
+
+	// a little optimization, no need to update
+	// gui if the current line should not be marked
+	if (markCurrentLine)
+		viewport()->update();
+}
+
+void CoreEdit::paintEvent(QPaintEvent *e)
+{
+	if (markCurrentLine)
+	{
+		QPainter p( viewport() );
+		QRect r( 0,
+			cursorRect().y(),
+			viewport()->width(),
+			QFontMetrics( document()->defaultFont() ).lineSpacing() );
+		
+		p.fillRect( r, currentLineColor );
+		p.end();
+	}
+	
+	QTextEdit::paintEvent(e);
 }
 
 void CoreEdit::keyPressEvent(QKeyEvent *e)
@@ -68,16 +106,15 @@ void CoreEdit::keyPressEvent(QKeyEvent *e)
 		setOverwriteMode(m);
 		
 		if ( m )
-			message("Overwrite", (int)DevQt::TypingMode);
+			message( tr("Overwrite"), (int)DevQt::TypingMode);
 		else
-			message("Insert", (int)DevQt::TypingMode);
+			message( tr("Insert"), (int)DevQt::TypingMode);
 		
-	} else {
+	}
+	else
+	{
 		QTextEdit::keyPressEvent(e);
-		viewport()->update();
-		
-		message(QString::number( DevQt::lines( document() ) ), 
-				(int)DevQt::Lines);
+		message(QString::number(DevQt::lines(document())), (int)DevQt::Lines );
 	}
 }
 
@@ -107,15 +144,15 @@ void CoreEdit::mouseMoveEvent(QMouseEvent *e)
 	}
 	else
 	{
-		col = QString::number(-1);
-		row = QString::number(-1);
+		col = "-1";
+		row = "-1";
+
+//		WTF?
+// 		col = QString::number(-1);
+// 		row = QString::number(-1);
 	}
 	
-	message(QString("Mouse :") + " Row " + row + ", Column " + col,
-			(int)DevQt::MouseCursor);
-	
-	if ( e->buttons() )
-		viewport()->update();
+	message( QString(tr("Mouse: Row %1 Column %2").arg(col).arg(row)), (int)DevQt::MouseCursor);
 	
 	QTextEdit::mouseMoveEvent(e);
 }
@@ -125,40 +162,3 @@ void CoreEdit::contextMenuEvent(QContextMenuEvent *e)
 	viewport()->update();
 	e->ignore();
 }
-
-void CoreEdit::paintEvent(QPaintEvent *e)
-{
-	QPainter p( viewport() );
-	QRect r(0,
-			cursorRect().y(),
-			viewport()->width(),
-			QFontMetrics( document()->defaultFont() ).lineSpacing() );
-	
-	p.fillRect(r, QColor(0x00, 0xff, 0xff, 0x30));
-	p.end();
-	
-	QTextEdit::paintEvent(e);
-}
-
-void CoreEdit::textCursorPos()
-{
-	QTextCursor c = textCursor();
-	QTextBlock b = c.block();
-	
-	int x = c.position() - b.position(), y = DevQt::line(document(), b);
-	
-	QString col = QString::number(x);
-	QString row = QString::number(y);
-	
-	message(QString("Text :") + " Row " + row + ", Column " + col,
-			(int)DevQt::TextCursor);
-}
-
-void CoreEdit::docModified(bool mod)
-{
-	if ( mod )
-		message("Modified", (int)DevQt::Modification);
-	else
-		message("", (int)DevQt::Modification);
-}
-
