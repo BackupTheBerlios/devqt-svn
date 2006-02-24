@@ -82,35 +82,35 @@ DevGUI::DevGUI()
 	pDlg = new DevPropertiesDialog(Editor);
 
 	connect(QApplication::clipboard()	, SIGNAL(dataChanged()),
-			this						, SLOT  (clipboardDataChanged()) );
+			this, SLOT  (clipboardDataChanged()) );
 	
 	s = new DevStatus;
 	setStatusBar(s);
 	
-    setupMenu();
+	setupMenu();
     
 	setupFileActions();
-    setupEditActions();
-    setupSearchActions();
-    setupProjectActions();
-    
-    setupExplorer();
-    setupCompiler();
-    
-    setupSettings();
-    setupHelpActions();
-    
-    QToolBar *tb = new QToolBar(this);
+	setupEditActions();
+	setupSearchActions();
+	setupProjectActions();
+	
+	setupExplorer();
+	setupCompiler();
+	
+	setupSettings();
+	setupHelpActions();
+	
+	QToolBar *tb = new QToolBar(this);
 	tb->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
-    tb->setWindowTitle(tr("Projects Actions"));
-    addToolBar(tb);
+	tb->setWindowTitle(tr("Projects Actions"));
+	addToolBar(tb);
 
 	tb = new QToolBar(this);
 	tb->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
-    tb->setWindowTitle(tr("Scopes Actions"));
+	tb->setWindowTitle(tr("Scopes Actions"));
 	addToolBarBreak(Qt::TopToolBarArea);
-    addToolBar(tb);
-    
+	addToolBar(tb);
+
 	project = new QComboBox(tb);
 	project->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	tb->addWidget(project);
@@ -121,13 +121,10 @@ DevGUI::DevGUI()
 	
 	connect(project	, SIGNAL( currentIndexChanged(const QString&) ),
 			this	, SLOT  ( changeProject(const QString&) ) );
-	
-	
-	Compiler->hide();
-	Compiler->setWindowIcon(QIcon(":/compiler.png"));
-	
+		
 	if (DEV_APP->argc() == 1)
 	{
+		// TODO what to open by default when no arguments have been passed to the appliation...?
 		//if (!load("deveditor.cpp"))
 		//	fileNew();
 	} else {
@@ -135,8 +132,9 @@ DevGUI::DevGUI()
 			load(DEV_APP->argv()[i]);
 	}
 	
+	// TODO: session managment - restore window state
 	setWindowState(Qt::WindowMaximized);
-	setWindowTitle("DevQt 0.2.0");
+	setWindowTitle("DevQt 0.2.2");
 }
 
 DevGUI::~DevGUI()
@@ -158,7 +156,6 @@ void DevGUI::setupMenu()
 	a = aRedo		= new QAction(QIcon(":/redo.png"), tr("&Redo"), this);
 	a->setEnabled( false );
 	menu->addAction(a);
-	
 	menu->addSeparator();
     
 	a = aCut		= new QAction(QIcon(":/cut.png"), tr("Cu&t"), this);
@@ -309,18 +306,6 @@ void DevGUI::setupFileActions()
     a->setEnabled(false);
     menu->addAction(a);
     
-    a = aSaveProject = new QAction(QIcon(":/saveproject"), tr("Save Project"), this);
-    connect(a	, SIGNAL( triggered() ),
-			this, SLOT  ( projectSave() ) );
-    a->setEnabled(false);
-    menu->addAction(a);
-    
-    a = aSaveProjectAs = new QAction(QIcon(":/saveprojectas.png"), 
-									tr("Save project As..."), this);
-    connect(a	, SIGNAL( triggered() ),
-			this, SLOT  ( projectSaveAs() ) );
-    a->setEnabled(false);
-    menu->addAction(a);
     
     menu->addSeparator();
 
@@ -334,13 +319,6 @@ void DevGUI::setupFileActions()
     
     a = aCloseAll = new QAction(tr("C&lose all"), this);
     connect(a, SIGNAL(triggered()), this, SLOT(close()));
-    a->setEnabled(false);
-    menu->addAction(a);
-	
-	a = aCloseProject = new QAction(tr("Close projec&t"), this);
-    a->setShortcut(Qt::CTRL + Qt::Key_W);
-    connect(a	, SIGNAL( triggered() ),
-			this, SLOT( close() ) );
     a->setEnabled(false);
     menu->addAction(a);
 	
@@ -514,6 +492,7 @@ void DevGUI::setupExplorer()
 	tabExplorer->addTab(treeClasses, tr("Classes"));
 	
 	Explorer->setWindowIcon(QIcon(":/explorer.png"));
+	Explorer->hide();
 }
 
 void DevGUI::setupCompiler()
@@ -521,75 +500,98 @@ void DevGUI::setupCompiler()
 	QAction *a;
 	QToolBar *tb = new QToolBar(this);
 	tb->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
-    tb->setWindowTitle(tr("Compiler Actions"));
-    addToolBarBreak();
-    addToolBar(tb);
-    
-    QMenu *menu = new QMenu(tr("E&xecute"), this);
-    menuBar()->addMenu(menu);
-    
-    a = aCompile = new QAction(QIcon(":/compile.png"), tr("&Compile..."), this);
-    a->setShortcut(Qt::CTRL + Qt::Key_F9);
-    connect(a	, SIGNAL( triggered() ),
+	tb->setWindowTitle(tr("Compiler Actions"));
+	addToolBarBreak();
+	addToolBar(tb);
+	
+	QMenu *menu = new QMenu(tr("E&xecute"), this);
+	menuBar()->addMenu(menu);
+	
+	a = aCompile = new QAction(QIcon(":/compile.png"), tr("&Compile..."), this);
+	a->setShortcut(Qt::CTRL + Qt::Key_F9);
+	connect(a	, SIGNAL( triggered() ),
 			this, SLOT  ( compile() ) );
-    a->setEnabled(false);
-    tb->addAction(a);
-    menu->addAction(a);
-    
-    a = aRun = new QAction(QIcon(":/exec.png"), tr("&Run..."), this);
-    a->setShortcut(Qt::CTRL + Qt::Key_F10);
-    connect(a	, SIGNAL( triggered()  ),
+	a->setEnabled(false);
+	tb->addAction(a);
+	menu->addAction(a);
+	
+	a = aRun = new QAction(QIcon(":/exec.png"), tr("&Run..."), this);
+	a->setShortcut(Qt::CTRL + Qt::Key_F10);
+	connect(a	, SIGNAL( triggered()  ),
 			this, SLOT  ( run() ) );
-    a->setEnabled(false);
-    tb->addAction(a);
-    menu->addAction(a);
-    
-    a = aParams = new QAction(tr("&Params"), this);
-    connect(a	, SIGNAL( triggered() ),
+	a->setEnabled(false);
+	tb->addAction(a);
+	menu->addAction(a);
+	
+	a = aParams = new QAction(tr("&Params"), this);
+	connect(a	, SIGNAL( triggered() ),
 			this, SLOT  ( params() ) );
-    a->setEnabled(false);
-    menu->addAction(a);
-    
-    menu->addSeparator();
-    
-    a = aCompRun = new QAction(QIcon(":/comprun.png"), tr("C&ompile and run..."), this);
-    a->setShortcut(Qt::Key_F9);
-    connect(a	, SIGNAL( triggered() ),
+	a->setEnabled(false);
+	menu->addAction(a);
+	
+	menu->addSeparator();
+	
+	a = aCompRun = new QAction(QIcon(":/comprun.png"), tr("C&ompile and run..."), this);
+	a->setShortcut(Qt::Key_F9);
+	connect(a	, SIGNAL( triggered() ),
 			this, SLOT  ( compRun() ) );
-    a->setEnabled(false);
-    tb->addAction(a);
-    menu->addAction(a);
-    
-    a = aRebuild = new QAction(QIcon(":/rebuild.png"), tr("R&ebuild all..."), this);
-    a->setShortcut(Qt::CTRL + Qt::Key_F11);
-    connect(a	, SIGNAL( triggered() ),
+	a->setEnabled(false);
+	tb->addAction(a);
+	menu->addAction(a);
+	
+	a = aRebuild = new QAction(QIcon(":/rebuild.png"), tr("R&ebuild all..."), this);
+	a->setShortcut(Qt::CTRL + Qt::Key_F11);
+	connect(a	, SIGNAL( triggered() ),
 			this, SLOT  ( rebuild() ));
-    a->setEnabled(false);
-    tb->addAction(a);
-    menu->addAction(a);
-    
-    a = aSyntax = new QAction(tr("&Syntax check..."), this);
-    connect(a	, SIGNAL( triggered() ),
+	a->setEnabled(false);
+	tb->addAction(a);
+	menu->addAction(a);
+	
+	a = aSyntax = new QAction(tr("&Syntax check..."), this);
+	connect(a	, SIGNAL( triggered() ),
 			this, SLOT  ( syntax() ) );
-    a->setEnabled(false);
-    menu->addAction(a);
-    
-    a = aClean = new QAction(tr("C&lean..."), this);
-    connect(a	, SIGNAL( triggered() ),
+	a->setEnabled(false);
+	menu->addAction(a);
+	
+	a = aClean = new QAction(tr("C&lean..."), this);
+	connect(a	, SIGNAL( triggered() ),
 			this, SLOT  ( clean() ) );
-    a->setEnabled(false);
-    menu->addAction(a);
-    
-    tb->setIconSize( QSize(22, 22) );
-    
+	a->setEnabled(false);
+	menu->addAction(a);
+	
+	tb->setIconSize( QSize(22, 22) );
+   	
 	Compiler = new DevDock(tr("Compiler"), Qt::BottomDockWidgetArea, this);
 	tabCompiler = Compiler->Tab();
+	Compiler->hide();
+	Compiler->setWindowIcon(QIcon(":/compiler.png"));
 }
 
 void DevGUI::setupProjectActions()
 {
-    QMenu *menu = new QMenu(tr("&Project"), this);
-    menuBar()->addMenu(menu);
+	QMenu *menu = new QMenu(tr("&Project"), this);
+
+	aSaveProject = new QAction(QIcon(":/saveproject"), tr("Save Project"), this);
+	aSaveProject->setEnabled(false);
+	connect(aSaveProject, SIGNAL(triggered()), this, SLOT(projectSave()));
+	
+	aSaveProjectAs = new QAction(QIcon(":/saveprojectas.png"), tr("Save project As..."), this);
+	aSaveProjectAs->setEnabled(false);
+	connect( aSaveProjectAs, SIGNAL(triggered()), this, SLOT(projectSaveAs()));
+
+	// TODO: this should close the project and not the current file
+	// TODO: connect this action to a slot
+	aCloseProject = new QAction(tr("Close projec&t"), this);
+	aCloseProject->setShortcut(Qt::CTRL + Qt::Key_W);
+	aCloseProject->setEnabled(false);
+	/*connect(a	, SIGNAL( triggered() ),this, SLOT( close() ) ); */
+
+	menu->addAction( aNewProject );
+	menu->addAction( aSaveProject );
+	menu->addAction( aSaveProjectAs );
+	menu->addAction( aCloseProject );
+	
+	menuBar()->addMenu(menu);
 }
 
 void DevGUI::setupSettings()
@@ -605,17 +607,17 @@ void DevGUI::setupSettings()
 
 bool DevGUI::load(const QString &f)
 {
-    if (!QFile::exists(f))
-        return false;
-    
-    if (f.endsWith(".pro"))
-    	return loadProject(f);
-    
-    createEditor(f);
-    
-    DEV_SETTINGS->addRecent(f);
-    
-    return true;
+	if (!QFile::exists(f))
+		return false;
+	
+	if (f.endsWith(".pro"))
+		return loadProject(f);
+	
+	createEditor(f);
+	
+	DEV_SETTINGS->addRecent(f);
+	
+	return true;
 }
 
 bool DevGUI::loadProject(const QString &f)
@@ -640,6 +642,7 @@ bool DevGUI::loadProject(const QString &f)
 		project->addItem(f);
 		
 		DEV_SETTINGS->addRecent(f, true);
+		Explorer->show();
 	}
 	
 	return s;
@@ -667,13 +670,14 @@ void DevGUI::fileNew()
 
 void DevGUI::fileOpen()
 {
-    QStringList fl = QFileDialog::getOpenFileNames(	this,
-													"Open File...",
-        											QString(),
-													DevQt::supportedFiles );
+	QStringList fl = QFileDialog::getOpenFileNames(	this,
+		"Open File...",
+        	QString(),
+		DevQt::supportedFiles 
+	);
 	
 	foreach(QString fn, fl)
-        load(fn);
+		load(fn);
 }
 
 void DevGUI::fileSave(const QString& n, const QString& ext)

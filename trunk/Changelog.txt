@@ -52,13 +52,6 @@
 	- when editing inside a multiline string, typing '\' freezes the program.
 	I think it comes from highlighting but don't manage to solve it!
 
- TODO:
-	- add "save project" option
-	- implement the properties dialog
-	- implement compilation ( still a lot of work to do!!! )
-	- add a dialog that deals with text editor properties and GUI style (singleton)
-	- and a lot more... :)
-
 
  So long ago : first version released
 	- lots of TODOs ;)

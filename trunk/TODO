@@ -1,0 +1,24 @@
+TODO:
+	== Functionality
+	- implement the properties dialog
+	- implement compilation ( still a lot of work to do!!! )
+	- Implement debug
+	- add a dialog that deals with text editor properties and GUI style (singleton)
+	- Move the Opening of projects into the Project menu
+	- Ability to close projects, create new projects and saving them
+	- Add new files to the current project (via File->New->*)
+	
+	== Internal
+	- MDI library and dunamic menus + toolbars (diego)
+	- Generic syntax higlighter
+	- Get a coding style guides
+	- Need to refactor DevGUI::setupMenu(), it's code is ugly
+
+	== General
+	- Need an icon for the project
+	- Need help for the project
+	- Need Doxygen documentation
+
+	
+and a lot more... :)
+
