@@ -418,7 +418,7 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 				if ( (i = text.indexOf('/', i)) == -1 )
 					break;
 				n = i;
-				switch ( text.at(++i).toLatin1() )
+				switch ( str[++i].toLatin1() )
 				{
 					case '/':
 						setFormat(n, len-n, fmts[comment]);
