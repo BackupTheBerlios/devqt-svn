@@ -169,9 +169,13 @@ void DevGUI::setupMenu()
 	menu->addAction(a);
 	
 	a = aPaste		= new QAction(QIcon(":/paste.png"), tr("&Paste"), this);
-	connect(a	, SIGNAL( triggered() ),
-			this, SLOT	( paste() ) );
+	// We're already doing this elsewhere. Having it connect twice, once to "this" and once
+	// elsewhere to "e" just makes the program paste the contents of the clipboard twice
+	// when user clicks the Paste button in the toolbar.
+	//	connect(a    , SIGNAL( triggered() ),
+	//	 this, SLOT      ( paste() ) );
 	menu->addAction(a);
+	
 	
 	a = aSelectAll	= new QAction(tr("&Select All"), this);
 	connect(a	, SIGNAL( triggered() ),
