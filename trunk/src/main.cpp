@@ -23,10 +23,14 @@
 ****************************************************************************/
 
 #include "devapp.h"
+#include "stdio.h"
 
 int main (int argc, char **argv)
 {
 	Q_INIT_RESOURCE(DevEditor);
-	
-	return DevQt(argc, argv)->exec();
+	int exit_code = DevQt(argc, argv)->exec();
+	DEV_APP->killApp();
+	if (!exit_code)
+		qDebug("DevQt successfully terminated.");
+	return exit_code;
 }

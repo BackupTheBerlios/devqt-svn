@@ -23,6 +23,7 @@
 ****************************************************************************/
 
 #include "devhighlighter.h"
+#include "devgui.h"
 
 /*
 
@@ -261,20 +262,20 @@ void CppHighlighter::setupData()
 	fmts.resize(5);
 	QTextCharFormat f;
 	
-	f.setForeground(Qt::darkMagenta);
+	f.setForeground(DEV_GUI->getNumberBrush());
 	fmts[number] = f;
 	
-	f.setForeground(Qt::red);
+	f.setForeground(DEV_GUI->getQuoteBrush());
 	fmts[quote] = f;
 	
-	f.setForeground(Qt::darkGreen);
+	f.setForeground(DEV_GUI->getPreprocessorBrush());
 	fmts[preprocessor] = f;
 	
-	f.setForeground(Qt::black);
+	f.setForeground(DEV_GUI->getKeywordBrush());
 	f.setFontWeight(QFont::Bold);
 	fmts[keyword] = f;
 	
-	f.setForeground(Qt::darkBlue);
+	f.setForeground(DEV_GUI->getCommentBrush());
 	f.setFontWeight(QFont::Normal);
 	f.setFontItalic(true);
 	fmts[comment] = f;

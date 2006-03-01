@@ -133,14 +133,50 @@ DevGUI::DevGUI()
 	}
 	
 	// TODO: session managment - restore window state
-	setWindowState(Qt::WindowMaximized);
+	//setWindowState(Qt::WindowMaximized);
+
+	// Load all GUI-related settings from conf file.
+
+	int winwidth = DEV_SETTINGS->value("gui/width").toInt();
+	int winheight = DEV_SETTINGS->value("gui/height").toInt();
+	if (winwidth && winheight)
+	{
+		resize(winwidth, winheight);
+		QPoint winpos = DEV_SETTINGS->value("gui/pos").toPoint();
+		if (!winpos.isNull())
+			move(winpos);
+	} else setWindowState(Qt::WindowMaximized);
 	setWindowTitle("DevQt 0.2.2");
+
+	fontFamily = DEV_SETTINGS->value("editor/fontfamily", "Courier New").toString();
+	// There's no function in QVariant for qreal's data type, but it's
+	// really just a double so we'll convert it with toDouble.
+	fontSize = DEV_SETTINGS->value("editor/fontsize", 10).toDouble();
+
+	// Load the Syntax Highlighter colors or defaults if no colors are specified
+	numberBrush = (Qt::GlobalColor)DEV_SETTINGS->value("highlighter/number", Qt::darkMagenta).toInt();
+	quoteBrush = (Qt::GlobalColor)DEV_SETTINGS->value("highlighter/quote", Qt::red).toInt();
+	preprocessorBrush = (Qt::GlobalColor)DEV_SETTINGS->value("highlighter/preprocessor", Qt::darkGreen).toInt();
+	keywordBrush = (Qt::GlobalColor)DEV_SETTINGS->value("highlighter/keyword", Qt::black).toInt();
+	commentBrush = (Qt::GlobalColor)DEV_SETTINGS->value("highlighter/comment", Qt::darkBlue).toInt();
+
+}
+
+void DevGUI::killGUI()
+{
+	if ( _gui )
+	{
+		qDebug("GUI terminating...");
+		delete _gui;
+	}
 }
 
 DevGUI::~DevGUI()
 {
 	closeAll();
-	delete workspace;
+//	delete workspace;
+	// DEV_SETTINGS->killSettings();
+	qDebug("Shutting down GUI");
 }
 
 void DevGUI::setupMenu()
@@ -1251,10 +1287,10 @@ void DevGUI::hideExplorer()
 }
 
 
-void DevGUI::closeEvent(QCloseEvent *e)
+void DevGUI::closeEvent(QCloseEvent *event)
 {
 	closeAll();
 	delete workspace;
 	
-	e->accept();
+	event->accept();
 }

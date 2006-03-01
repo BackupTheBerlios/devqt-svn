@@ -47,7 +47,7 @@ class DevSettings : public QSettings
 		
 		QMenu* recent();
 		void applyFormat(DevEdit *e);
-		
+		void killSettings();
 	public slots:
 		void execute();
 		void addRecent(const QString& n, bool project = false);

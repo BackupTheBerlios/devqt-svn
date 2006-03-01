@@ -23,7 +23,7 @@
 ****************************************************************************/
 
 #include "devedit.h"
-
+#include "devgui.h"
 #include "coreedit.h"
 #include "devstatus.h"
 #include "devlinenumber.h"
@@ -65,7 +65,7 @@ void DevEdit::setup()
 	setLayout(grid);
 	
 	//setup editor properties
-	setFont( QFont("Courier New", 10) );
+	setFont( QFont(DEV_GUI->getFontFamily(), DEV_GUI->getFontSize()) );
 	
 	hl = new CppHighlighter(e);//, true);
 	

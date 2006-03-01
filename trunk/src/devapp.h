@@ -38,7 +38,7 @@ class DevApp : public QApplication
 	public:
 		static DevApp* Instance();
 		static DevApp* Init(int argc, char **argv);
-		
+		void killApp();
 	protected:
 		DevApp(int argc, char **argv);
 		virtual ~DevApp();

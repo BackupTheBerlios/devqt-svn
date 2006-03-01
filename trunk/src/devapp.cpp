@@ -87,7 +87,18 @@ DevApp::DevApp(int argc, char **argv)
 	gui->show();
 }
 
-DevApp::~DevApp()
+void DevApp::killApp()
 {
+	if ( _app )
+	{
+		qDebug("App terminating....");
+		delete _app;
+	}
 }
 
+DevApp::~DevApp()
+{
+	set->killSettings();
+	gui->killGUI();
+	qDebug("Shutting down application.");
+}

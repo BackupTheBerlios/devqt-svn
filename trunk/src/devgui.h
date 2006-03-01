@@ -50,7 +50,14 @@ class DevGUI : public QMainWindow
 	
 	public:
 		static DevGUI* Instance();
-		
+		void killGUI();
+		QString getFontFamily() { return fontFamily; }
+		qreal	getFontSize() { return fontSize; }
+		Qt::GlobalColor	getNumberBrush() { return numberBrush; }
+		Qt::GlobalColor	getCommentBrush() { return commentBrush; }
+		Qt::GlobalColor	getKeywordBrush() { return keywordBrush; }
+		Qt::GlobalColor	getQuoteBrush() { return quoteBrush; }
+		Qt::GlobalColor	getPreprocessorBrush() { return preprocessorBrush; }
 	protected:
 		DevGUI();
 		virtual ~DevGUI();
@@ -234,6 +241,17 @@ class DevGUI : public QMainWindow
 		long noname_count;
 			
 		static DevGUI *_gui;
+
+		// Variables which store the default font family and size for the editor windows
+		QString	fontFamily;
+		qreal	fontSize;
+		// Variables containing the colors for the syntax highlighter
+		Qt::GlobalColor	numberBrush;
+		Qt::GlobalColor	quoteBrush;
+		Qt::GlobalColor	preprocessorBrush;
+		Qt::GlobalColor	keywordBrush;
+		Qt::GlobalColor	commentBrush;
+		
 };
 
 #endif

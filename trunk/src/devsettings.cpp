@@ -33,9 +33,9 @@ Settings map:
 	
 |		purpose			|		key				|			type			|
 |---------------------------------------------------------------------------|
-|	recent files : 		|	recent/files		|		QStringList			|
-|	recent projects : 	|	recent/projects		|		QStringList			|
-|-----------------------|-----------------------|---------------------------|
+|    recent files:        |    recent/files       |      QStringList        |
+|    recent projects:     |    recent/projects	  |      QStringList        |
+|-------------------------|-----------------------|-------------------------|
 |	higlight formats	|	edit/formats		|	QList<QTextCharFormat>	|
 |	editor font			|	edit/font			|			QFont			|
 |	gutter font			|	edit/gutter/font	|			QFont			|
@@ -55,6 +55,12 @@ DevSettings* DevSettings::Instance()
 		inst = new DevSettings;
 		
 	return inst;
+}
+
+void DevSettings::killSettings()
+{
+	if ( inst )
+		delete inst;
 }
 
 DevSettings::DevSettings(QWidget *p)
@@ -147,7 +153,27 @@ DevSettings::DevSettings(QWidget *p)
 
 DevSettings::~DevSettings()
 {
-	;
+        beginGroup("gui");
+        setValue("state", QVariant(DEV_GUI->windowState()));
+        setValue("title", QVariant(DEV_GUI->windowTitle()));
+        setValue("height", QVariant(DEV_GUI->height()));
+        setValue("width", QVariant(DEV_GUI->width()));
+        setValue("pos", QVariant(DEV_GUI->pos()));
+        endGroup();
+
+	beginGroup("editor");
+	setValue("fontfamily", QVariant(DEV_GUI->getFontFamily()));
+	setValue("fontsize", QVariant(DEV_GUI->getFontSize()));
+	endGroup();
+
+	beginGroup("highlighter");
+	setValue("number", QVariant(DEV_GUI->getNumberBrush()));
+	setValue("quote", QVariant(DEV_GUI->getQuoteBrush()));
+	setValue("preprocessor", QVariant(DEV_GUI->getPreprocessorBrush()));
+	setValue("keyword", QVariant(DEV_GUI->getKeywordBrush()));
+	setValue("comment", QVariant(DEV_GUI->getCommentBrush()));
+	endGroup();
+	qDebug("Settings saved.");
 }
 
 void DevSettings::applyFormat(DevEdit *e)
