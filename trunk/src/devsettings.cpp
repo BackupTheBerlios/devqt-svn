@@ -30,19 +30,19 @@
 /*
 
 Settings map:
-	
-|		purpose			|		key				|			type			|
+
+|       purpose           |    key                |      type               |
 |---------------------------------------------------------------------------|
 |    recent files:        |    recent/files       |      QStringList        |
 |    recent projects:     |    recent/projects	  |      QStringList        |
 |-------------------------|-----------------------|-------------------------|
-|	higlight formats	|	edit/formats		|	QList<QTextCharFormat>	|
-|	editor font			|	edit/font			|			QFont			|
-|	gutter font			|	edit/gutter/font	|			QFont			|
-|	tab width			|	edit/tabs			|			int				|
-|	insert mode			|	edit/insert			|			bool			|
-|	auto indent			|	edit/indent			|			bool			|
-|	scrollbar as needed	|	edit/scroll			|			bool			|
+|    higlight formats     |    edit/formats       |  QList<QTextCharFormat> |
+|    editor font          |    edit/font          |  QFont                  |
+|    gutter font          |    edit/gutter/font   |  QFont                  |
+|    tab width            |    edit/tabs          |  int                    |
+|    insert mode          |    edit/insert        |  bool                   |
+|    auto indent          |    edit/indent        |  bool                   |
+|    scrollbar as needed  |    edit/scroll        |  bool                   |
 |---------------------------------------------------------------------------|
 
 */
