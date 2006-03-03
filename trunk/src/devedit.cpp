@@ -274,7 +274,7 @@ void DevEdit::indent()
 	;
 }
 
-void DevEdit::scrollTo(const QString &txt, const QString &first)
+void DevEdit::scrollTo(const QString & /*txt*/, const QString & /*first*/)
 {
 	//e->scrollTo(txt, first);
 }

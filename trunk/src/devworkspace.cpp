@@ -68,7 +68,7 @@ DevWorkSpace::~DevWorkSpace()
 	DevProjectMap::clear();
 }
 
-void DevWorkSpace::loadWorkSpace(const QString& name)
+void DevWorkSpace::loadWorkSpace(const QString& /*name*/)
 {
 	QFile f(n);
 	
@@ -231,7 +231,7 @@ bool DevWorkSpace::addFile(const QString& name, const QString& project, const QS
 }
 */
 
-bool DevWorkSpace::newProject(const QString& name)
+bool DevWorkSpace::newProject(const QString& /*name*/)
 {
 	return false;
 }
@@ -312,17 +312,17 @@ void DevWorkSpace::deletion(AbstractFile *o)
 	delete i;
 }
 
-void DevWorkSpace::rename(AbstractFile *o)
+void DevWorkSpace::rename(AbstractFile * /*o*/)
 {
 	QMessageBox::warning(0, "!", "renaming...");
 }
 
-void DevWorkSpace::addFile(DevFolder *p)
+void DevWorkSpace::addFile(DevFolder * /*p*/)
 {
 	QMessageBox::warning(0, "!", "adding file...");
 }
 
-void DevWorkSpace::subFolder(DevFolder *p)
+void DevWorkSpace::subFolder(DevFolder * /*p*/)
 {
 	QMessageBox::warning(0, "!", "creating subfolder...");
 }

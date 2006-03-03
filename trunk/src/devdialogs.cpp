@@ -27,38 +27,7 @@
 DevGotoDialog::DevGotoDialog(QWidget *p)
  : QDialog(p)
 {
-	setWindowTitle("Goto line");
-	
-	connect(this, SIGNAL( accepted() ),
-			this, SLOT  ( process()  ) );
-	
-	QLabel *lbl;
-	QVBoxLayout *vb = new QVBoxLayout;
-	QHBoxLayout *hc = new QHBoxLayout, *hb = new QHBoxLayout;
-	
-	lbl = new QLabel("New line");
-	hc->addWidget(lbl);
-	
-	line = new QSpinBox;
-	line->setMinimum(1);
-	hc->addWidget(line);
-	
-	//vc->setSizeConstraint(QLayout::SetMaximumSize);
-	
-	b_accept = new QPushButton("&Goto");
-	connect(b_accept, SIGNAL( clicked() ),
-			this	, SLOT  ( accept() ) );
-	hb->addWidget(b_accept);
-	
-	b_cancel = new QPushButton("&Cancel");
-	connect(b_cancel, SIGNAL( clicked() ),
-			this	, SLOT  ( reject() ) );
-	hb->addWidget(b_cancel);
-	
-	vb->addLayout(hc);
-	vb->addLayout(hb);
-	
-	setLayout(vb);
+	setupUi(this);
 }
 
 DevGotoDialog::~DevGotoDialog()
@@ -96,82 +65,19 @@ void DevGotoDialog::process()
 }
 
 DevFindDialog::DevFindDialog(QWidget *p)
- : QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint)
+ : QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint), status(0)
 {
-	setWindowTitle("Find text");
-	
-	QLabel *lbl;
-	QGroupBox *g;
-	QVBoxLayout *b;
-	QGridLayout *l = new QGridLayout;
-	
-	text = new QLineEdit;
-	lbl = new QLabel("Text to Find");
-	l->addWidget(lbl, 0, 0, 1, 1);
-	l->addWidget(text, 0, 1, 1, 3);
-	
-	g = new QGroupBox("Options");
-	b = new QVBoxLayout;
-	
-	sensitive = new QCheckBox("Case &sensitive");
-	b->addWidget(sensitive);
-	
-	bound = new QCheckBox("&Whole words only");
-	b->addWidget(bound);
-	
-	g->setLayout(b);
-	l->addWidget(g, 1, 0, 3, 2);
-	
-	g = new QGroupBox("Direction");
-	b = new QVBoxLayout;
-	
-	forward = new QRadioButton("Forward");
-	forward->toggle();
-	b->addWidget(forward);
-	
-	backward = new QRadioButton("Backward");
-	b->addWidget(backward);
-	
-	g->setLayout(b);
-	l->addWidget(g, 1, 2, 3, 2);
-	
-	g = new QGroupBox("Scope");
-	b = new QVBoxLayout;
-	
-	global = new QRadioButton("Global");
-	global->toggle();
-	b->addWidget(global);
-	
-	selection = new QRadioButton("Selected only");
-	b->addWidget(selection);
-	
-	g->setLayout(b);
-	l->addWidget(g, 4, 0, 3, 2);
-	
-	g = new QGroupBox("Origin");
-	b = new QVBoxLayout;
-	
-	cursor = new QRadioButton("Cursor");
-	cursor->toggle();
-	b->addWidget(cursor);
-	
-	whole = new QRadioButton("Entire scope");
-	b->addWidget(whole);
-	
-	g->setLayout(b);
-	l->addWidget(g, 4, 2, 3, 2);
-	
-	b_accept = new QPushButton("&Find");
+	setupUi(this);
+
+	QGridLayout *l = qobject_cast<QGridLayout*>(layout());
+	if ( l != 0 ) {
+		status = new QStatusBar(this);
+		status->setSizeGripEnabled(true);
+		l->addWidget(status, l->rowCount(), 0, 1, l->columnCount());
+	}
+
 	connect(b_accept, SIGNAL( clicked() ),
-			this	, SLOT  ( setVars() ) );
-	l->addWidget(b_accept, 7, 0, 1, 1);
-	
-	b_cancel = new QPushButton("&Cancel");
-	connect(b_cancel, SIGNAL( clicked() ),
-			this	, SLOT  ( hide() ) );
-	l->addWidget(b_cancel, 7, 3, 1, 1);
-	
-	setLayout(l);
+			this	, SLOT  ( process() ) );
 }
 
 DevFindDialog::~DevFindDialog()
@@ -184,25 +90,35 @@ void DevFindDialog::execute(QTextEdit *e)
 {
 	if ( !e )
 		return;
+
 	edit = e;
 	
-	QTextCursor cur = e->textCursor();
-	text->setText( cur.selectedText() );
-	
 	show();
+	raise();
+	activateWindow();
+	text->setFocus();
+
+	QTextCursor cur = e->textCursor();
+	if ( cur.hasSelection() )
+		text->setText( cur.selectedText() );
+
+	text->selectAll();
+	if (status)
+		status->clearMessage();
 }
 
-void DevFindDialog::setVars()
+void DevFindDialog::showMessage(const QString &message, int timeout)
+{
+	if ( !status )
+		return;
+	status->showMessage(message, timeout);
+}
+
+void DevFindDialog::process()
 {
 	if ( !edit )
 		return;
-	
-	hide();
-	
-	/*
-	setup internal vars used for find and find next
-	*/
-	
+
 	f = text->text();
 	s = edit->document()->toPlainText();
 	QTextCursor cur(edit->textCursor());
@@ -211,68 +127,41 @@ void DevFindDialog::setVars()
 	cs = (sensitive->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive );
 	pos = absPos = 0;
 	
-	if ( cursor->isChecked() )
+	if ( Ui::DevFindDialog::cursor->isChecked() )
 		absPos = cur.position();
 	
-	if ( selection->isChecked() )
-	{
+	if ( selection->isChecked() ) {
 		s = cur.selectedText();
-		if( bw )
-			absPos = cur.selectionEnd();
-		else
-			absPos = cur.selectionStart();
-	}
-	else
-	{
-		if ( cursor->isChecked() )
+		absPos = bw ? cur.selectionEnd() : cur.selectionStart();
+	} else {
+		if ( Ui::DevFindDialog::cursor->isChecked() )
 			absPos = cur.position();
 		else if ( bw )
 			absPos = s.count();
-		
-		if ( bw )
-			s = s.mid(0, absPos);
-		else
-			s = s.mid(absPos);
+
+		s = bw ? s.mid(0, absPos) : s.mid(absPos);
 	}
 	
 	if ( bw )		//start at string's end
 		pos = -1;
 	
-	process(); //find once
-}
-
-void DevFindDialog::process()
-{
-	if ( !edit )
-		return;
-	
 	int i;
-	QTextCursor cur(edit->document());
+	cur = QTextCursor(edit->document());
 	
-	if ( ww )
-	{
+	if ( ww ) {
 		QRegExp xp(QString("\\b")+f+"\\b");
 		xp.setCaseSensitivity(cs);
 		
-		if ( bw )
-			i = s.lastIndexOf(xp, pos);
-		else
-			i = s.indexOf(xp, pos);
+		i = bw ? s.lastIndexOf(xp, pos) : s.indexOf(xp, pos);
+	} else {
+		i = bw ? s.lastIndexOf(f, pos, cs) : s.indexOf(f, pos, cs);
 	}
-	else
-	{
-		if ( bw )
-			i = s.lastIndexOf(f, pos, cs);
-		else
-			i = s.indexOf(f, pos, cs);
+
+	if ( i == -1 ) {
+		showMessage(tr("Unable to find : ") + f);
+		return;
 	}
-	
-	if ( i==-1 )
-		return (void)QMessageBox::warning(	this,
-											"Search results",
-											"Unable to find : " + f );
-	
-	//now jump to start of word and select it
+
 	if ( bw )
 		cur.setPosition(absPos-s.count()+i, QTextCursor::MoveAnchor);
 	else
@@ -283,16 +172,14 @@ void DevFindDialog::process()
 	edit->setTextCursor(cur);		//update document cursor
 	color(cur);						//update current line highlighting
 	
-	if ( bw )
-		pos = i - s.count() - f.count();
-	else
-		pos	= i + f.count();
+	pos = bw ? i - s.count() - f.count() : i + f.count();
+
 }
 
 DevReplaceDialog::DevReplaceDialog(QWidget *p)
  : QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint)
 {
-	setWindowTitle("Replace text");
+	setWindowTitle(tr("Replace text"));
 	
 	QLabel *lbl;
 	QGroupBox *g;
@@ -300,82 +187,82 @@ DevReplaceDialog::DevReplaceDialog(QWidget *p)
 	QGridLayout *l = new QGridLayout;
 	
 	find = new QLineEdit;
-	lbl = new QLabel("Text to Find");
+	lbl = new QLabel(tr("Text to Find"));
 	l->addWidget(lbl, 0, 0, 1, 1);
 	l->addWidget(find, 0, 1, 1, 3);
 	
 	replace = new QLineEdit;
-	lbl = new QLabel("Replace with");
+	lbl = new QLabel(tr("Replace with"));
 	l->addWidget(lbl, 1, 0, 1, 1);
 	l->addWidget(replace, 1, 1, 1, 3);
 	
-	g = new QGroupBox("Options");
+	g = new QGroupBox(tr("Options"));
 	b = new QVBoxLayout;
 	
-	sensitive = new QCheckBox("Case &sensitive");
+	sensitive = new QCheckBox(tr("Case &sensitive"));
 	b->addWidget(sensitive);
 	
-	bound = new QCheckBox("&Whole words only");
+	bound = new QCheckBox(tr("&Whole words only"));
 	b->addWidget(bound);
 	
-	prompt = new QCheckBox("&Prompt on replace");
+	prompt = new QCheckBox(tr("&Prompt on replace"));
 	b->addWidget(prompt);
 	
 	g->setLayout(b);
 	l->addWidget(g, 2, 0, 4, 2);
 	
-	g = new QGroupBox("Direction");
+	g = new QGroupBox(tr("Direction"));
 	b = new QVBoxLayout;
 	
 	forward = new QRadioButton("Forward");
 	forward->toggle();
 	b->addWidget(forward);
 	
-	backward = new QRadioButton("Backward");
+	backward = new QRadioButton(tr("Backward"));
 	b->addWidget(backward);
 	
 	g->setLayout(b);
 	l->addWidget(g, 2, 2, 4, 2);
 	
-	g = new QGroupBox("Scope");
+	g = new QGroupBox(tr("Scope"));
 	b = new QVBoxLayout;
 	
-	global = new QRadioButton("Global");
+	global = new QRadioButton(tr("Global"));
 	global->toggle();
 	b->addWidget(global);
 	
-	selection = new QRadioButton("Selected only");
+	selection = new QRadioButton(tr("Selected only"));
 	b->addWidget(selection);
 	
 	g->setLayout(b);
 	l->addWidget(g, 6, 0, 3, 2);
 	
-	g = new QGroupBox("Origin");
+	g = new QGroupBox(tr("Origin"));
 	b = new QVBoxLayout;
 	
-	cursor = new QRadioButton("Cursor");
+	cursor = new QRadioButton(tr("Cursor"));
 	cursor->toggle();
 	b->addWidget(cursor);
 	
-	whole = new QRadioButton("Entire scope");
+	whole = new QRadioButton(tr("Entire scope"));
 	b->addWidget(whole);
 	
 	g->setLayout(b);
 	l->addWidget(g, 6, 2, 3, 2);
 	
-	b_accept = new QPushButton("&Ok");
+	b_accept = new QPushButton(tr("&Ok"));
 	connect(b_accept, SIGNAL( clicked() ),
 			this	, SLOT  ( setVars() ) );
 	connect(b_accept, SIGNAL( clicked() ),
 			this	, SLOT  ( process() ) );
 	l->addWidget(b_accept, 9, 0, 1, 1);
 	
-	b_all = new QPushButton("&Replace all");
+	b_all = new QPushButton(tr("&Replace all"));
 	connect(b_all	, SIGNAL( clicked() ),
 			this	, SLOT  ( all() ) );
 	l->addWidget(b_all, 9, 1, 1, 1);
 	
-	b_cancel = new QPushButton("&Cancel");
+	b_cancel = new QPushButton(tr("&Cancel"));
 	connect(b_cancel, SIGNAL( clicked() ),
 			this	, SLOT  ( hide() ) );
 	l->addWidget(b_cancel, 9, 3, 1, 1);
@@ -481,8 +368,8 @@ void DevReplaceDialog::process()
 	{
 		abort = true;
 		return (void)QMessageBox::warning(	this,
-											"Search results",
-											"Unable to find : " + f );
+											tr("Search results"),
+											tr("Unable to find : ") + f );
 	}
 	
 	int delta = count*displace;
@@ -499,8 +386,8 @@ void DevReplaceDialog::process()
 	
 	if ( pr )
 	{
-		int s = QMessageBox::warning(this, "Replacing...",
-							"Are you sure that you want to replace that?",
+		int s = QMessageBox::warning(this, tr("Replacing..."),
+							tr("Are you sure that you want to replace that?"),
 							QMessageBox::Yes,
 							QMessageBox::YesAll,
 							QMessageBox::Cancel );
@@ -563,3 +450,4 @@ void DevPropertiesDialog::execute(const QString& n)
 	
 	exec();
 }
+

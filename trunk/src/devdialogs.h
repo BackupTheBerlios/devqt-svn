@@ -26,8 +26,11 @@
 #define _DEV_DIALOGS_H_
 
 #include "dev.h"
+#include "ui_devgotodialog.h"
+#include "ui_devfinddialog.h"
+#include <QStatusBar>
 
-class DevGotoDialog : public QDialog
+class DevGotoDialog : public QDialog, private Ui::DevGotoDialog
 {
 	Q_OBJECT
 	
@@ -37,7 +40,7 @@ class DevGotoDialog : public QDialog
 		
 	public slots:
 		void execute(QTextEdit *e);
-		
+
 	protected slots:
 		void process();
 		
@@ -46,12 +49,9 @@ class DevGotoDialog : public QDialog
 		
 	private:
 		QPointer<QTextEdit> edit;
-		
-		QSpinBox *line;
-		QPushButton *b_accept, *b_cancel;
 };
 
-class DevFindDialog : public QDialog
+class DevFindDialog : public QDialog, private Ui::DevFindDialog
 {
 	Q_OBJECT
 	
@@ -66,9 +66,8 @@ class DevFindDialog : public QDialog
 	signals:
 		void color(QTextCursor& c);
 		
-	private slots:
-		void setVars();
-		
+	private:
+		void showMessage(const QString & message, int timeout = 0);
 	private:
 		QPointer<QTextEdit> edit;
 		
@@ -77,10 +76,7 @@ class DevFindDialog : public QDialog
 		int absPos, pos;
 		Qt::CaseSensitivity cs;
 		
-		QLineEdit *text;
-		QCheckBox *sensitive, *bound;
-		QPushButton *b_accept, *b_cancel;
-		QRadioButton *global, *selection, *forward, *backward, *cursor, *whole;
+		QStatusBar *status;
 };
 
 class DevReplaceDialog : public QDialog

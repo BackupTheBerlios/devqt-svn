@@ -27,6 +27,7 @@
 
 #include <QtCore>
 #include <QtGui>
+#include <QtDebug>
 
 namespace DevQt
 {
@@ -55,6 +56,12 @@ namespace DevQt
 		Lines,
 		None
 	};
+
+	enum EditorMode
+	{
+		Tabbed,
+		MDI
+	};
 	
 	QChar charFromCursor(QTextCursor cursor, QTextCursor::MoveOperation op);
 
@@ -66,13 +73,11 @@ namespace DevQt
 	
 	bool isNumber(char c, char base);
 	
-	static const QString supportedFiles = "DevQt projects ( *.pro);;C++ \
-source files( *.cpp *.cxx *.c);;C++ header files ( *.h *.hpp);;All Files (*)";
+	static const QString supportedFiles = QT_TR_NOOP("DevQt projects ( *.pro);;C++ source files( *.cpp *.cxx *.c);;C++ header files ( *.h *.hpp);;All Files (*)");
 
-	static const QString extFiles = "C++ sources( *.cpp *.cxx *.c);;C++ headers \
-( *.h *.hpp);;All Files (*)";
+	static const QString extFiles = QT_TR_NOOP("C++ sources( *.cpp *.cxx *.c);;C++ headers ( *.h *.hpp);;All Files (*)");
 
-	static const QString extProjects = "DevQt projects ( *.pro);;All Files (*)";
+	static const QString extProjects = QT_TR_NOOP("DevQt projects ( *.pro);;All Files (*)");
 };
 
 struct BlockData : public QTextBlockUserData

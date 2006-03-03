@@ -4,18 +4,25 @@
 
 TEMPLATE = app
 TARGET = devqt
-INCLUDEPATH += . src src/ui
-TRANSLATIONS = translations/fr_FR.ts
+INCLUDEPATH += . src
+#src/ui
+TRANSLATIONS += translations/fr_FR.ts \
+                translations/uk_UA.ts
 QT += xml
 
+FORMS += src/ui/devgotodialog.ui \
+         src/ui/devfinddialog.ui \
+         src/ui/configdialog.ui
 
 
 MOC_DIR = tmp/moc
 OBJECTS_DIR = tmp/obj
 RCC_DIR = tmp/rcc
+UI_DIR = tmp/ui
+
+CONFIG += console
 
 # Input
-FORMS +=	src/ui/configdialog.ui
 	
 HEADERS +=	src/dev.h \
 		src/devapp.h \

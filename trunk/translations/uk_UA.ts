@@ -3,11 +3,11 @@
     <name>AbstractFile</name>
     <message>
         <source>Re&amp;move</source>
-        <translation>Re&amp;tirer</translation>
+        <translation>&amp;Виключити</translation>
     </message>
     <message>
         <source>&amp;Rename</source>
-        <translation>&amp;Renommer</translation>
+        <translation>&amp;Перейменувати</translation>
     </message>
 </context>
 <context>
@@ -89,119 +89,142 @@
     <name>CoreEdit</name>
     <message>
         <source>Text: Row %1 Column %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Текст: Ряд %1 Колонка %2</translation>
     </message>
     <message>
         <source>Modified</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінений</translation>
     </message>
     <message>
         <source>Overwrite</source>
-        <translation type="unfinished"></translation>
+        <translation>Заміна</translation>
     </message>
     <message>
         <source>Insert</source>
-        <translation type="unfinished"></translation>
+        <translation>Вставка</translation>
     </message>
     <message>
         <source>Mouse: Row %1 Column %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Миша: Ряд %1 Колонка %2</translation>
     </message>
 </context>
 <context>
     <name>DevApp</name>
     <message>
         <source>Initializing langage...</source>
-        <translation type="unfinished"></translation>
+        <translation>Встановлення мови...</translation>
     </message>
     <message>
         <source>Getting back settings...</source>
-        <translation type="unfinished"></translation>
+        <translation>Відновлення налаштувань...</translation>
     </message>
     <message>
         <source>Initializing UI...</source>
-        <translation type="unfinished"></translation>
+        <translation>Встановлення інтерфейсу користувача...</translation>
     </message>
     <message>
         <source>DevQt initialized.</source>
-        <translation type="unfinished"></translation>
+        <translation>DevQt готовий.</translation>
     </message>
 </context>
 <context>
     <name>DevDirectory</name>
     <message>
         <source>scope : </source>
-        <translation>cible :</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DevDock</name>
     <message>
         <source>Movable</source>
-        <translation>Déplaçable</translation>
+        <translation>Рухоме</translation>
     </message>
     <message>
         <source>Floatable</source>
-        <translation>Détachable</translation>
+        <translation>Ширяюче</translation>
     </message>
     <message>
         <source>Floating</source>
-        <translation>Détachée</translation>
+        <translation>Ширяє</translation>
     </message>
     <message>
         <source>Allow on Left</source>
-        <translation>Autoriser à gauche</translation>
+        <translation>Дозволити ліворуч</translation>
     </message>
     <message>
         <source>Allow on Right</source>
-        <translation>Autoriser à droite
-</translation>
+        <translation>Дозволити праворуч</translation>
     </message>
     <message>
         <source>Allow on Top</source>
-        <translation>Autoriser en haut</translation>
+        <translation>Дозволити нагорі</translation>
     </message>
     <message>
         <source>Allow on Bottom</source>
-        <translation>Autoriser en bas</translation>
+        <translation>Дозволити внизу</translation>
     </message>
     <message>
         <source>Place on Left</source>
-        <translation>Placer à gauche</translation>
+        <translation>Помістити ліворуч</translation>
     </message>
     <message>
         <source>Place on Right</source>
-        <translation>Placer à droite</translation>
+        <translation>Помістити праворуч</translation>
     </message>
     <message>
         <source>Place on Top</source>
-        <translation>Placer en haut</translation>
+        <translation>Помістити нагорі</translation>
     </message>
     <message>
         <source>Place on Bottom</source>
-        <translation>Placer en bas</translation>
+        <translation>Помістити внизу</translation>
     </message>
 </context>
 <context>
     <name>DevFile</name>
     <message>
         <source>file : </source>
-        <translation>fichier :</translation>
+        <translation>файл :</translation>
     </message>
 </context>
 <context>
     <name>DevFindDialog</name>
     <message>
         <source>Find text</source>
+        <translation>Знайти текст</translation>
+    </message>
+    <message>
+        <source>Case &amp;sensitive</source>
+        <translation>Чутливий до &amp;реґістру</translation>
+    </message>
+    <message>
+        <source>&amp;Whole words only</source>
+        <translation>Тільки &amp;цілі слова</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Напрямок</translation>
+    </message>
+    <message>
+        <source>Scope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Find</source>
-        <translation type="unfinished">C&amp;hercher</translation>
+        <translation>&amp;Знайти</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;Annuler</translation>
+        <translation>&amp;Скасувати</translation>
+    </message>
+    <message>
+        <source>Unable to find : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Origin</source>
@@ -216,20 +239,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Вперед</translation>
     </message>
     <message>
         <source>&amp;Backward</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scope</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Назад</translation>
     </message>
     <message>
         <source>&amp;Global</source>
@@ -237,293 +252,265 @@
     </message>
     <message>
         <source>&amp;Selected only</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;У виділенні</translation>
     </message>
     <message>
         <source>&amp;Text to Find</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Case &amp;sensitive</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Whole words only</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to find : </source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Знайти</translation>
     </message>
 </context>
 <context>
     <name>DevFolder</name>
     <message>
         <source>&amp;Subdir</source>
-        <translation>&amp;Sous dossier</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;New file</source>
-        <translation>&amp;Nouveau Fichier</translation>
+        <translation>&amp;Новий файл</translation>
     </message>
     <message>
         <source>folder : </source>
-        <translation>dossier :</translation>
+        <translation>тека :</translation>
     </message>
 </context>
 <context>
     <name>DevGUI</name>
     <message>
-        <source>&amp;Undo</source>
-        <translation>&amp;Annuler</translation>
-    </message>
-    <message>
-        <source>&amp;Redo</source>
-        <translation>&amp;Refaire</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t</source>
-        <translation>Co&amp;uper</translation>
-    </message>
-    <message>
-        <source>Cop&amp;y</source>
-        <translation>Cop&amp;ier</translation>
-    </message>
-    <message>
-        <source>&amp;Paste</source>
-        <translation>Co&amp;ller</translation>
-    </message>
-    <message>
-        <source>&amp;Select All</source>
-        <translation>Tout &amp;sélectionner</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>Effacer la sélec&amp;tion</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation>C&amp;hercher</translation>
-    </message>
-    <message>
-        <source>Find &amp;Next</source>
-        <translation>Chercher suiva&amp;nt</translation>
-    </message>
-    <message>
-        <source>R&amp;eplace</source>
-        <translation>R&amp;emplacer</translation>
-    </message>
-    <message>
-        <source>&amp;Goto</source>
-        <translation>Alle&amp;r à</translation>
-    </message>
-    <message>
-        <source>Toggle Brea&amp;kpoint</source>
-        <translation>Activer brea&amp;kpoint</translation>
-    </message>
-    <message>
-        <source>Print</source>
-        <translation>Imprimer</translation>
-    </message>
-    <message>
-        <source>Pr&amp;operties</source>
-        <translation>Pr&amp;opriété</translation>
-    </message>
-    <message>
-        <source>File Actions</source>
-        <translation>Actions sur les fichiers</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fichier</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Nouveau</translation>
-    </message>
-    <message>
-        <source>New &amp;project</source>
-        <translation>Nouveau &amp;projet</translation>
-    </message>
-    <message>
-        <source>&amp;Source file</source>
-        <translation>Fichier &amp;source</translation>
-    </message>
-    <message>
-        <source>&amp;User Interface</source>
-        <translation>Interface &amp;Utilisateur (UI)</translation>
-    </message>
-    <message>
-        <source>&amp;Resource</source>
-        <translation>&amp;Ressource (QRC)</translation>
-    </message>
-    <message>
-        <source>&amp;Template</source>
-        <translation>&amp;Modèle de projet</translation>
-    </message>
-    <message>
-        <source>&amp;Open...</source>
-        <translation type="obsolete">&amp;Ouvrir...</translation>
-    </message>
-    <message>
-        <source>&amp;Reopen...</source>
-        <translation type="obsolete">&amp;Réouvrir...</translation>
-    </message>
-    <message>
-        <source>&amp;Save...</source>
-        <translation>&amp;Sauvegarder...</translation>
-    </message>
-    <message>
-        <source>Sa&amp;ve All...</source>
-        <translation>Tout sau&amp;vegarder...</translation>
-    </message>
-    <message>
-        <source>Save &amp;As...</source>
-        <translation>S&amp;auvegarder sous...</translation>
-    </message>
-    <message>
-        <source>Save Project</source>
-        <translation>Sauvegarder projet</translation>
-    </message>
-    <message>
-        <source>Save project As...</source>
-        <translation>Sauvegarder project sous...</translation>
-    </message>
-    <message>
-        <source>&amp;Close</source>
-        <translation>Fe&amp;rmer</translation>
-    </message>
-    <message>
-        <source>C&amp;lose all</source>
-        <translation>Fermer &amp;tout</translation>
-    </message>
-    <message>
-        <source>Close projec&amp;t</source>
-        <translation>Fermer pro&amp;jet</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;Quitter</translation>
-    </message>
-    <message>
-        <source>Edit Actions</source>
-        <translation>Actions d&apos;édition</translation>
-    </message>
-    <message>
-        <source>&amp;Edit</source>
-        <translation>&amp;Edition</translation>
-    </message>
-    <message>
-        <source>Search Actions</source>
-        <translation>Actions de recherche</translation>
-    </message>
-    <message>
-        <source>&amp;Search</source>
-        <translation>Recherc&amp;her</translation>
-    </message>
-    <message>
-        <source>Files</source>
-        <translation>Fichier</translation>
-    </message>
-    <message>
-        <source>Classes</source>
-        <translation>Classes</translation>
-    </message>
-    <message>
-        <source>Compiler Actions</source>
-        <translation>Actions de compilation</translation>
-    </message>
-    <message>
-        <source>&amp;Compile</source>
-        <translation type="obsolete">&amp;Compiler</translation>
-    </message>
-    <message>
-        <source>&amp;Compile...</source>
-        <translation>&amp;Compiler...</translation>
-    </message>
-    <message>
-        <source>&amp;Run...</source>
-        <translation>&amp;Executer...</translation>
-    </message>
-    <message>
-        <source>&amp;Params</source>
-        <translation>&amp;Paramètres</translation>
-    </message>
-    <message>
-        <source>C&amp;ompile and run...</source>
-        <translation>C&amp;ompiler et exécuter...</translation>
-    </message>
-    <message>
-        <source>R&amp;ebuild all...</source>
-        <translation>Tout &amp;reconstruire...</translation>
-    </message>
-    <message>
-        <source>&amp;Syntax check...</source>
-        <translation>Vérification &amp;syntaxique...</translation>
-    </message>
-    <message>
-        <source>C&amp;lean...</source>
-        <translation>&amp;Nettoyer...</translation>
-    </message>
-    <message>
-        <source>Compiler</source>
-        <translation>Compilateur</translation>
-    </message>
-    <message>
         <source>Projects Actions</source>
-        <translation>Actions sur le projet</translation>
-    </message>
-    <message>
-        <source>Help Actions</source>
-        <translation>Aide</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Aide</translation>
-    </message>
-    <message>
-        <source>A&amp;bout Qt...</source>
-        <translation>À propos de &amp;Qt...</translation>
-    </message>
-    <message>
-        <source>Qt Assistant...</source>
-        <translation>Assistant Qt...</translation>
-    </message>
-    <message>
-        <source>&amp;About DevQt...</source>
-        <translation>&amp;À propos de DevQt...</translation>
-    </message>
-    <message>
-        <source>&amp;DevQt Help...</source>
-        <translation>Aide de &amp;DevQt...</translation>
-    </message>
-    <message>
-        <source>E&amp;xecute</source>
-        <translation>E&amp;xécution</translation>
-    </message>
-    <message>
-        <source>&amp;Open project or file...</source>
-        <translation>&amp;Ouvrir projet ou fichier...</translation>
-    </message>
-    <message>
-        <source>&amp;Project</source>
-        <translation>&amp;Projet</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Scopes Actions</source>
-        <translation>Cibles de compilations</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Undo</source>
+        <translation>Ві&amp;дмінити</translation>
+    </message>
+    <message>
+        <source>&amp;Redo</source>
+        <translation>&amp;Повторити</translation>
+    </message>
+    <message>
+        <source>Cu&amp;t</source>
+        <translation>&amp;Вирізати</translation>
+    </message>
+    <message>
+        <source>Cop&amp;y</source>
+        <translation>&amp;Скопіювати</translation>
+    </message>
+    <message>
+        <source>&amp;Paste</source>
+        <translation>Вст&amp;авити</translation>
+    </message>
+    <message>
+        <source>&amp;Select All</source>
+        <translation>В&amp;иділити все</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Очистити</translation>
+    </message>
+    <message>
+        <source>&amp;Find</source>
+        <translation>&amp;Знайти</translation>
+    </message>
+    <message>
+        <source>Find &amp;Next</source>
+        <translation>З&amp;найти далі</translation>
+    </message>
+    <message>
+        <source>R&amp;eplace</source>
+        <translation>З&amp;амінити</translation>
+    </message>
+    <message>
+        <source>&amp;Goto</source>
+        <translation>П&amp;ерейти</translation>
+    </message>
+    <message>
+        <source>Toggle Brea&amp;kpoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation>Друк</translation>
+    </message>
+    <message>
+        <source>Pr&amp;operties</source>
+        <translation>В&amp;ластивості</translation>
+    </message>
+    <message>
+        <source>File Actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>&amp;Файл</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Створити</translation>
+    </message>
+    <message>
+        <source>New &amp;project</source>
+        <translation>Новий &amp;проект</translation>
+    </message>
+    <message>
+        <source>&amp;Source file</source>
+        <translation>&amp;Вихідний файл</translation>
+    </message>
+    <message>
+        <source>&amp;User Interface</source>
+        <translation>&amp;Інтерфейс користувача</translation>
+    </message>
+    <message>
+        <source>&amp;Resource</source>
+        <translation>&amp;Ресурс</translation>
+    </message>
+    <message>
+        <source>&amp;Template</source>
+        <translation>&amp;Шаблон</translation>
+    </message>
+    <message>
+        <source>&amp;Open project or file...</source>
+        <translation>&amp;Відкрити проект чи файл...</translation>
+    </message>
+    <message>
+        <source>&amp;Save...</source>
+        <translation>&amp;Зберегти...</translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve All...</source>
+        <translation>З&amp;берегти все...</translation>
+    </message>
+    <message>
+        <source>Save &amp;As...</source>
+        <translation>З&amp;берегти як...</translation>
+    </message>
+    <message>
+        <source>&amp;Close</source>
+        <translation>За&amp;крити</translation>
+    </message>
+    <message>
+        <source>C&amp;lose all</source>
+        <translation>Зак&amp;рити все</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation>&amp;Вихід</translation>
+    </message>
+    <message>
+        <source>Edit Actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Правка</translation>
+    </message>
+    <message>
+        <source>Search Actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Search</source>
+        <translation>&amp;Пошук</translation>
+    </message>
+    <message>
+        <source>Help Actions</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;Довідка</translation>
+    </message>
+    <message>
+        <source>A&amp;bout Qt...</source>
+        <translation>&amp;Про Qt...</translation>
+    </message>
+    <message>
+        <source>Qt Assistant...</source>
+        <translation>Помічник Qt...</translation>
+    </message>
+    <message>
+        <source>&amp;About DevQt...</source>
+        <translation>П&amp;ро DevQt...</translation>
+    </message>
+    <message>
+        <source>&amp;DevQt Help...</source>
+        <translation>&amp;Довідка DevQt...</translation>
+    </message>
+    <message>
+        <source>Files</source>
+        <translation>Файли</translation>
+    </message>
+    <message>
+        <source>Classes</source>
+        <translation>Класи</translation>
+    </message>
+    <message>
+        <source>Compiler Actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>E&amp;xecute</source>
+        <translation>&amp;Виконати</translation>
+    </message>
+    <message>
+        <source>&amp;Compile...</source>
+        <translation>&amp;Компілювати...</translation>
+    </message>
+    <message>
+        <source>&amp;Run...</source>
+        <translation>&amp;Виконати...</translation>
+    </message>
+    <message>
+        <source>&amp;Params</source>
+        <translation>&amp;Параметри</translation>
+    </message>
+    <message>
+        <source>C&amp;ompile and run...</source>
+        <translation>К&amp;омпілювати і виконати...</translation>
+    </message>
+    <message>
+        <source>R&amp;ebuild all...</source>
+        <translation>Пере&amp;будувати все...</translation>
+    </message>
+    <message>
+        <source>&amp;Syntax check...</source>
+        <translation>Перевірка &amp;синтаксису...</translation>
+    </message>
+    <message>
+        <source>C&amp;lean...</source>
+        <translation>&amp;Очистити...</translation>
+    </message>
+    <message>
+        <source>Compiler</source>
+        <translation>Компілятор</translation>
+    </message>
+    <message>
+        <source>&amp;Project</source>
+        <translation>&amp;Проект</translation>
+    </message>
+    <message>
+        <source>Save Project</source>
+        <translation>Зберегти проект</translation>
+    </message>
+    <message>
+        <source>Save project As...</source>
+        <translation>Зберегти проект як...</translation>
+    </message>
+    <message>
+        <source>Close projec&amp;t</source>
+        <translation>&amp;Закрити проект</translation>
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation>Ou&amp;tils</translation>
+        <translation>&amp;Інструменти</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>&amp;Configuration</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Text : Row 0, Column 0</source>
@@ -535,55 +522,55 @@
     </message>
     <message>
         <source>Insert</source>
-        <translation type="unfinished"></translation>
+        <translation>Вставка</translation>
     </message>
 </context>
 <context>
     <name>DevGotoDialog</name>
     <message>
         <source>Goto line</source>
-        <translation type="unfinished"></translation>
+        <translation>Перейти до рядка</translation>
     </message>
     <message>
         <source>New line</source>
-        <translation type="unfinished"></translation>
+        <translation>Новий рядок</translation>
     </message>
     <message>
         <source>&amp;Goto</source>
-        <translation type="unfinished">Alle&amp;r à</translation>
+        <translation>П&amp;ерейти</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;Annuler</translation>
+        <translation>&amp;Скасувати</translation>
     </message>
 </context>
 <context>
     <name>DevProject</name>
     <message>
         <source>&amp;Close</source>
-        <translation>&amp;Fermer</translation>
+        <translation>&amp;Закрити</translation>
     </message>
 </context>
 <context>
     <name>DevQt::@default</name>
     <message>
         <source>DevQt projects ( *.pro);;C++ source files( *.cpp *.cxx *.c);;C++ header files ( *.h *.hpp);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Файли проектів DevQt ( *.pro);;Вихідні файли C++( *.cpp *.cxx *.c);;Заголовочні файли C++ ( *.h *.hpp);;Усі файли (*)</translation>
     </message>
     <message>
         <source>C++ sources( *.cpp *.cxx *.c);;C++ headers ( *.h *.hpp);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Вихідні файли C++( *.cpp *.cxx *.c);;Заголовочні файли C++( *.h *.hpp);;Усі файли (*)</translation>
     </message>
     <message>
         <source>DevQt projects ( *.pro);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Файли проектів DevQt ( *.pro);;Усі файли (*)</translation>
     </message>
 </context>
 <context>
     <name>DevReplaceDialog</name>
     <message>
         <source>Replace text</source>
-        <translation type="unfinished"></translation>
+        <translation>Замінити текст</translation>
     </message>
     <message>
         <source>Text to Find</source>
@@ -591,7 +578,7 @@
     </message>
     <message>
         <source>Replace with</source>
-        <translation type="unfinished"></translation>
+        <translation>Замінити на</translation>
     </message>
     <message>
         <source>Options</source>
@@ -599,23 +586,23 @@
     </message>
     <message>
         <source>Case &amp;sensitive</source>
-        <translation type="unfinished"></translation>
+        <translation>Чутливий до &amp;реґістру</translation>
     </message>
     <message>
         <source>&amp;Whole words only</source>
-        <translation type="unfinished"></translation>
+        <translation>Тільки &amp;цілі слова</translation>
     </message>
     <message>
         <source>&amp;Prompt on replace</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Питати перед заміною</translation>
     </message>
     <message>
         <source>Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Напрямок</translation>
     </message>
     <message>
         <source>Backward</source>
-        <translation type="unfinished"></translation>
+        <translation>Назад</translation>
     </message>
     <message>
         <source>Scope</source>
@@ -643,19 +630,19 @@
     </message>
     <message>
         <source>&amp;Ok</source>
-        <translation type="unfinished">&amp;Valider</translation>
+        <translation>&amp;Гаразд</translation>
     </message>
     <message>
         <source>&amp;Replace all</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Замінити все</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;Annuler</translation>
+        <translation>&amp;Скасувати</translation>
     </message>
     <message>
         <source>Search results</source>
-        <translation type="unfinished"></translation>
+        <translation>Результати пошуку</translation>
     </message>
     <message>
         <source>Unable to find : </source>
@@ -667,68 +654,68 @@
     </message>
     <message>
         <source>Are you sure that you want to replace that?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ви впевнені, що хочете замінити це?</translation>
     </message>
 </context>
 <context>
     <name>DevSettings</name>
     <message>
-        <source>&amp;Reopen...</source>
-        <translation>&amp;Réouvrir...</translation>
-    </message>
-    <message>
-        <source>&amp;Default</source>
-        <translation type="obsolete">&amp;Defaut</translation>
-    </message>
-    <message>
-        <source>&amp;Ok</source>
-        <translation type="obsolete">&amp;Valider</translation>
-    </message>
-    <message>
-        <source>&amp;Cancel</source>
-        <translation type="obsolete">&amp;Annuler</translation>
-    </message>
-    <message>
-        <source>&amp;Clear history</source>
-        <translation>&amp;Nettoyer l&apos;historique</translation>
-    </message>
-    <message>
         <source>General</source>
-        <translation type="obsolete">Général</translation>
+        <translation type="obsolete">Загальні</translation>
     </message>
     <message>
         <source>Compilation</source>
-        <translation type="obsolete">Compilation</translation>
+        <translation type="obsolete">Компіляція</translation>
     </message>
     <message>
         <source>Editors</source>
-        <translation type="obsolete">Editeurs</translation>
+        <translation type="obsolete">Редактор</translation>
     </message>
     <message>
         <source>Highlighting</source>
-        <translation type="obsolete">Coloration</translation>
+        <translation type="obsolete">Підсвітка</translation>
+    </message>
+    <message>
+        <source>&amp;Default</source>
+        <translation type="obsolete">&amp;За замовчанням</translation>
+    </message>
+    <message>
+        <source>&amp;Ok</source>
+        <translation type="obsolete">&amp;Гаразд</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation type="obsolete">&amp;Скасувати</translation>
+    </message>
+    <message>
+        <source>&amp;Reopen...</source>
+        <translation>В&amp;ідкрити недавні...</translation>
+    </message>
+    <message>
+        <source>&amp;Clear history</source>
+        <translation>&amp;Очистити історію</translation>
     </message>
 </context>
 <context>
     <name>DevStatus</name>
     <message>
         <source>Explorer</source>
-        <translation>Explorateur</translation>
+        <translation>Переглядач</translation>
     </message>
     <message>
         <source>Compiler</source>
-        <translation>Compilateur</translation>
+        <translation>Компілятор</translation>
     </message>
 </context>
 <context>
     <name>DevWorkSpace</name>
     <message>
         <source>WorkSpace : </source>
-        <translation>Espace de travail :</translation>
+        <translation>Робоча область :</translation>
     </message>
     <message>
         <source>External</source>
-        <translation>Externe</translation>
+        <translation>Зовнішня</translation>
     </message>
 </context>
 </TS>

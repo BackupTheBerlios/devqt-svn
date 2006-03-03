@@ -63,7 +63,7 @@ DevApp::DevApp(int argc, char **argv)
 	scr = DevSplash::Instance();
 	
 	// Setup Locale Language
-	scr->showMessage("Initializing langage...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->showMessage(tr("Initializing langage..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	
 	QTranslator *translator = new QTranslator(this);
 	
@@ -72,17 +72,18 @@ DevApp::DevApp(int argc, char **argv)
 	installTranslator(translator);
 	
 	// Get back app settings
-	scr->showMessage("Getting back settings...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->showMessage(tr("Getting back settings..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	
 	set = DEV_SETTINGS;
 	
 	// Setup main window
-	scr->showMessage("Initializing UI...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->showMessage(tr("Initializing UI..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	gui = DEV_GUI;
+	scr->finish(gui);
 	gui->s->connection();
 	
 	
-	scr->showMessage("DevQt initialized.", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->showMessage(tr("DevQt initialized."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	
 	gui->show();
 }

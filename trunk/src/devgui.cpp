@@ -81,9 +81,6 @@ DevGUI::DevGUI()
 	rDlg = new DevReplaceDialog(Editor);
 	pDlg = new DevPropertiesDialog(Editor);
 
-	connect(QApplication::clipboard()	, SIGNAL(dataChanged()),
-			this, SLOT  (clipboardDataChanged()) );
-	
 	s = new DevStatus;
 	setStatusBar(s);
 	
@@ -99,6 +96,9 @@ DevGUI::DevGUI()
 	
 	setupSettings();
 	setupHelpActions();
+	
+	connect(QApplication::clipboard()	, SIGNAL(dataChanged()),
+			this, SLOT  (clipboardDataChanged()) );
 	
 	QToolBar *tb = new QToolBar(this);
 	tb->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
@@ -159,14 +159,12 @@ DevGUI::DevGUI()
 	preprocessorBrush = (Qt::GlobalColor)DEV_SETTINGS->value("highlighter/preprocessor", Qt::darkGreen).toInt();
 	keywordBrush = (Qt::GlobalColor)DEV_SETTINGS->value("highlighter/keyword", Qt::black).toInt();
 	commentBrush = (Qt::GlobalColor)DEV_SETTINGS->value("highlighter/comment", Qt::darkBlue).toInt();
-
 }
 
 void DevGUI::killGUI()
 {
 	if ( _gui )
 	{
-		qDebug("GUI terminating...");
 		delete _gui;
 	}
 }
@@ -1066,7 +1064,7 @@ void DevGUI::QtAssistant()
 
 void DevGUI::clipboardDataChanged()
 {
-    aPaste->setEnabled(!QApplication::clipboard()->text().isEmpty());
+	aPaste->setEnabled(!QApplication::clipboard()->text().isEmpty());
 }
 
 void DevGUI::editorChanged()
@@ -1175,9 +1173,9 @@ void DevGUI::editorChanged()
     connect(e, SIGNAL( message(const QString&, int) ),
 			s, SLOT  ( message(const QString&, int) ) );
 	
-    s->message("Text : Row 0, Column 0", (int)DevQt::TextCursor);
-	s->message("Mouse : Row 0, Column 0", (int)DevQt::MouseCursor);
-	s->message("Insert", (int)DevQt::TypingMode);
+    s->message(tr("Text : Row 0, Column 0"), (int)DevQt::TextCursor);
+	s->message(tr("Mouse : Row 0, Column 0"), (int)DevQt::MouseCursor);
+	s->message(tr("Insert"), (int)DevQt::TypingMode);
 	s->message(QString::number(DevQt::lines(e->document())), (int)DevQt::Lines);
 	
 	e->e->setFocus();

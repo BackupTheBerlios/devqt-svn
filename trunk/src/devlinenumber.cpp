@@ -48,7 +48,7 @@ DevLineNumber::DevLineNumber(QTextEdit *_editor, QWidget *parent)
             this, SLOT(update()));
 }
 
-void DevLineNumber::paintEvent(QPaintEvent *e)
+void DevLineNumber::paintEvent(QPaintEvent * /*e*/)
 {
 	const QPixmap pm[] ={ 	
 							QPixmap(":/break.png"),

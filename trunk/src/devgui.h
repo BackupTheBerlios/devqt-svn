@@ -29,7 +29,6 @@
 
 class DevDock;
 class DevEdit;
-class CoreEdit;
 class DevCorner;
 class DevStatus;
 class DevWorkSpace;
@@ -51,13 +50,13 @@ class DevGUI : public QMainWindow
 	public:
 		static DevGUI* Instance();
 		void killGUI();
-		QString getFontFamily() { return fontFamily; }
-		qreal	getFontSize() { return fontSize; }
-		Qt::GlobalColor	getNumberBrush() { return numberBrush; }
-		Qt::GlobalColor	getCommentBrush() { return commentBrush; }
-		Qt::GlobalColor	getKeywordBrush() { return keywordBrush; }
-		Qt::GlobalColor	getQuoteBrush() { return quoteBrush; }
-		Qt::GlobalColor	getPreprocessorBrush() { return preprocessorBrush; }
+		QString getFontFamily() const { return fontFamily; }
+		qreal	getFontSize() const { return fontSize; }
+		Qt::GlobalColor	getNumberBrush() const { return numberBrush; }
+		Qt::GlobalColor	getCommentBrush() const { return commentBrush; }
+		Qt::GlobalColor	getKeywordBrush() const { return keywordBrush; }
+		Qt::GlobalColor	getQuoteBrush() const { return quoteBrush; }
+		Qt::GlobalColor	getPreprocessorBrush() const { return preprocessorBrush; }
 	protected:
 		DevGUI();
 		virtual ~DevGUI();
