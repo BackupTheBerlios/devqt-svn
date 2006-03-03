@@ -26,6 +26,8 @@
 
 #include "devgui.h"
 #include "devedit.h"
+#include "devsettingsdialog.h"
+
 
 /*
 
@@ -66,73 +68,7 @@ void DevSettings::killSettings()
 DevSettings::DevSettings(QWidget *p)
  : QSettings(p)
 {
-	dlg = new QDialog(p, Qt::Dialog | Qt::WindowStaysOnTopHint);
-	
-	QVBoxLayout *box = new QVBoxLayout;
-	QTabWidget *tab = new QTabWidget(dlg);
-	
-	QFrame *frame;
-	QGridLayout *grid;
-	
-// <General>
-	frame = new QFrame;
-	frame->setFrameShape(QFrame::Box);
-	frame->setFrameShadow(QFrame::Sunken);
-	
-	grid = new QGridLayout;
-	
-	frame->setLayout(grid);
-	tab->addTab(frame, tr("General") );
-// </General>
-	
-// <Compiler>
-	frame = new QFrame;
-	frame->setFrameShape(QFrame::Box);
-	frame->setFrameShadow(QFrame::Sunken);
-	
-	grid = new QGridLayout;
-	
-	frame->setLayout(grid);
-	tab->addTab(frame, tr("Compilation") );
-// </Compiler>
-	
-// <Editors>
-	frame = new QFrame;
-	frame->setFrameShape(QFrame::Box);
-	frame->setFrameShadow(QFrame::Sunken);
-	
-	grid = new QGridLayout;
-	
-	frame->setLayout(grid);
-	tab->addTab(frame, tr("Editors") );
-// </Editors>
-	
-// <Highlight>
-	frame = new QFrame;
-	frame->setFrameShape(QFrame::Box);
-	frame->setFrameShadow(QFrame::Sunken);
-	
-	grid = new QGridLayout;
-	
-	frame->setLayout(grid);
-	tab->addTab(frame, tr("Highlighting") );
-// </Highlight>
-	
-	box->addWidget(tab);
-	
-	QHBoxLayout *but = new QHBoxLayout;
-	
-	b_Default = new QPushButton(QIcon(":/default.png"), tr("&Default"));
-	but->addWidget(b_Default);
-	
-	b_Valid = new QPushButton(QIcon(":/ok.png"), tr("&Ok"));
-	but->addWidget(b_Valid);
-	
-	b_Cancel = new QPushButton(QIcon(":/cancel.png"), tr("&Cancel"));
-	but->addWidget(b_Cancel);
-	
-	box->addLayout(but);
-	dlg->setLayout(box);
+	dlg = new DevSettingsDialog;
 	
 	m = new QMenu(tr("&Reopen..."), p);
 	m->setIcon(QIcon(":/reopen.png"));
@@ -141,7 +77,8 @@ DevSettings::DevSettings(QWidget *p)
 	connect(aClear	, SIGNAL( triggered() ),
 			this	, SLOT  ( clearRecents() ) );
 	recent();
-	
+
+	// WTF is this?	
 	if ( allKeys().isEmpty() )
 	{
 		;//dlg->exec();

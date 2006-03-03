@@ -4,8 +4,9 @@
 
 TEMPLATE = app
 TARGET = devqt
-INCLUDEPATH += . src 
+INCLUDEPATH += . src src/ui
 TRANSLATIONS = translations/fr_FR.ts
+QT += xml
 
 
 
@@ -14,39 +15,50 @@ OBJECTS_DIR = tmp/obj
 RCC_DIR = tmp/rcc
 
 # Input
-HEADERS += src/dev.h \
-           src/devapp.h \
-           src/devdialogs.h \
-           src/devdock.h \
-           src/devedit.h \
-           src/coreedit.h \
-           src/devlinenumber.h \
-           src/devgui.h \
-           src/devhighlighter.h \
-           src/devsplash.h \
-           src/devstatus.h \
-           src/devcorner.h \
-           src/devproject.h \
-           src/devworkspace.h  \
-           src/devscope.h  \
-	   src/devsettings.h
+FORMS +=	src/ui/configdialog.ui
+	
+HEADERS +=	src/dev.h \
+		src/devapp.h \
+		src/devdialogs.h \
+		src/devdock.h \
+		src/devedit.h \
+		src/coreedit.h \
+		src/devlinenumber.h \
+		src/devgui.h \
+		src/devhighlighter.h \
+		src/devsplash.h \
+		src/devstatus.h \
+		src/devcorner.h \
+		src/devproject.h \
+		src/devworkspace.h  \
+		src/devscope.h  \
+		src/devsettings.h \
+		src/devsettingsdialog.h \
 
-SOURCES += src/dev.cpp \
-           src/devapp.cpp \
-           src/devdialogs.cpp \
-           src/devdock.cpp \
-           src/devedit.cpp \
-           src/coreedit.cpp \
-           src/devlinenumber.cpp \
-           src/devgui.cpp \
-           src/devhighlighter.cpp \
-           src/devsplash.cpp \
-           src/devstatus.cpp \
-           src/devcorner.cpp \
-           src/devproject.cpp \
-           src/devworkspace.cpp \
-           src/devscope.cpp  \
-	   src/devsettings.cpp \
-           src/main.cpp \
+# 		src/kateitemdata.h \
+# 		src/kateitemdatamanager.h \
+
+
+SOURCES +=	src/dev.cpp \
+		src/devapp.cpp \
+		src/devdialogs.cpp \
+		src/devdock.cpp \
+		src/devedit.cpp \
+		src/coreedit.cpp \
+		src/devlinenumber.cpp \
+		src/devgui.cpp \
+		src/devhighlighter.cpp \
+		src/devsplash.cpp \
+		src/devstatus.cpp \
+		src/devcorner.cpp \
+		src/devproject.cpp \
+		src/devworkspace.cpp \
+		src/devscope.cpp  \
+		src/devsettings.cpp \
+		src/devsettingsdialog.cpp \
+		src/main.cpp
+
+#		src/kateitemdata.cpp \
+#		src/kateitemdatamanager.cpp \
 	   
 RESOURCES += src/DevEditor.qrc
