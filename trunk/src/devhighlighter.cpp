@@ -259,27 +259,25 @@ CppHighlighter::~CppHighlighter()
 
 void CppHighlighter::setupData()
 {
-	fmts.resize(5);
 	QTextCharFormat f;
 	
 	f.setForeground(DEV_GUI->getNumberBrush());
-	fmts[number] = f;
+	fmts << f;
 	
 	f.setForeground(DEV_GUI->getQuoteBrush());
-	fmts[quote] = f;
+	fmts << f;
 	
 	f.setForeground(DEV_GUI->getPreprocessorBrush());
-	fmts[preprocessor] = f;
+	fmts << f;
 	
 	f.setForeground(DEV_GUI->getKeywordBrush());
 	f.setFontWeight(QFont::Bold);
-	fmts[keyword] = f;
+	fmts << f;
 	
 	f.setForeground(DEV_GUI->getCommentBrush());
 	f.setFontWeight(QFont::Normal);
 	f.setFontItalic(true);
-	fmts[comment] = f;
-	
+	fmts << f;
 }
 
 void CppHighlighter::highlightBlock(QTextBlock& b)

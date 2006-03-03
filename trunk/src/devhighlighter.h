@@ -104,7 +104,7 @@ class CppHighlighter : public DevHighlighter
 		
 	private:
     	static const char *kwds[];
-    	QVector<QTextCharFormat> fmts;
+    	QList<QTextCharFormat> fmts;
 };
 
 #endif
