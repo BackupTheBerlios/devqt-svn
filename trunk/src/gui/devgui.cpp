@@ -356,7 +356,7 @@ void DevGUI::setupFileActions()
     menu->addAction(a);
     
     a = aCloseAll = new QAction(tr("C&lose all"), this);
-    connect(a, SIGNAL(triggered()), this, SLOT(close()));
+    connect(a, SIGNAL(triggered()), this, SLOT(closeAll()));
     a->setEnabled(false);
     menu->addAction(a);
 	
