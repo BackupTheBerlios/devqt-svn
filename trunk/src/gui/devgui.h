@@ -29,7 +29,7 @@
 
 class DevDock;
 class DevEdit;
-class DevCorner;
+//class DevCorner;
 class DevStatus;
 class DevWorkSpace;
 class DevGotoDialog;

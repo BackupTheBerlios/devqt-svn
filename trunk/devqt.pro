@@ -4,11 +4,10 @@
 
 TEMPLATE = app
 TARGET = devqt
-INCLUDEPATH += . src
+INCLUDEPATH += . src src/gui src/core src/edit
 #src/ui
 TRANSLATIONS += translations/fr_FR.ts \
                 translations/uk_UA.ts
-QT += xml
 
 FORMS += src/ui/devgotodialog.ui \
          src/ui/devfinddialog.ui \
@@ -26,46 +25,37 @@ CONFIG += console
 	
 HEADERS +=	src/dev.h \
 		src/devapp.h \
-		src/devdialogs.h \
-		src/devdock.h \
-		src/devedit.h \
-		src/coreedit.h \
-		src/devlinenumber.h \
-		src/devgui.h \
-		src/devhighlighter.h \
-		src/devsplash.h \
-		src/devstatus.h \
-		src/devcorner.h \
-		src/devproject.h \
-		src/devworkspace.h  \
-		src/devscope.h  \
+		src/gui/devdialogs.h \
+		src/gui/devdock.h \
+		src/edit/devedit.h \
+		src/edit/coreedit.h \
+		src/edit/devlinenumber.h \
+		src/gui/devgui.h \
+		src/edit/devhighlighter.h \
+		src/gui/devsplash.h \
+		src/gui/devstatus.h \
+		src/core/devproject.h \
+		src/core/devworkspace.h  \
+		src/core/devscope.h  \
 		src/devsettings.h \
 		src/devsettingsdialog.h \
 
-# 		src/kateitemdata.h \
-# 		src/kateitemdatamanager.h \
-
-
 SOURCES +=	src/dev.cpp \
 		src/devapp.cpp \
-		src/devdialogs.cpp \
-		src/devdock.cpp \
-		src/devedit.cpp \
-		src/coreedit.cpp \
-		src/devlinenumber.cpp \
-		src/devgui.cpp \
-		src/devhighlighter.cpp \
-		src/devsplash.cpp \
-		src/devstatus.cpp \
-		src/devcorner.cpp \
-		src/devproject.cpp \
-		src/devworkspace.cpp \
-		src/devscope.cpp  \
+		src/gui/devdialogs.cpp \
+		src/gui/devdock.cpp \
+		src/edit/devedit.cpp \
+		src/edit/coreedit.cpp \
+		src/edit/devlinenumber.cpp \
+		src/gui/devgui.cpp \
+		src/edit/devhighlighter.cpp \
+		src/gui/devsplash.cpp \
+		src/gui/devstatus.cpp \
+		src/core/devproject.cpp \
+		src/core/devworkspace.cpp \
+		src/core/devscope.cpp  \
 		src/devsettings.cpp \
 		src/devsettingsdialog.cpp \
 		src/main.cpp
 
-#		src/kateitemdata.cpp \
-#		src/kateitemdatamanager.cpp \
-	   
 RESOURCES += src/DevEditor.qrc
