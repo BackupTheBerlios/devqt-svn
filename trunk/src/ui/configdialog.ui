@@ -2,14 +2,14 @@
  <author></author>
  <comment></comment>
  <exportmacro></exportmacro>
- <class>ConfigurationDlg</class>
- <widget class="QDialog" name="ConfigurationDlg" >
+ <class>ConfigDialog</class>
+ <widget class="QDialog" name="ConfigDialog" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>359</width>
-    <height>333</height>
+    <width>620</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -31,6 +31,285 @@
       <attribute name="title" >
        <string>Editor</string>
       </attribute>
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item row="0" column="1" >
+        <widget class="QGroupBox" name="groupBox" >
+         <property name="title" >
+          <string>GroupBox</string>
+         </property>
+         <widget class="QLabel" name="label_9" >
+          <property name="geometry" >
+           <rect>
+            <x>80</x>
+            <y>50</y>
+            <width>47</width>
+            <height>14</height>
+           </rect>
+          </property>
+          <property name="text" >
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="1" >
+        <widget class="QGroupBox" name="cbMargin" >
+         <property name="title" >
+          <string>Margin</string>
+         </property>
+         <property name="checkable" >
+          <bool>true</bool>
+         </property>
+         <property name="checked" >
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="1" column="0" >
+           <widget class="QToolButton" name="bMarginBrush" >
+            <property name="text" >
+             <string>Set margin brush ...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QToolButton" name="bMarginColor" >
+            <property name="text" >
+             <string>Set margin color ...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QSpinBox" name="iMargin" >
+            <property name="suffix" >
+             <string> spaces</string>
+            </property>
+            <property name="maximum" >
+             <number>120</number>
+            </property>
+            <property name="value" >
+             <number>80</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" >
+           <widget class="QLabel" name="label_8" >
+            <property name="text" >
+             <string>Width : </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item rowspan="2" row="0" column="0" >
+        <widget class="QGroupBox" name="groupBox_2" >
+         <property name="title" >
+          <string>General</string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="3" column="1" >
+           <widget class="QCheckBox" name="checkBox_6" >
+            <property name="text" >
+             <string>CheckBox</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" >
+           <widget class="QCheckBox" name="cbScroll" >
+            <property name="text" >
+             <string>Scrollbars as needed</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" >
+           <widget class="QCheckBox" name="cbIndent" >
+            <property name="text" >
+             <string>Auto indent</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" >
+           <widget class="QCheckBox" name="checkBox_4" >
+            <property name="text" >
+             <string>CheckBox</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" >
+           <widget class="QCheckBox" name="cbWordWrap" >
+            <property name="text" >
+             <string>Word wrap</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QCheckBox" name="cbAutoClose" >
+            <property name="text" >
+             <string>Auto close chars</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QCheckBox" name="cbTab" >
+            <property name="text" >
+             <string>Use tab character</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QCheckBox" name="cbCTRL" >
+            <property name="text" >
+             <string>Ctrl key navigation</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2" >
+        <widget class="QGroupBox" name="groupBox_7" >
+         <property name="title" >
+          <string>Fonts : </string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="1" column="6" >
+           <widget class="QComboBox" name="gutterFont" />
+          </item>
+          <item row="2" column="5" >
+           <widget class="QLabel" name="label_4" >
+            <property name="text" >
+             <string>Font size : </string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" >
+           <widget class="QLabel" name="label_2" >
+            <property name="text" >
+             <string>Font size :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5" >
+           <widget class="QLabel" name="label_3" >
+            <property name="text" >
+             <string>Font family</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QComboBox" name="editorFont" />
+          </item>
+          <item row="2" column="6" >
+           <widget class="QComboBox" name="gutterSize" />
+          </item>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="label" >
+            <property name="text" >
+             <string>Font family :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5" >
+           <widget class="QLabel" name="label_7" >
+            <property name="text" >
+             <string>Gutter : </string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" >
+           <widget class="QComboBox" name="editorSize" />
+          </item>
+          <item row="0" column="0" >
+           <widget class="QLabel" name="label_5" >
+            <property name="text" >
+             <string>Editor : </string>
+            </property>
+           </widget>
+          </item>
+          <item rowspan="6" row="0" column="3" >
+           <widget class="Line" name="line" >
+            <property name="orientation" >
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
+          <item rowspan="3" row="3" column="0" colspan="2" >
+           <widget class="QLabel" name="editorOverview" >
+            <property name="frameShape" >
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow" >
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="text" >
+             <string>Editor Font</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item rowspan="3" row="3" column="5" colspan="2" >
+           <widget class="QLabel" name="gutterOverview" >
+            <property name="frameShape" >
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow" >
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="text" >
+             <string>Gutter Font</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabSyntax" >
+      <attribute name="title" >
+       <string>Syntax</string>
+      </attribute>
       <layout class="QVBoxLayout" >
        <property name="margin" >
         <number>9</number>
@@ -39,139 +318,71 @@
         <number>6</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox" >
+        <widget class="QGroupBox" name="groupBox_5" >
          <property name="title" >
-          <string>Display</string>
+          <string>General</string>
          </property>
-         <layout class="QVBoxLayout" >
+         <layout class="QGridLayout" >
           <property name="margin" >
            <number>9</number>
           </property>
           <property name="spacing" >
            <number>6</number>
           </property>
-          <item>
-           <widget class="QCheckBox" name="cbLineNumbers" >
+          <item row="0" column="0" >
+           <widget class="QLabel" name="label_6" >
             <property name="text" >
-             <string>Show line number</string>
+             <string>Concerned files</string>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="cbWordWrap" >
-            <property name="text" >
-             <string>Word wrap</string>
+          <item row="0" column="1" >
+           <widget class="QGroupBox" name="cbLine" >
+            <property name="title" >
+             <string>Higlight current line</string>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="cbMarkCurrentLine" >
-            <property name="text" >
-             <string>Mark current line</string>
+          <item row="1" column="1" >
+           <widget class="QGroupBox" name="cbBlock" >
+            <property name="title" >
+             <string>Highlight current block</string>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
             </property>
            </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" >
-            <property name="margin" >
-             <number>0</number>
-            </property>
-            <property name="spacing" >
-             <number>6</number>
-            </property>
-            <item>
-             <widget class="QToolButton" name="buttonChooseFont" >
-              <property name="text" >
-               <string>...</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_2" >
-              <property name="text" >
-               <string>Editor font</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="fontPreview" >
-              <property name="readOnly" >
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="cbSaveBackups" >
-         <property name="text" >
-          <string>Save backups</string>
+        <widget class="QGroupBox" name="groupBox_3" >
+         <property name="title" >
+          <string>Formats</string>
          </property>
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" >
-         <property name="margin" >
-          <number>0</number>
+        <widget class="QGroupBox" name="groupBox_6" >
+         <property name="title" >
+          <string>Preview</string>
          </property>
-         <property name="spacing" >
-          <number>6</number>
+         <property name="checkable" >
+          <bool>true</bool>
          </property>
-         <item>
-          <widget class="QLabel" name="label" >
-           <property name="text" >
-            <string>End of line</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="comboBox" >
-           <item>
-            <property name="text" >
-             <string>Don't modify</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>Unix</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>Windows/DOS</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>Mac</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
+        </widget>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="tabSyntax" >
-      <attribute name="title" >
-       <string>Syntax</string>
-      </attribute>
-      <widget class="QPushButton" name="pushButton" >
-       <property name="geometry" >
-        <rect>
-         <x>250</x>
-         <y>140</y>
-         <width>90</width>
-         <height>35</height>
-        </rect>
-       </property>
-       <property name="text" >
-        <string>PushButton</string>
-       </property>
-      </widget>
      </widget>
     </widget>
    </item>
@@ -183,6 +394,13 @@
      <property name="spacing" >
       <number>6</number>
      </property>
+     <item>
+      <widget class="QPushButton" name="DefaultButton" >
+       <property name="text" >
+        <string>Set to default</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <spacer>
        <property name="orientation" >
@@ -201,12 +419,18 @@
        <property name="text" >
         <string>&amp;Apply</string>
        </property>
+       <property name="icon" >
+        <iconset resource="..\DevEditor.qrc" >:/images/ok.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="closeButton" >
        <property name="text" >
         <string>&amp;Close</string>
+       </property>
+       <property name="icon" >
+        <iconset resource="..\DevEditor.qrc" >:/images/cancel.png</iconset>
        </property>
       </widget>
      </item>
@@ -215,13 +439,15 @@
   </layout>
  </widget>
  <pixmapfunction></pixmapfunction>
- <resources/>
+ <resources>
+  <include location="../DevEditor.qrc" />
+ </resources>
  <connections>
   <connection>
    <sender>closeButton</sender>
    <signal>clicked()</signal>
-   <receiver>ConfigurationDlg</receiver>
-   <slot>close()</slot>
+   <receiver>ConfigDialog</receiver>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>369</x>
@@ -230,6 +456,22 @@
     <hint type="destinationlabel" >
      <x>179</x>
      <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>applyButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>492</x>
+     <y>524</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>313</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>

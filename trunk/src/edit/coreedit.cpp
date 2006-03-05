@@ -24,141 +24,294 @@
 
 #include "coreedit.h"
 
+#include "matcher.h"
+#include "indenter.h"
+#include "normalstate.h"
+#include "persistentstate.h"
+
 CoreEdit::CoreEdit(QWidget *p, const QString& s)
- : QTextEdit(p)
+ : 	QTextEdit(p),
+ 	pState( NormalState::Instance() ), pMatcher( new ParenMatcher(this) ),
+	pIndenter( new Indenter(this) ), iTab(4), iMargin(80),
+	bLine(true), bBlock(false), bMatchParen(true), bMargin(true),
+	bTab(false), bAutoClose(false), bNavCTRL(true)
 {
 	setMouseTracking(true);
 	setLineWrapMode(NoWrap);
+	setAcceptRichText(false);
+	setFrameStyle(QFrame::NoFrame);
 	setWordWrapMode(QTextOption::NoWrap);
 	
-	markCurrentLine  = true;
- 	currentLineColor = QColor(0x00, 0xff, 0xff, 0x30);
-
-	// this will disable the pasting of richtext (line copying
-	// html from a browser and pasting it on the editor)
-	setAcceptRichText(false);
 	setPlainText(s);
 	
-	connect( this, SIGNAL(cursorPositionChanged()), this, SLOT  (textCursorPos()));
-	connect( document(), SIGNAL(modificationChanged(bool)),	this, SLOT  ( docModified(bool)));
+	connect(this, SIGNAL( cursorPositionChanged() ),
+			this, SLOT  ( textCursorPos() ) );
+	
+	connect(document()	, SIGNAL( modificationChanged(bool) ),
+			this		, SLOT  ( docModified(bool) ) );
+	
+	blinker.start(QApplication::cursorFlashTime() / 2, this);
 }
 
-void CoreEdit::textCursorPos()
+int CoreEdit::line(const QTextCursor& c)
 {
-	QTextCursor c = textCursor();
+	return DevQt::line(document(), c.block());
+}
+
+int CoreEdit::column(const QTextCursor& c)
+{
 	QTextBlock b = c.block();
+	int n = 0, len = c.position() - b.position();
 	
-	int x = c.position() - b.position();
-	int y = DevQt::line(document(), b);
-
-	message( QString(tr("Text: Row %1 Column %2").arg(x).arg(y)), (int)DevQt::TextCursor);
+	if ( !b.isValid() )
+		return -1;
 	
-	viewport()->update();
+	QString s = b.text();
+	
+	if ( !s.contains("\t") )
+		return len + 1;
+	
+	for ( int i = 0; i < len; i++ )
+	{
+		if ( s.at(i) == '\t' )
+			n = ( ( n / iTab ) + 1 ) * iTab;
+		else
+			n++;
+	}
+	
+	return n + 1;
 }
 
-void CoreEdit::docModified( bool mod )
+void CoreEdit::gotoLine(int row, int col)
 {
-	if (mod)
-		message( tr("Modified"), (int)DevQt::Modification);
-	else
-		message( "", (int)DevQt::Modification);
+	;
 }
 
-void CoreEdit::setMarkCurrentLine( bool enable )
+bool CoreEdit::parenMatching() const
 {
-	markCurrentLine = enable;
-	viewport()->update();
+	return bMatchParen;
 }
 
-void CoreEdit::setCurrentLineColor( QColor color )
+void CoreEdit::setParenMatching(bool y)
 {
-	currentLineColor = color;
+	bMatchParen = y;
+}
 
-	// a little optimization, no need to update
-	// gui if the current line should not be marked
-	if (markCurrentLine)
-		viewport()->update();
+bool CoreEdit::drawMargin() const
+{
+	return bMargin;
+}
+
+void CoreEdit::setDrawMargin(bool y)
+{
+	bMargin = y;
+}
+
+int CoreEdit::margin() const
+{
+	return iMargin;
+}
+
+void CoreEdit::setMargin(int n)
+{
+	iMargin = n;
+}
+
+bool CoreEdit::CtrlNavigation() const
+{
+	return bNavCTRL;
+}
+
+void CoreEdit::setCtrlNavigation(bool y)
+{
+	bNavCTRL = y;
+}
+
+bool CoreEdit::autoClose() const
+{
+	return bAutoClose;
+}
+
+void CoreEdit::setAutoClose(bool y)
+{
+	bAutoClose = y;
+}
+
+QFont CoreEdit::font() const
+{
+	return document()->defaultFont();
+}
+
+void CoreEdit::setFont(const QFont& f)
+{
+	QTextEdit::setFont(f);
+	document()->setDefaultFont(f);
+	
+	setTabStopWidth(iTab*QFontMetrics(f).width(' '));
+}
+
+int CoreEdit::tabstop() const
+{
+	return iTab;
+}
+
+void CoreEdit::setTabstop(int n)
+{
+	iTab = n;
+	
+	setTabStopWidth(n*QFontMetrics(document()->defaultFont()).width(' '));
+}
+
+bool CoreEdit::replaceTab() const
+{
+	return bTab;
+}
+
+void CoreEdit::setReplaceTab(bool y)
+{
+	bTab = y;
+}
+
+bool CoreEdit::highlightCurrentLine() const
+{
+	return bLine;
+}
+
+void CoreEdit::setHighlightCurrentLine(bool y)
+{
+	bLine = y;
+}
+
+bool CoreEdit::highlightCurrentBlock() const
+{
+	return bBlock;
+}
+
+void CoreEdit::setHighlightCurrentBlock(bool y)
+{
+	bBlock = y;
+}
+
+EditorState* CoreEdit::state() const
+{
+	return pState;
+}
+
+void CoreEdit::setState(EditorState *s)
+{
+	pState = s;
 }
 
 void CoreEdit::paintEvent(QPaintEvent *e)
 {
-	if (markCurrentLine)
-	{
-		QPainter p( viewport() );
-		QRect r( 0,
-			cursorRect().y(),
-			viewport()->width(),
-			QFontMetrics( document()->defaultFont() ).lineSpacing() );
-		
-		p.fillRect( r, currentLineColor );
-		p.end();
-	}
-	
-	QTextEdit::paintEvent(e);
+	e->accept();
+	pState->paintEvent(this, e);
+}
+
+void CoreEdit::timerEvent(QTimerEvent *e)
+{
+	pState->timerEvent(this, e);
 }
 
 void CoreEdit::keyPressEvent(QKeyEvent *e)
 {
-	if ( e->key() == Qt::Key_Insert )
-	{
-		bool m = !overwriteMode();
-		
-		setOverwriteMode(m);
-		
-		if ( m )
-			message( tr("Overwrite"), (int)DevQt::TypingMode);
-		else
-			message( tr("Insert"), (int)DevQt::TypingMode);
-		
-	}
-	else
-	{
-		QTextEdit::keyPressEvent(e);
-		message(QString::number(DevQt::lines(document())), (int)DevQt::Lines );
-	}
+	pState->keyPressEvent(this, e);
 }
 
 void CoreEdit::mouseMoveEvent(QMouseEvent *e)
 {
-	const QFontMetrics fm(document()->defaultFont());
-	QString row, col, line;
-	const QPoint p = viewport()->mapFromGlobal(e->globalPos());
-	
-	QTextCursor cur = cursorForPosition(p);
-	
-	int x, y = DevQt::line(document(), cur.block());
-	
-	if ( y != -1 )
-	{
-		line = cur.block().text();
-		x = line.length()+1;
-		
-		do
-		{
-			if ( (fm.width(line, --x) - fm.charWidth(line, x)) < p.x() )
-				break;
-		} while ( x > 0 );
-		
-		col = QString::number(x);
-		row = QString::number(y);
-	}
-	else
-	{
-		col = "-1";
-		row = "-1";
+	pState->mouseMoveEvent(this, e);
+}
 
-//		WTF?
-// 		col = QString::number(-1);
-// 		row = QString::number(-1);
-	}
-	
-	message( QString(tr("Mouse: Row %1 Column %2").arg(col).arg(row)), (int)DevQt::MouseCursor);
-	
-	QTextEdit::mouseMoveEvent(e);
+void CoreEdit::mousePressEvent(QMouseEvent *e)
+{
+	pState->mousePressEvent(this, e);
+}
+
+void CoreEdit::mouseReleaseEvent(QMouseEvent *e)
+{
+	pState->mouseReleaseEvent(this, e);
+}
+
+void CoreEdit::mouseDoubleClickEvent(QMouseEvent *e)
+{
+	pState->mouseDoubleClickEvent(this, e);
+}
+
+void CoreEdit::dragEnterEvent(QDragEnterEvent *e)
+{
+	pState->dragEnterEvent(this, e);
+}
+
+void CoreEdit::dragLeaveEvent(QDragLeaveEvent *e)
+{
+	pState->dragLeaveEvent(this, e);
+}
+
+void CoreEdit::dragMoveEvent(QDragMoveEvent *e)
+{
+	pState->dragMoveEvent(this, e);
+}
+
+void CoreEdit::dropEvent(QDropEvent *e)
+{
+	pState->dropEvent(this, e);
 }
 
 void CoreEdit::contextMenuEvent(QContextMenuEvent *e)
 {
 	viewport()->update();
 	e->ignore();
+}
+
+QMimeData* CoreEdit::createMimeDataFromSelection() const
+{
+	return pState->createMimeDataFromSelection(this);
+}
+
+void CoreEdit::insertFromMimeData(const QMimeData *source)
+{
+	return pState->insertFromMimeData(this, source);
+}
+
+void CoreEdit::delSelect()
+{
+	textCursor().removeSelectedText();
+}
+
+void CoreEdit::changeState(EditorState *s)
+{
+	if ( !s )
+		return;
+	
+	pState->disconnect(this);
+	pState = s;
+	
+	connect(s	, SIGNAL( message(const QString&, int) ),
+			this, SIGNAL( message(const QString&, int) ));
+	
+	emit message(tr("Switched to ") + s->name() + "...", (int)DevQt::General);
+}
+
+void CoreEdit::textCursorPos()
+{
+	/*
+	QTextCursor c = textCursor();
+	
+	int x = column(c), y = line(c);
+	
+	QString col = QString::number(x);
+	QString row = QString::number(y);
+	
+	emit message(QString("Text :") + " Row " + row + ", Column " + col,
+				(int)DevQt::TextCursor);
+	*/
+}
+
+void CoreEdit::docModified(bool mod)
+{
+	if ( mod )
+		emit message("Modified", (int)DevQt::Modification);
+	else
+		emit message("", (int)DevQt::Modification);
 }

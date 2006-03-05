@@ -79,6 +79,8 @@ DevDock::DevDock(	const QString& name,
     	
     	areaActions->addAction(leftAction);
     	areaActions->addAction(rightAction);
+    	
+    	leftAction->setChecked(true);
 	}
 	
 	if ( area & 12 )
@@ -88,6 +90,8 @@ DevDock::DevDock(	const QString& name,
     	
     	areaActions->addAction(topAction);
     	areaActions->addAction(bottomAction);
+    	
+    	bottomAction->setChecked(true);
 	}
 	
     connect(movableAction, SIGNAL(triggered(bool)), areaActions, SLOT(setEnabled(bool)));
@@ -110,7 +114,7 @@ DevDock::DevDock(	const QString& name,
     
     tabW = new QTabWidget;
     tabW->setMinimumSize(150, 75);
-    tabW->setWindowState(Qt::WindowMaximized);
+    //tabW->setWindowState(Qt::WindowMaximized);
     setWidget(tabW);
     
     if (p)

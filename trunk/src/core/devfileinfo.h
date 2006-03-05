@@ -22,63 +22,31 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _DEV_FILE_INFO_H_
+#define _DEV_FILE_INFO_H_
 
 #include "dev.h"
 
-class DevEdit;
-class DevSettingsDialog;
-
-class DevSettings : public QSettings
+class DevFileInfo
 {
-	Q_OBJECT
-	
-	friend class DevApp;
-	
 	public:
+		DevFileInfo(const QString& f);
+		DevFileInfo(const QString& f, const QStringList& dirs);
 		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
+		QString path() const;	//path only
+		QString base() const;	//name only
+		QString ext () const;	//ext only
 		
-		static DevSettings* Instance();
-		void killSettings();
+		QString file() const;	//path + name
+		QString name() const;	//name + ext
 		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
+		QString all () const; 	//path + name + ext
 		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
-		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
+		QString relative(const QString& other);
 		
 	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
+		QString s;
 };
-
+		
 
 #endif

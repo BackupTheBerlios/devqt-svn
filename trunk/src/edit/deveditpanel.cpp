@@ -22,63 +22,18 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#include "deveditpanel.h"
 
-#include "dev.h"
+#include "coreedit.h"
 
-class DevEdit;
-class DevSettingsDialog;
-
-class DevSettings : public QSettings
+DevEditPanel::DevEditPanel(CoreEdit *e, QWidget *p)
+ : QWidget(p), editor(e)
 {
-	Q_OBJECT
-	
-	friend class DevApp;
-	
-	public:
-		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
-		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
-		
-	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
-};
-
-
-#endif
+	if ( !e )
+		return;
+    
+    connect(editor->document()->documentLayout(), SIGNAL(update(const QRectF &)),
+            this, SLOT(update()));
+    connect(editor->verticalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(update()));
+}

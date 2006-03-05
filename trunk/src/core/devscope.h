@@ -27,11 +27,153 @@
 
 #include "dev.h"
 
-#ifdef _ORDERED_
-typedef QMap<int, QString> DevValues;
-#else
+/*
+
+These class are the core of project management.
+Basically a *.pro is considered as a tree of scopes with a global scope at top.
+Each scope is a map of variable (name as key, content as value), each variable
+being a map itslef.
+
+Actually no QMap are used because we don't care about ordering vaiables by name,
+but we do care about the speed gain brought by QHash.
+
+So as to get a tree structure, each scope has to hold a list of children. In
+order to allow easy navigation through project data, scope do not have names
+because their names are hold by their parent in a map with name as key and
+pointer to child as value.
+
+To give the highest flexibility, variables are not QStringList but maps of
+operators and corresponding value. That way of storage allow to keep intact any
+variable and to modify each aspect, not only a punctually calculated value.
+
+This example project is not a typical one AFAIK, but It could become one easily.
+I doubt many people make an expensive use of scopes but that is because there
+wasn't any IDE that smartly used them before DevQt does. Scopes are a great
+advantage of *.pro format because the allow both targets and folder. Indeed, a
+scope which is set in the CONFIG variable as follow, will be treated by qmake
+as if it wasn't present in the project file :
+	
+# Project.pro :
+	
+	CONFIG +=	qt thread release \ 		# don't care about this line
+				scope child_scope_1 \		# but look at this one!!!
+				child_scope_2				# and this on as well!!!
+	
+	VARIABLE_X = ...						# basic variable assignment
+	VARIABLE_Y = ...
+	VARIABLE_Z = ...
+	
+	scope {									# first folder
+		
+		VARIABLE_X += ...					# variable in folder
+		VARIABLE_Y += ...
+		
+		child_scope_1 {						# child folder 1
+			
+			VARIABLE_Z += ...				# variable in child folder
+			VARIABLE_X += ...
+			
+			child_scope_3 {					# optionnal target
+				
+				VARIABLE_Y -= ...			# remove from variable
+				
+			}								# ! optionnal target
+						
+		}									# ! child folder 1
+		
+		child_scope_2 {						# child folder 2
+			
+			VARIABLE_Z ~= ...				# replace in variable
+			
+		}									# ! child folder 2
+		
+	}										# ! first folder
+
+# EOF
+	
+Since a project file is represented as a tree of scopes holding variable, this
+property of scopes allow an IDE to create and read project files where data is
+ordered in folders.
+
+The file above will give the following (pseudo) data structure :
+	
+DevProject *project {
+	
+	DevScope *global {
+		
+		QHash<QString, DevVariable> {
+			
+			"VARIABLE_X", DevVariable {
+				
+							QHash<QString, QStringList> {
+								
+								"+=", QStringList { ... }
+								
+							}
+							
+			}
+			
+			"VARIABLE_Y", DevVariable {
+				
+							QHash<QString, QStringList> {
+								
+								"+=", QStringList { ... }
+								
+							}
+							
+			}
+			
+			"VARIABLE_Z", DevVariable {
+				
+							QHash<QString, QStringList> {
+								
+								"+=", QStringList { ... }
+								
+							}
+							
+			}
+			
+		}
+		
+		QHash<QString, DevScope*> nest {
+			
+			"scope", DevScope* {
+							QHash<QString, DevVariable> {
+								
+										"VARIABLE_Z", DevVariable {
+											
+													QHash<QString, QStringList> {
+															
+															"+=", QStringList { ... }
+															
+													}
+								
+										"VARIABLE_X", DevVariable {
+											
+													QHash<QString, QStringList> {
+															
+															"+=", QStringList { ... }
+															
+													}
+													
+							}
+							
+							...
+							
+			}
+			
+		}
+		
+	}
+	
+}
+
+DevQt automatically check if a scope is set in the CONFIG variable, create the
+corresponding tree item and update the target combobox correctly.
+
+*/
+
 typedef QStringList DevValues;
-#endif
 
 class DevVariable : public QHash<QString, DevValues>
 {
@@ -43,11 +185,10 @@ class DevVariable : public QHash<QString, DevValues>
 typedef QHash<QString, DevVariable>	DevVarsMap;
 
 class DevScope;
-class DevProject;
 typedef QHash<QString, DevScope*> 	DevScopeMap;
 
 
-class DevScope : public DevVarsMap
+class DevScope : public QObject, public DevVarsMap
 {
 	friend class DevProject;
 	friend class DevWorkSpace;
@@ -61,12 +202,15 @@ class DevScope : public DevVarsMap
 		DevScope* parent() const;
 		DevScope* nested(const QString& name);
 		
+		QStringList scopes();
 		void scopes(QStringList& l, const QString& prefix = QString());
 		
 		QString content(int indent);
 		
 		void calculate(const QString& var, QStringList& l);
 		void content(const QString& var, QStringList& l);
+		
+		void content(const QString& var, const QStringList& scopes, QStringList& l);
 		
 	private:
 		DevScope *par;

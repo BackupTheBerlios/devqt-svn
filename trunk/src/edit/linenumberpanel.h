@@ -8,9 +8,9 @@
 ** version 2 as published by the Free Software Foundation and appearing in the
 ** file GPL.txt included in the packaging of this file.
 **
-** Notes :	- the DevLineNumber widget is based on the LineNumberWidget provided
+** Notes :	- the LineNumberPanel widget is based on the LineNumberWidget provided
 ** by QSA 1.2.0 (C) Trolltech, as modifications have been done to make it comply
-** my requirements, DevLineNumber has to be considered as a derivative work of
+** my requirements, LineNumberPanel has to be considered as a derivative work of
 ** the original widget from the Trolls.
 **			- the DevHighlighter class is based on the QSyntaxHighlighter class
 ** provided by QSA 1.2.0 (C) Trolltech, as modifications have been done to make
@@ -22,63 +22,22 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _LINE_NUMBER_PANEL_H_
+#define _LINE_NUMBER_PANEL_H_
 
 #include "dev.h"
 
-class DevEdit;
-class DevSettingsDialog;
+#include "deveditpanel.h"
 
-class DevSettings : public QSettings
+class LineNumberPanel : public DevEditPanel
 {
 	Q_OBJECT
-	
-	friend class DevApp;
-	
+    
 	public:
-		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
+		LineNumberPanel(CoreEdit *e, QWidget *p = 0);
 		
 	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
-		
-	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
+		virtual void paintEvent(QPaintEvent *e);
 };
-
 
 #endif

@@ -22,63 +22,22 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _LINE_MARKS_PANEL_H_
+#define _LINE_MARKS_PANEL_H_
 
 #include "dev.h"
 
-class DevEdit;
-class DevSettingsDialog;
+#include "deveditpanel.h"
 
-class DevSettings : public QSettings
+class LineMarksPanel : public DevEditPanel
 {
 	Q_OBJECT
 	
-	friend class DevApp;
-	
 	public:
-		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
+		LineMarksPanel(CoreEdit *e, QWidget *p = 0);
 		
 	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
-		
-	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
+		virtual void paintEvent(QPaintEvent *e);
 };
-
 
 #endif

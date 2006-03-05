@@ -22,14 +22,25 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_FILE_H_
-#define _DEV_FILE_H_
+#ifndef _DEV_PROJECT_H_
+#define _DEV_PROJECT_H_
 
 #include "dev.h"
 
 #include "devscope.h"
 
 class DevEdit;
+
+/*
+
+AbstractFile and heirs are meant to handle every signal and slots related stuff
+inside QTreeWidget. Each instance of these class is linked to a QTreeWidgetItem,
+using a QHash, once again.
+
+The AbstractFile::FileFlag enum is the core of an ugly looking but working
+communication system, never change AbstractFile::f field !!!
+
+*/
 
 class AbstractFile : public QObject
 {
@@ -43,8 +54,8 @@ class AbstractFile : public QObject
 			abstract,
 			file,
 			folder,
-			project,
-			scope
+			scope,
+			project
 		};
 		
 		AbstractFile(const QString& name);
@@ -68,6 +79,8 @@ class AbstractFile : public QObject
 		FileFlag	f;
 		QMenu 		*m;
 		
+		DevScope	*o;
+		
 		QAction *aDel,
 			*aRen;
 		
@@ -84,7 +97,8 @@ class DevFile : public AbstractFile
 		virtual ~DevFile();
 		
 	protected:
-		DevEdit *e;
+		QString v;
+		QPointer<DevEdit> e;
 };
 
 class DevFolder : public AbstractFile
@@ -109,6 +123,13 @@ class DevFolder : public AbstractFile
 		
 };
 
+/*
+
+DevDirectory ( bad name but, well... Who cares about such a low level class? ),
+is a restricted DevFolder, dseigned for targets representation.
+
+*/
+
 class DevDirectory : public DevFolder
 {
 	Q_OBJECT
@@ -120,6 +141,14 @@ class DevDirectory : public DevFolder
 		virtual ~DevDirectory();
 		
 };
+
+/*
+
+DevProject is the lowest level project manager (lower level classes only perform
+generic stuffs). It holds the project parser and a few routines usefull for the
+GUI part of the project managing.
+
+*/
 
 class DevProject : 	public DevFolder
 {
@@ -146,6 +175,7 @@ class DevProject : 	public DevFolder
 		QString content();
 		
 		QStringList scopes();
+		QStringList content(const QString& var, const QString& scope);
 		QStringList content(const QString& var, bool files = false);
 		
 	protected:

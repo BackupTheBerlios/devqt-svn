@@ -22,63 +22,32 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _MULTILINE_STATE_H_
+#define _MULTILINE_STATE_H_
 
-#include "dev.h"
+#include "normalstate.h"
 
-class DevEdit;
-class DevSettingsDialog;
-
-class DevSettings : public QSettings
+class MultilineState : public NormalState
 {
-	Q_OBJECT
-	
-	friend class DevApp;
-	
 	public:
+		static MultilineState* Instance();
 		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
+		virtual QString name();
 		
-		static DevSettings* Instance();
-		void killSettings();
+		virtual void paintEvent(CoreEdit *ctxt, QPaintEvent *e);
 		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
+		virtual void keyPressEvent(CoreEdit *ctxt, QKeyEvent *e);
 		
 	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
+		MultilineState();
+		virtual ~MultilineState();
+		
+		virtual void paintSelection(CoreEdit *ctxt, QPainter& p,
+								int xOffset, int yOffset,
+								QAbstractTextDocumentLayout::PaintContext &cxt);
 		
 	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
+		static MultilineState *inst;
 };
-
 
 #endif

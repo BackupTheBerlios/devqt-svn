@@ -22,63 +22,37 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _DEV_SETTINGS_DIALOG_H_
+#define _DEV_SETTINGS_DIALOG_H_
 
 #include "dev.h"
 
-class DevEdit;
-class DevSettingsDialog;
+#include "ui_configdialog.h"
 
-class DevSettings : public QSettings
+class DevSettings;
+
+class DevSettingsDialog : public QDialog, private Ui::ConfigDialog
 {
 	Q_OBJECT
 	
-	friend class DevApp;
-	
 	public:
-		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
+		DevSettingsDialog(DevSettings *s, QWidget *p);
 		
 	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
+		void apply();
+		void setDefault();
+		void setCurrent();
+	
 	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
+		void on_DefaultButton_clicked();
 		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
+		void on_editorFont_currentIndexChanged(const QString& text);
+		void on_gutterFont_currentIndexChanged(const QString& text);
+		void on_editorSize_currentIndexChanged(const QString& text);
+		void on_gutterSize_currentIndexChanged(const QString& text);
 		
 	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
+		QPointer<DevSettings> settings;
 };
-
 
 #endif

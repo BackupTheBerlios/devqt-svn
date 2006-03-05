@@ -32,15 +32,19 @@ DevVariable::DevVariable()
 }
 
 DevScope::DevScope(DevProject *project, DevScope *parent)
- : par(parent), pro(project)
+ : QObject(parent), par(parent), pro(project)
 {
 	//QMessageBox::warning(0, "scope built", QString::number(++count)+"th");
 }
 
 DevScope::~DevScope()
 {
-	foreach(DevScope *next, nest.values())
-		delete next;
+	/*
+	Dunno why but those lines caused a crash when closing a project where scopes
+	has been moved with drag and drop!
+	*/
+	//foreach(DevScope *next, nest.values())
+	//	delete next;
 	
 	nest.clear();
 	clear();
@@ -69,6 +73,25 @@ DevScope* DevScope::nested(const QString& name)
 	return s;
 }
 
+QStringList DevScope::scopes()
+{
+	QStringList l;
+	
+	for ( DevScopeMap::iterator i = nest.begin(); i != nest.end(); i++ )
+	{
+		if ( !l.contains(i.key()) )
+			l<<i.key();
+		
+		QStringList list = (*i)->scopes();
+		
+		foreach (QString s, list)
+			if ( !l.contains(s) )
+				l<<s;
+	}
+	
+	return l;
+}
+
 void DevScope::scopes(QStringList& l, const QString& prefix)
 {
 	QString preceding(prefix);
@@ -78,8 +101,15 @@ void DevScope::scopes(QStringList& l, const QString& prefix)
 	
 	for ( DevScopeMap::iterator i = nest.begin(); i != nest.end(); i++ )
 	{
-		l<<preceding + i.key();
-		(*i)->scopes(l, preceding + i.key());
+		QString pre(preceding);
+		
+		if ( !pro->content("CONFIG").contains(i.key()) )
+			pre += i.key();
+		
+		if ( !pre.isEmpty() )
+			l<<pre;
+		
+		(*i)->scopes(l, pre);
 	}
 }
 
@@ -95,6 +125,10 @@ QString DevScope::content(int indent)
 		for (DevVariable::iterator j = v.begin(); j != v.end(); j++)
 		{
 			QStringList l(*j);
+			
+			if ( l.isEmpty() )
+				continue;
+			
 			QStringList::iterator k = l.begin();
 			
 			s += tab + i.key() + " " + j.key() + " " + *(k++) + " \\\n";
@@ -157,6 +191,23 @@ void DevScope::content(const QString& name, QStringList& l)
 			
 			l.replaceInStrings(QRegExp(f.cap(1)), f.cap(2));
 		}
+	}
+}
+
+void DevScope::content(const QString& var, const QStringList& scopes, QStringList& l)
+{
+	DevVariable v = value(var);
+	
+	l<<v.value("=");
+	l<<v.value("+=");
+	l<<v.value("*=");
+	
+	foreach (QString s, scopes)
+	{
+		if ( !nest.contains(s) )
+			continue;
+		
+		(*(nest.find(s)))->content(var, scopes, l);
 	}
 }
 

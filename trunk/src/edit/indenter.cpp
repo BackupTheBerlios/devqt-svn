@@ -22,63 +22,30 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#include "indenter.h"
 
-#include "dev.h"
+#include "coreedit.h"
 
-class DevEdit;
-class DevSettingsDialog;
-
-class DevSettings : public QSettings
+Indenter::Indenter(CoreEdit *e)
+ : QObject(e), edit(e)
 {
-	Q_OBJECT
-	
-	friend class DevApp;
-	
-	public:
-		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
-		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
-		
-	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
-};
+	;
+}
 
+Indenter::~Indenter()
+{
+}
 
-#endif
+QString Indenter::spaces(const QTextCursor& c)
+{
+	int i = -1;
+	QString tabs = c.block().text();
+	
+	while ( ++i < tabs.size() )
+	{
+		if ( !tabs.at(i).isSpace() )
+			return tabs.left(i);
+	}
+	
+	return tabs;
+}

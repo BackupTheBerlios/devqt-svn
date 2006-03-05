@@ -22,12 +22,22 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_PROJECT_H_
-#define _DEV_PROJECT_H_
+#ifndef _DEV_WORKSPACE_H_
+#define _DEV_WORKSPACE_H_
 
 #include "dev.h"
 
 #include "devproject.h"
+
+/*
+
+The real project manager (dragging, deleting, renaming, adding, for both files
+and folders, everything is handled by the workspace, which is, for simlicity, a
+QTreeWidget itself.
+
+Low level stuff are eplained in devscope.h
+
+*/
 
 typedef QHash<QTreeWidgetItem*, AbstractFile*> 	DevTreeMap;
 typedef QHash<QString, DevProject*>				DevProjectMap;
@@ -60,10 +70,10 @@ class DevWorkSpace : 	public QTreeWidget,
 						const QString& project,
 						const QString& folder);
 		*/
+		void rename(AbstractFile *f, const QString& name);
 		
 		bool newProject(const QString& name);
-		
-		void rename(AbstractFile *f, const QString& name);
+		bool closeProject(const QString& name);
 		
 	protected slots:
 		void deletion(AbstractFile *o);
@@ -74,6 +84,9 @@ class DevWorkSpace : 	public QTreeWidget,
 		void focus(QTreeWidgetItem *i, int c);
 		
 	protected:
+		bool dropMimeData (	QTreeWidgetItem *parent, int index,
+							const QMimeData *data, Qt::DropAction action);
+		
 		virtual void contextMenuEvent(QContextMenuEvent *e);
 		
 	private:

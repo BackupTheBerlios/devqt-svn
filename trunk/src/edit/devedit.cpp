@@ -23,11 +23,12 @@
 ****************************************************************************/
 
 #include "devedit.h"
-#include "devgui.h"
+
 #include "coreedit.h"
-#include "devstatus.h"
-#include "devlinenumber.h"
+#include "blockdata.h"
 #include "devhighlighter.h"
+#include "devstandardpanel.h"
+#include "devoverviewpanel.h"
 
 /*
 
@@ -53,24 +54,34 @@ void DevEdit::setup()
 {
 	// setup widgets
 	e = new CoreEdit;
-	l = new DevLineNumber(e);
+	s = new DevStandardPanel(e);
+	o = new DevOverviewPanel(e);
 	
 	//setup layout
+	/*
+	QToolBox *b = new QToolBox;
+	
+	b->addItem(s, QIcon(":/"), tr("Standard"));
+	b->addItem(o, QIcon(":/"), tr("Overview"));
+	
+	b->setMaximumWidth(100);
+	*/
+	
 	QGridLayout *grid = new QGridLayout;
 	
-	grid->addWidget(l,  0, 0, 48,  1);
+	grid->addWidget(s,  0, 0, 48,  1);
 	grid->addWidget(e,  0, 1, 48, 63);
 	
 	//apply layout
 	setLayout(grid);
 	
 	//setup editor properties
-	setFont( QFont(DEV_GUI->getFontFamily(), DEV_GUI->getFontSize()) );
+	setFont( QFont("Courier New", 10) );
 	
 	hl = new CppHighlighter(e);//, true);
 	
 	//setup internal connections
-	connect(l	, SIGNAL( clicked(QTextCursor&) ),
+	connect(s	, SIGNAL( clicked(QTextCursor&) ),
 			this, SLOT  ( toggleBreakPoint(QTextCursor&) ) );
 	
 	connect(e	, SIGNAL( message(const QString&, int) ),
@@ -127,7 +138,7 @@ void DevEdit::setup()
 	connect(e->verticalScrollBar(), SIGNAL( valueChanged(int) ),
 			this, SLOT( v_valueChanged(int) ) );
 	
-	connect(l	, SIGNAL( clicked(int) ),
+	connect(s	, SIGNAL( clicked(int) ),
 			this, SIGNAL( clicked(int) ) );
 	
 }
@@ -169,10 +180,7 @@ void DevEdit::setText(const QString& s, DevEdit::OpenType t)
 
 void DevEdit::setFont(const QFont& f)
 {
-	e->document()->setDefaultFont(f);
-	
-	//temporary tab work around
-	e->setTabStopWidth(4*QFontMetrics(f).width(' '));
+	e->setFont(f);
 }
 
 QTextDocument* DevEdit::document() const
@@ -227,7 +235,7 @@ void DevEdit::selectAll()
 
 void DevEdit::delSelect()
 {
-	e->textCursor().removeSelectedText();
+	e->delSelect();
 }
 
 void DevEdit::print()
@@ -274,7 +282,7 @@ void DevEdit::indent()
 	;
 }
 
-void DevEdit::scrollTo(const QString & /*txt*/, const QString & /*first*/)
+void DevEdit::scrollTo(const QString &txt, const QString &first)
 {
 	//e->scrollTo(txt, first);
 }

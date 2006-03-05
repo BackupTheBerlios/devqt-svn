@@ -26,30 +26,58 @@
 
 #include "devgui.h"
 #include "devedit.h"
+#include "coreedit.h"
+#include "linenumberpanel.h"
+#include "devstandardpanel.h"
 #include "devsettingsdialog.h"
-
 
 /*
 
 Settings map:
-
-|       purpose           |    key                |      type               |
+	
+|		purpose			|		key				|			type			|
 |---------------------------------------------------------------------------|
-|    recent files:        |    recent/files       |      QStringList        |
-|    recent projects:     |    recent/projects	  |      QStringList        |
-|-------------------------|-----------------------|-------------------------|
-|    higlight formats     |    edit/formats       |  QList<QTextCharFormat> |
-|    editor font          |    edit/font          |  QFont                  |
-|    gutter font          |    edit/gutter/font   |  QFont                  |
-|    tab width            |    edit/tabs          |  int                    |
-|    insert mode          |    edit/insert        |  bool                   |
-|    auto indent          |    edit/indent        |  bool                   |
-|    scrollbar as needed  |    edit/scroll        |  bool                   |
+|	recent files : 		|	recent/files		|		QStringList			|
+|	recent projects : 	|	recent/projects		|		QStringList			|
+|-----------------------|-----------------------|---------------------------|
+|	openned files : 	|	openned/files		|		QStringList			|
+|	openned projects : 	|	openned/projects	|		QStringList			|
+|-----------------------|-----------------------|---------------------------|
+|	main win state :	|	gui/state			|		Qt::WindowStates	|
+|	main win title : 	|	gui/title			|			QString			|
+|	main win width :	|	gui/width			|			int				|
+|	main win height : 	|	gui/height			|			int				|
+|	main win position : |	gui/pos				|			QPoint			|
+|-----------------------|-----------------------|---------------------------|
+|	insert mode			|	edit/insert			|			bool			|
+|	auto indent			|	edit/indent			|			bool			|
+|	scrollbar as needed	|	edit/scroll			|			bool			|
+|	auto close chars	|	edit/autoclose		|			bool			|
+|	CTRL navigation		|	edit/ctrl			|			bool			|
+|	editor font			|	edit/font/editor	|			QFont			|
+|	gutter font			|	edit/font/gutter	|			QFont			|
+|	tab width			|	edit/tabs/size		|			int				|
+|	tab replace			|	edit/tabs/replace	|			bool			|
+|	draws margin		|	edit/margin/draws	|			bool			|
+|	margin size			|	edit/margin/margin	|			int				|
+|	margin color		|	edit/margin/color	|			QColor			|
+|-----------------------|-----------------------|---------------------------|
+|	higlight formats	|	highlight/formats	|	QList<QTextCharFormat>	|
+|	higlight line		|	highlight/line		|			bool			|
+|	highlight block		|	highlight/block		|			bool			|
 |---------------------------------------------------------------------------|
 
 */
 
 DevSettings* DevSettings::inst = 0;
+
+#ifdef Q_WS_WIN
+	const QString DevSettings::PATH_VAR = "PATH";
+#elif defined(Q_WS_X11)
+	const QString DevSettings::PATH_VAR = "PATH";
+#elif defined(Q_WS_MAC)
+	const QString DevSettings::PATH_VAR = "PATH";
+#endif
 
 DevSettings* DevSettings::Instance()
 {
@@ -59,16 +87,10 @@ DevSettings* DevSettings::Instance()
 	return inst;
 }
 
-void DevSettings::killSettings()
-{
-	if ( inst )
-		delete inst;
-}
-
 DevSettings::DevSettings(QWidget *p)
  : QSettings(p)
 {
-	dlg = new DevSettingsDialog;
+	dlg = new DevSettingsDialog(this, p);
 	
 	m = new QMenu(tr("&Reopen..."), p);
 	m->setIcon(QIcon(":/reopen.png"));
@@ -77,45 +99,102 @@ DevSettings::DevSettings(QWidget *p)
 	connect(aClear	, SIGNAL( triggered() ),
 			this	, SLOT  ( clearRecents() ) );
 	recent();
-
-	// WTF is this?	
+	
 	if ( allKeys().isEmpty() )
 	{
-		;//dlg->exec();
+		//set default settings if it's the first time the app is ran
+		dlg->setDefault();
 	} else {
-		;
+		//get back settings and update the config dialog as needed
+		dlg->setCurrent();
 	}
 	
 }
 
 DevSettings::~DevSettings()
 {
-        beginGroup("gui");
-        setValue("state", QVariant(DEV_GUI->windowState()));
-        setValue("title", QVariant(DEV_GUI->windowTitle()));
-        setValue("height", QVariant(DEV_GUI->height()));
-        setValue("width", QVariant(DEV_GUI->width()));
-        setValue("pos", QVariant(DEV_GUI->pos()));
-        endGroup();
+	//dlg->apply();
+}
 
-	beginGroup("editor");
-	setValue("fontfamily", QVariant(DEV_GUI->getFontFamily()));
-	setValue("fontsize", QVariant(DEV_GUI->getFontSize()));
-	endGroup();
+void DevSettings::killSettings()
+{
+	if ( inst )
+	{
+		qDebug("closing settings...");
+		delete inst;
+	}
+}
 
-	beginGroup("highlighter");
-	setValue("number", QVariant(DEV_GUI->getNumberBrush()));
-	setValue("quote", QVariant(DEV_GUI->getQuoteBrush()));
-	setValue("preprocessor", QVariant(DEV_GUI->getPreprocessorBrush()));
-	setValue("keyword", QVariant(DEV_GUI->getKeywordBrush()));
-	setValue("comment", QVariant(DEV_GUI->getCommentBrush()));
-	endGroup();
-	qDebug("Settings saved.");
+QString DevSettings::make()
+{
+	#ifdef Q_WS_WIN
+	return "mingw32-make";
+	#elif defined(Q_WS_X11)
+	return "make";
+	#elif defined(Q_WS_MAC)
+	return "make"; 		//Is that true???
+	#endif
+}
+
+QStringList DevSettings::environment(const QStringList& dirs)
+{
+	QStringList l = QProcess::systemEnvironment();
+	
+	if ( dirs.isEmpty() )
+		return l;
+	
+	QString PATH;
+	
+	QMessageBox::warning(0, 0, l.join("\n"));
+	
+	for ( QStringList::iterator i = l.begin(); i != l.end(); i++ )
+	{
+		if ( !(*i).startsWith(PATH_VAR) )
+			continue;
+		
+		foreach ( QString dir, dirs )
+			(*i) += QString(";") + dir;
+		
+		QMessageBox::warning(0, 0, (*i).split(';').join("\n"));
+	}
+	
+	
+	return l;
+}
+
+QStringList DevSettings::includes()
+{
+	QStringList l;
+	
+	return l;
 }
 
 void DevSettings::applyFormat(DevEdit *e)
 {
-	;
+	if ( !e )
+		return;
+	
+	CoreEdit *edit = e->e;
+	DevStandardPanel *s = e->s;
+	
+	beginGroup("edit");
+	
+	beginGroup("font");
+	edit->setFont( value("editor").value<QFont>() );
+	s->l->setFont( value("gutter").value<QFont>() );
+	endGroup();
+	
+	
+	endGroup();
+	
+	beginGroup("highlight");
+	
+	endGroup();
+}
+
+int DevSettings::tabStop()
+{
+	return 4;
 }
 
 QMenu* DevSettings::recent()
@@ -163,20 +242,12 @@ QMenu* DevSettings::recent()
 
 void DevSettings::execute()
 {
-	if ( allKeys().isEmpty() )
-	{
-		;
-	} else {
-		;
-	}
-	
 	dlg->exec();
 }
 
 void DevSettings::clearRecents()
 {
-	remove("recent/files");
-	remove("recent/projects");
+	remove("recent");
 }
 
 void DevSettings::addRecent(const QString& n, bool project)
@@ -220,57 +291,3 @@ void DevSettings::recent(QAction *a)
 	
 	DEV_GUI->load(*i);
 }
-
-/*
-
-	QToolBar *tb = new QToolBar(this);
-	tb->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
-	tb->setWindowTitle("Format Actions");
-	addToolBarBreak(Qt::TopToolBarArea);
-	addToolBar(tb);
-	
-	Font = new QComboBox(tb);
-	tb->addWidget(Font);
-	Font->setEditable(true);
-	QFontDatabase db;
-	Font->addItems(db.families());
-	connect(Font, SIGNAL(activated(const QString &)),
-			this, SLOT(textFamily(const QString &)));
-	Font->setCurrentIndex(Font->findText(DevApp::font().family()));
-	
-	Size = new QComboBox(tb);
-	Size->setObjectName("Size");
-	tb->addWidget(Size);
-	Size->setEditable(true);
-
-	foreach(int size, db.standardSizes())
-		Size->addItem(QString::number(size));
-
-	connect(Size, SIGNAL(activated(const QString &)),
-			this, SLOT(textSize(const QString &)));
-	Size->setCurrentIndex(Size->findText(QString::number(DevApp::font().pointSize())));
-
-
-TODO : make custom styling look nicer!
-
-
-void DevGUI::textFamily(const QString &f)
-{
-    if ( !e )
-        return;
-    e->setFont( QFont( f, Size->currentText().toInt() ) );
-}
-
-void DevGUI::textSize(const QString &p)
-{
-    if ( !e )
-        return;
-    e->setFont( QFont( Font->currentText(), p.toInt() ) );
-}
-
-void DevGUI::fontChanged(const QFont &f)
-{
-    Font->setCurrentIndex(Font->findText(f.family()));
-    Size->setCurrentIndex(Size->findText(QString::number(f.pointSize())));
-}
-*/

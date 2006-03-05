@@ -22,63 +22,46 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _DEV_CONSOLE_H_
+#define _DEV_CONSOLE_H_
 
 #include "dev.h"
 
-class DevEdit;
-class DevSettingsDialog;
-
-class DevSettings : public QSettings
+class DevConsole : public QFrame
 {
 	Q_OBJECT
 	
-	friend class DevApp;
-	
 	public:
-		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
+		DevConsole(QWidget *p = 0);
+		virtual ~DevConsole();
+	
 	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
+		void wait();
+		void exec(const QString& cmd, const QString& dir, const QStringList& params);
 		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
+	private slots:
+		void error(QProcess::ProcessError err);
+		void stateChanged(QProcess::ProcessState state);
 		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
+		void read();
+		
+		void display(const QString& msg);
+		void command(const QString& msg);
+		
+		void directory(const QString& msg);
 		
 	private:
-		QHash<QAction*, QString> recents;
+		int n;
+		QString dir;
 		
-		DevSettingsDialog *dlg;
+		QProcess *proc;
 		
-		QMenu *m;
-		QAction *aClear;
+		QTextEdit *log;
+		QComboBox *cmd;
 		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
+		QPushButton *abort;
+		QLineEdit *errors, *size;
 };
 
-
 #endif
+

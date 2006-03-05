@@ -28,7 +28,17 @@
 #include "dev.h"
 #include "ui_devgotodialog.h"
 #include "ui_devfinddialog.h"
-#include <QStatusBar>
+
+//class holding "one shot" dialogs (new file, new folder...)
+class DevDialogs : public QObject
+{
+	Q_OBJECT
+	
+	public:
+		static QString newFile(QString& n);
+		static QString newFold(DevQt::node& n);
+		
+};
 
 class DevGotoDialog : public QDialog, private Ui::DevGotoDialog
 {

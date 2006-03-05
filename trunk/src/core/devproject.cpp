@@ -25,9 +25,10 @@
 #include "devproject.h"
 
 #include "devedit.h"
+#include "devfileinfo.h"
 
 AbstractFile::AbstractFile(const QString& name)
- : n(name), f(abstract)
+ : n(name), f(abstract), o(0)
 {
 	m = new QMenu;
 	
@@ -140,6 +141,8 @@ DevDirectory::DevDirectory(const QString& name)
 	QAction *a = new QAction(QString( tr("scope : ") ) + name, this);
 	a->setEnabled(false);
 	
+	m->clear();
+	
 	m->addAction(a);
 	m->addSeparator();
 	m->addAction(aSub);
@@ -247,7 +250,10 @@ void DevProject::setup(const QString& data)
 			} while ( n < count );
 			
 			if ( n != j )
+			{
+				//QMessageBox::warning(0, c, QString(l+j, n-j));
 				words<<QString(l+j, n-j);
+			}
 			
 			if ( c == '#' )
 			{
@@ -296,8 +302,14 @@ void DevProject::setup(const QString& data)
 					state &= ~( SingleLineScope | MultiLineScope );
 				}
 				
-			} else if ( ((j+1) < words.count()) &&
-						((words[j+1] == ":") || (words[j+1] == "{")) ) {
+			} 
+			
+			if ( words[j] == "!" )
+				j++;
+			
+			if (((j+1) < words.count()) &&
+				((words[j+1] == ":") || (words[j+1] == "{")) )
+			{
 				tmp = words[++j];
 				
 				DevScope *temp = scope->nested(words[j-1]);
@@ -309,25 +321,30 @@ void DevProject::setup(const QString& data)
 					
 					if ( (words[j+2] == ":") || (words[j+2] == "{") )
 					{
-						j++;
 						do
 						{
+							j++;
+							
 							DevScope *temp = scope->nested(words[j]);
 							scope = temp;
 							j++;
 							n++;
-						} while ( (words[j+2] == ":") || (words[j+2] == "{") );
+							
+							if ( (j+2) >= words.count() )
+								break;
+							
+						} while ( ((words[j+2] == ":") || (words[j+2] == "{")) );
 						
 						nest_len.push(n);
-						
-						if ( words[j] == "{" )
-						{
-							state |= MultiLineScope;
-							continue;
-						}
 					}
-					state |= SingleLineScope;
+					
+					if ( words[j] == "{" )
+						state |= MultiLineScope;
+					else
+						state |= SingleLineScope;
+					
 					j++;
+					
 				} else if ( tmp == "{" ) {
 					nest_len.push(1);
 					state |= MultiLineScope;
@@ -422,6 +439,20 @@ QString DevProject::content()
 	return s;
 }
 
+QStringList DevProject::content(const QString& var, const QString& scope)
+{
+	QStringList l, scopes;
+	
+	if ( scope == "all" )
+		scopes = global->scopes();
+	else
+		scopes = scope.split(" & ");
+	
+	global->content(var, scopes, l);
+	
+	return l;
+}
+
 QStringList DevProject::content(const QString& var, bool files)
 {
 	QStringList l;
@@ -470,7 +501,7 @@ void DevProject::insert(QStringList& l, const QString& s, bool u, bool f)
 			return;
 		
 		if ( f )
-			l<<QFileInfo(QFileInfo(n).path(), s).filePath();
+			l<<DevFileInfo(s, QStringList( QFileInfo(n).path() )).all();
 		else
 			l<<s;
 	}
@@ -478,13 +509,24 @@ void DevProject::insert(QStringList& l, const QString& s, bool u, bool f)
 
 QStringList DevProject::scopes()
 {
-	QStringList l;
+	QStringList l, c = content("CONFIG", false);
 	
-	l<<"all";
+	//l<<"all";
+	
 	global->scopes(l);
 	
-	foreach (QString s, content("CONFIG", false))
+	foreach (QString s, c)
 		l.removeAll(s);
+	
+	if (!c.contains("release") && !c.contains("debug") &&
+		!l.contains("release") && !l.contains("debug") )
+		l<<"release"<<"debug";
+	
+	/*
+	foreach (QString s, l)
+		if ( s.contains("win32") || s.contains("unix") || s.contains("mac") )
+			l.removeAll(s);
+	*/
 	
 	return l;
 }

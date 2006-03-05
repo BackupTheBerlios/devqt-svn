@@ -22,63 +22,64 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _MATCHER_H_
+#define _MATCHER_H_
 
 #include "dev.h"
 
-class DevEdit;
-class DevSettingsDialog;
+class CoreEdit;
 
-class DevSettings : public QSettings
+class ParenMatcher : public QObject
 {
 	Q_OBJECT
 	
-	friend class DevApp;
-	
 	public:
-		
-		enum Settings
+		enum MatchType
 		{
-			maxProjects = 5,
-			maxFiles = 15
+			NoMatch,
+			Match,
+			Mismatch
 		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
-		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
-		
-	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
-};
 
+
+		ParenMatcher(CoreEdit *parent = 0);
+		
+		QColor matchColor();
+		QRect currentBlock();
+		QStringList anotations(QTextBlock block);
+		
+		bool  collapse(QTextBlock block);
+		bool  expand(QTextBlock block);
+		bool  isCollapsed(QTextBlock block);
+		bool  couldCollapse(QTextBlock block);
+		void  matchCharacter(QLine *lineToPaint = 0);
+		
+		static MatchType match(QTextCursor *cursor);
+		
+		inline static QChar charFromCursor(	QTextCursor cursor,
+											QTextCursor::MoveOperation op)
+		{
+			cursor.clearSelection();
+			
+			if (!cursor.movePosition(op, QTextCursor::KeepAnchor))
+				return QChar();
+				
+			if (!cursor.hasSelection())
+				return QChar();
+				
+			return cursor.selectedText().at(0);
+		}
+
+	private:
+		QPointer<CoreEdit> edit;
+		
+		QTextCharFormat  matchFormat;
+		QTextCharFormat  mismatchFormat;
+		
+		QTextCursor currentMatch;
+		
+		void fixBlockData(QTextCursor cursor, MatchType matchType, bool open);
+		void clearMarkerFormat(const QTextBlock &block, int markerId);
+};
 
 #endif

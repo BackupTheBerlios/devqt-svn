@@ -22,63 +22,41 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _DEV_STANDARD_PANEL_H_
+#define _DEV_STANDARD_PANEL_H_
 
 #include "dev.h"
 
-class DevEdit;
-class DevSettingsDialog;
+class CoreEdit;
+class DevSettings;
+class FoldingPanel;
+class LineMarksPanel;
+class LineNumberPanel;
 
-class DevSettings : public QSettings
+class DevStandardPanel : public QFrame
 {
 	Q_OBJECT
 	
-	friend class DevApp;
+	friend class DevSettings;
 	
 	public:
+		DevStandardPanel(CoreEdit *e);
+		virtual ~DevStandardPanel();
 		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
+	signals:
+		void clicked(int line);
+		void clicked(QTextCursor& c);	
 		
 	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
+		virtual void mousePressEvent(QMouseEvent *e);
 		
 	private:
-		QHash<QAction*, QString> recents;
+		QPointer<CoreEdit> editor;
 		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
+		FoldingPanel *f;
+		LineMarksPanel *m;
+		LineNumberPanel *l;
+	
 };
-
 
 #endif

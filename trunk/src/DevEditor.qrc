@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/" >
+        <file alias="GPL.txt">../GPL.txt</file>
+        <file alias="Changelog.txt">../Changelog.txt</file>
+        
         <file alias="ok.png">images/ok.png</file>
         <file alias="cancel.png">images/cancel.png</file>
         <file alias="settings.png">images/settings.png</file>

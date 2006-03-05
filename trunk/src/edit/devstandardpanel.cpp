@@ -22,63 +22,55 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#include "devstandardpanel.h"
 
-#include "dev.h"
+#include "coreedit.h"
+#include "foldingpanel.h"
+#include "linemarkspanel.h"
+#include "linenumberpanel.h"
 
-class DevEdit;
-class DevSettingsDialog;
-
-class DevSettings : public QSettings
+DevStandardPanel::DevStandardPanel(CoreEdit *e)
+ : QFrame(0), editor(e)
 {
-	Q_OBJECT
+	QHBoxLayout *box = new QHBoxLayout;
 	
-	friend class DevApp;
+	box->setMargin(0);
+	box->setSpacing(0);
 	
-	public:
-		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
-		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
-		
-	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
-};
+	f = new FoldingPanel(e);
+	m = new LineMarksPanel(e);
+	l = new LineNumberPanel(e);
+	
+	box->addWidget(m);
+	box->addWidget(l);
+	box->addWidget(f);
+	
+	setLayout(box);
+	
+	setFrameShadow(QFrame::Sunken);
+	setFrameShape(QFrame::StyledPanel);
+	setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+}
 
+DevStandardPanel::~DevStandardPanel()
+{
+	;
+}
 
-#endif
+void DevStandardPanel::mousePressEvent(QMouseEvent *e)
+{
+	e->accept();
+	
+	QPoint p = editor->viewport()->mapFromGlobal(e->globalPos());
+	QTextCursor c( editor->cursorForPosition(p) );
+	
+	clicked(c);
+	
+	int i = editor->line(c);
+	
+	if ( i != -1 )
+		clicked(i);
+	
+	update(); //update widget
+}
+

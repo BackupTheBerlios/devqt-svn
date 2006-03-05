@@ -26,31 +26,27 @@
 
 #include "devgui.h"
 
-char *statusBarTooltips[] =  { 
-	"Number of lines in this document",
-	"Typing mode - Insert or overide",
-	"Modification state of the document",
-	"Text cursor position",
-	"Mouse cursor position (in document coordinates)",
-	"line" 
-};
-
 DevStatus::DevStatus(QWidget *p)
  : QStatusBar(p)
 {
 	QLabel *l;
+	QStringList tool;
+	
+	tool<<tr("General pupose")<<tr("Mouse cursor position")
+		<<tr("Text cursor position")<<tr("Modification state")
+		<<tr("Typing mode")<<tr("Number of lines in file");
 	
 	for ( int p = DevQt::General; p < DevQt::None; p++ )
 	{
 		l = new QLabel;
 		l->setIndent(2);
 		l->setMargin(2);
+		l->setToolTip(tool.at(p));
 		l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 		l->setFrameStyle(QFrame::Sunken | QFrame::StyledPanel);
 		l->setMinimumWidth(fontMetrics().width("XXXXXX"));
-		l->setToolTip( tr(statusBarTooltips[p]) );
 		addWidget(l);
-		v.prepend(l);
+		v.append(l);
 	}
 	
 	explorer = new QPushButton(QIcon(":/explorer.png"), tr("Explorer"));

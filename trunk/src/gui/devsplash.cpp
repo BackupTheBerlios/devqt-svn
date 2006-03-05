@@ -36,7 +36,7 @@ DevSplash* DevSplash::Instance()
 DevSplash::DevSplash()
  : QSplashScreen( QPixmap(":/splash.png"), Qt::WindowStaysOnTopHint )
 {
-	//show();
+	show();
 }
 
 DevSplash::~DevSplash()

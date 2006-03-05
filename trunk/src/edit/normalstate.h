@@ -22,63 +22,49 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _NORMAL_STATE_H_
+#define _NORMAL_STATE_H_
 
-#include "dev.h"
+#include "editorstate.h"
 
-class DevEdit;
-class DevSettingsDialog;
-
-class DevSettings : public QSettings
+class NormalState : public EditorState
 {
-	Q_OBJECT
-	
-	friend class DevApp;
-	
 	public:
+		static NormalState* Instance();
 		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
+		virtual QString name();
 		
-		static DevSettings* Instance();
-		void killSettings();
+		virtual void paintEvent(CoreEdit *ctxt, QPaintEvent *e);
+		virtual void timerEvent(CoreEdit *ctxt, QTimerEvent *e);
 		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
+		virtual void keyPressEvent(CoreEdit *ctxt, QKeyEvent *e);
 		
-		int tabStop();
+		virtual void dropEvent(CoreEdit *ctxt, QDropEvent *e);
+		virtual void dragMoveEvent(CoreEdit *ctxt, QDragMoveEvent *e);
+		virtual void dragEnterEvent(CoreEdit *ctxt, QDragEnterEvent *e);
+		virtual void dragLeaveEvent(CoreEdit *ctxt, QDragLeaveEvent *e);
 		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
+		virtual void mouseMoveEvent(CoreEdit *ctxt, QMouseEvent *e);
+		virtual void mousePressEvent(CoreEdit *ctxt, QMouseEvent *e);
+		virtual void mouseReleaseEvent(CoreEdit *ctxt, QMouseEvent *e);
+		virtual void mouseDoubleClickEvent(CoreEdit *ctxt, QMouseEvent *e);
 		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
+		virtual QMimeData* createMimeDataFromSelection(const CoreEdit *ctxt) const;
+		virtual void insertFromMimeData(CoreEdit *ctxt, const QMimeData * source);
 		
 	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
+		NormalState();
+		virtual ~NormalState();
+		
+		void signalTextCursor(CoreEdit *ctxt);
+		
+		virtual void paintSelection(CoreEdit *ctxt, QPainter& p,
+								int xOffset, int yOffset,
+								QAbstractTextDocumentLayout::PaintContext &cxt);
 		
 	private:
-		QHash<QAction*, QString> recents;
+		static NormalState *inst;
 		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
 };
-
 
 #endif

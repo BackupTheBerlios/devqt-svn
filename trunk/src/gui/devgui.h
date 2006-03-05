@@ -29,13 +29,16 @@
 
 class DevDock;
 class DevEdit;
-//class DevCorner;
+class CoreEdit;
 class DevStatus;
+class DevConsole;
+class DevSettings;
 class DevWorkSpace;
 class DevGotoDialog;
 class DevFindDialog;
 class DevAboutDialog;
 class DevReplaceDialog;
+class DevSettingsDialog;
 class DevPropertiesDialog;
 
 class DevGUI : public QMainWindow
@@ -46,17 +49,12 @@ class DevGUI : public QMainWindow
 	friend class DevStatus;
 	friend class DevSettings;
 	friend class DevWorkSpace;
+	friend class DevSettingsDialog;
 	
 	public:
 		static DevGUI* Instance();
 		void killGUI();
-		QString getFontFamily() const { return fontFamily; }
-		qreal	getFontSize() const { return fontSize; }
-		Qt::GlobalColor	getNumberBrush() const { return numberBrush; }
-		Qt::GlobalColor	getCommentBrush() const { return commentBrush; }
-		Qt::GlobalColor	getKeywordBrush() const { return keywordBrush; }
-		Qt::GlobalColor	getQuoteBrush() const { return quoteBrush; }
-		Qt::GlobalColor	getPreprocessorBrush() const { return preprocessorBrush; }
+		
 	protected:
 		DevGUI();
 		virtual ~DevGUI();
@@ -74,7 +72,7 @@ class DevGUI : public QMainWindow
 	protected slots:
 		void fileNew();
 		void fileOpen();
-		void fileSave(const QString& n = QString(), const QString& ext = QString());
+		void fileSave();
 		void fileSaveAs();
 		void fileSaveAll();
 		
@@ -116,6 +114,7 @@ class DevGUI : public QMainWindow
 		
 		void close();
 		void closeAll();
+		void closeProject();
 		
 		void properties();
 		
@@ -191,6 +190,9 @@ class DevGUI : public QMainWindow
 		QComboBox *project,
 			*config;
 		
+		DevConsole *log;
+		QTableWidget *output;
+		
 		DevWorkSpace *workspace;
 		QTreeWidget	*treeClasses;
 		
@@ -220,8 +222,8 @@ class DevGUI : public QMainWindow
 			*aExit,
 			*aUndo,
 			*aRedo,
-			*aCut,
-			*aCopy,
+        	*aCut,
+        	*aCopy,
 			*aPaste,
 			*aCompile,
 			*aCompileCur,
@@ -240,17 +242,6 @@ class DevGUI : public QMainWindow
 		long noname_count;
 			
 		static DevGUI *_gui;
-
-		// Variables which store the default font family and size for the editor windows
-		QString	fontFamily;
-		qreal	fontSize;
-		// Variables containing the colors for the syntax highlighter
-		Qt::GlobalColor	numberBrush;
-		Qt::GlobalColor	quoteBrush;
-		Qt::GlobalColor	preprocessorBrush;
-		Qt::GlobalColor	keywordBrush;
-		Qt::GlobalColor	commentBrush;
-		
 };
 
 #endif

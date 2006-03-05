@@ -24,6 +24,170 @@
 
 #include "devdialogs.h"
 
+#include "devgui.h"
+
+QString DevDialogs::newFile(QString& n)
+{
+	QDialog *dlg = new QDialog(DEV_GUI);
+	
+	dlg->setWindowTitle(tr("New file :"));
+	
+	QFrame *hl;
+	QLabel *lbl;
+	QRadioButton *rad_s, *rad_h, *rad_r, *rad_t, *rad_f;
+	QPushButton *b_accept, *b_cancel;
+	QVBoxLayout *vb = new QVBoxLayout;
+	QHBoxLayout *hc = new QHBoxLayout, *hb = new QHBoxLayout;
+	
+	lbl = new QLabel(tr("Name : "));
+	hc->addWidget(lbl);
+	
+	QLineEdit *line = new QLineEdit;
+	hc->addWidget(line);
+	
+	QGridLayout *gr = new QGridLayout;
+	
+	lbl = new QLabel(tr("Type : "));
+	gr->addWidget(lbl, 0, 0);
+	
+	rad_s = new QRadioButton(tr("Source"));
+	rad_s->setChecked(true);
+	gr->addWidget(rad_s, 0, 1);
+	
+	rad_h = new QRadioButton(tr("Header"));
+	gr->addWidget(rad_h, 0, 2);
+	
+	rad_f = new QRadioButton(tr("Form"));
+	gr->addWidget(rad_f, 1, 0);
+	
+	rad_r = new QRadioButton(tr("Resource"));
+	gr->addWidget(rad_r, 1, 1);
+	
+	rad_t = new QRadioButton(tr("Translation"));
+	gr->addWidget(rad_t, 1, 2);
+	
+	b_accept = new QPushButton(QIcon(":/ok.png"), "&Ok");
+	connect(b_accept, SIGNAL( clicked() ),
+			dlg	, SLOT  ( accept() ) );
+	hb->addWidget(b_accept);
+	
+	b_cancel = new QPushButton(QIcon(":/cancel.png"), "&Cancel");
+	connect(b_cancel, SIGNAL( clicked() ),
+			dlg	, SLOT  ( reject() ) );
+	hb->addWidget(b_cancel);
+	
+	vb->addLayout(hc);
+	hl = new QFrame;
+	hl->setFrameShape(QFrame::HLine);
+	vb->addWidget(hl);
+	vb->addLayout(gr);
+	hl = new QFrame;
+	hl->setFrameShape(QFrame::HLine);
+	vb->addWidget(hl);
+	vb->addLayout(hb);
+	
+	dlg->setLayout(vb);
+	
+	int code = dlg->exec();
+	QString name = QString::null;
+	
+	if ( code == QDialog::Accepted )
+	{
+		name = line->text();
+		
+		if ( rad_s->isChecked() )
+			n = "SOURCES";
+		else if ( rad_h->isChecked() )
+			n = "HEADERS";
+		else if ( rad_f->isChecked() )
+			n = "FORMS";
+		else if ( rad_r->isChecked() )
+			n = "RESOURCES";
+		else if ( rad_t->isChecked() )
+			n = "TRANSLATIONS";
+	} else {
+		n = QString::null;
+		return QString::null;
+	}
+	
+	delete dlg;
+	return name;
+}
+
+QString DevDialogs::newFold(DevQt::node& n)
+{
+	QDialog *dlg = new QDialog(DEV_GUI);
+	
+	dlg->setWindowTitle(tr("New folder :"));
+	
+	QFrame *hl;
+	QLabel *lbl;
+	QRadioButton *rad_f, *rad_s;
+	QPushButton *b_accept, *b_cancel;
+	QVBoxLayout *vb = new QVBoxLayout;
+	QHBoxLayout *hc = new QHBoxLayout, *hb = new QHBoxLayout;
+	
+	lbl = new QLabel(tr("Name : "));
+	hc->addWidget(lbl);
+	
+	QLineEdit *line = new QLineEdit;
+	hc->addWidget(line);
+	
+	QGridLayout *gr = new QGridLayout;
+	
+	lbl = new QLabel(tr("Type : "));
+	gr->addWidget(lbl, 0, 0);
+	
+	rad_f = new QRadioButton(tr("Folder"));
+	rad_f->setChecked(true);
+	gr->addWidget(rad_f, 0, 1);
+	
+	rad_s = new QRadioButton(tr("Target"));
+	gr->addWidget(rad_s, 0, 2);
+	
+	b_accept = new QPushButton(QIcon(":/ok.png"), "&Ok");
+	connect(b_accept, SIGNAL( clicked() ),
+			dlg	, SLOT  ( accept() ) );
+	hb->addWidget(b_accept);
+	
+	b_cancel = new QPushButton(QIcon(":/cancel.png"), "&Cancel");
+	connect(b_cancel, SIGNAL( clicked() ),
+			dlg	, SLOT  ( reject() ) );
+	hb->addWidget(b_cancel);
+	
+	vb->addLayout(hc);
+	hl = new QFrame;
+	hl->setFrameShape(QFrame::HLine);
+	vb->addWidget(hl);
+	vb->addLayout(gr);
+	hl = new QFrame;
+	hl->setFrameShape(QFrame::HLine);
+	vb->addWidget(hl);
+	vb->addLayout(hb);
+	
+	dlg->setLayout(vb);
+	
+	
+	int code = dlg->exec();
+	QString name = QString::null;
+	
+	if ( code == QDialog::Accepted )
+	{
+		name = line->text();
+		
+		if ( rad_f->isChecked() )
+			n = DevQt::folder;
+		else if ( rad_s->isChecked() )
+			n = DevQt::scope;
+	} else {
+		n = DevQt::none;
+		return QString::null;
+	}
+	
+	delete dlg;
+	return name;
+}
+
 DevGotoDialog::DevGotoDialog(QWidget *p)
  : QDialog(p)
 {

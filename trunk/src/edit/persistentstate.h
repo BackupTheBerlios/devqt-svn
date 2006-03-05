@@ -22,63 +22,40 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _PERSISTENT_STATE_H_
+#define _PERSISTENT_STATE_H_
 
-#include "dev.h"
+#include "normalstate.h"
 
-class DevEdit;
-class DevSettingsDialog;
-
-class DevSettings : public QSettings
+class PersistentState : public NormalState
 {
-	Q_OBJECT
-	
-	friend class DevApp;
-	
 	public:
+		static PersistentState* Instance();
 		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
+		virtual QString name();
 		
-		static DevSettings* Instance();
-		void killSettings();
+		virtual void paintEvent(CoreEdit *ctxt, QPaintEvent *e);
+		virtual void keyPressEvent(CoreEdit *ctxt, QKeyEvent *e);
 		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
+		virtual void mouseMoveEvent(CoreEdit *ctxt, QMouseEvent *e);
+		virtual void mousePressEvent(CoreEdit *ctxt, QMouseEvent *e);
+		virtual void mouseReleaseEvent(CoreEdit *ctxt, QMouseEvent *e);
+		virtual void mouseDoubleClickEvent(CoreEdit *ctxt, QMouseEvent *e);
 		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
+		virtual QMimeData* createMimeDataFromSelection(const CoreEdit *ctxt) const;
 		
 	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
+		PersistentState();
+		virtual ~PersistentState();
+		
+		virtual void paintSelection(CoreEdit *ctxt, QPainter& p,
+								int xOffset, int yOffset,
+								QAbstractTextDocumentLayout::PaintContext &cxt);
 		
 	private:
-		QHash<QAction*, QString> recents;
+		static PersistentState *inst;
 		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
+		QTextCursor backup, anchor;
 };
-
 
 #endif

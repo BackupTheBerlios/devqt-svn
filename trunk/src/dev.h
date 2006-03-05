@@ -27,7 +27,6 @@
 
 #include <QtCore>
 #include <QtGui>
-#include <QtDebug>
 
 namespace DevQt
 {
@@ -43,7 +42,10 @@ namespace DevQt
 		header,
 		resource,
 		form,
+		translation,
 		folder,
+		scope,
+		none
 	};
 	
 	enum StatusPurpose
@@ -56,12 +58,6 @@ namespace DevQt
 		Lines,
 		None
 	};
-
-	enum EditorMode
-	{
-		Tabbed,
-		MDI
-	};
 	
 	QChar charFromCursor(QTextCursor cursor, QTextCursor::MoveOperation op);
 
@@ -73,33 +69,16 @@ namespace DevQt
 	
 	bool isNumber(char c, char base);
 	
-	static const QString supportedFiles = QT_TR_NOOP("DevQt projects ( *.pro);;C++ source files( *.cpp *.cxx *.c);;C++ header files ( *.h *.hpp);;All Files (*)");
+	static const QString supportedFiles = "DevQt projects ( *.pro);;C++ \
+source files( *.cpp *.cxx *.c);;C++ header files ( *.h *.hpp);;All Files (*)";
 
-	static const QString extFiles = QT_TR_NOOP("C++ sources( *.cpp *.cxx *.c);;C++ headers ( *.h *.hpp);;All Files (*)");
+	static const QString extFiles = "C++ sources( *.cpp *.cxx *.c);;C++ headers \
+( *.h *.hpp);;All Files (*)";
 
-	static const QString extProjects = QT_TR_NOOP("DevQt projects ( *.pro);;All Files (*)");
-};
-
-struct BlockData : public QTextBlockUserData
-{
-	enum InternalState
-	{
-		None		= 0x00,
-		Error 		= 0x01,
-		Current 	= 0x02,
-		BreakPoint 	= 0x04
-	};
+	static const QString extProjects = "DevQt projects ( *.pro);;All Files (*)";
 	
-	typedef QFlags<InternalState> State;
-	
-	static BlockData *data(const QTextBlock& block)
-	{ return static_cast<BlockData *>(block.userData()); }
-	void setToBlock(QTextBlock& block)
-	{ block.setUserData(this); }
-	
-	inline BlockData() : s(None) {}
-	
-	State s;
+	static const int iVersion = 0x00000300;
+	static const QString sVersion = "0.0.3.0";
 };
 
 #define DevQt(argc, argv)	DevApp::Init(argc, argv)

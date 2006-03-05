@@ -23,7 +23,8 @@
 ****************************************************************************/
 
 #include "devhighlighter.h"
-#include "devgui.h"
+
+#include "blockdata.h"
 
 /*
 
@@ -259,30 +260,61 @@ CppHighlighter::~CppHighlighter()
 
 void CppHighlighter::setupData()
 {
+	fmts.resize(5);
 	QTextCharFormat f;
 	
-	f.setForeground(DEV_GUI->getNumberBrush());
-	fmts << f;
+	f.setForeground(Qt::darkMagenta);
+	fmts[number] = f;
 	
-	f.setForeground(DEV_GUI->getQuoteBrush());
-	fmts << f;
+	f.setForeground(Qt::red);
+	fmts[quote] = f;
 	
-	f.setForeground(DEV_GUI->getPreprocessorBrush());
-	fmts << f;
+	f.setForeground(Qt::darkGreen);
+	fmts[preprocessor] = f;
 	
-	f.setForeground(DEV_GUI->getKeywordBrush());
+	f.setForeground(Qt::black);
 	f.setFontWeight(QFont::Bold);
-	fmts << f;
+	fmts[keyword] = f;
 	
-	f.setForeground(DEV_GUI->getCommentBrush());
+	f.setForeground(Qt::darkBlue);
 	f.setFontWeight(QFont::Normal);
 	f.setFontItalic(true);
-	fmts << f;
+	fmts[comment] = f;
+	
 }
 
 void CppHighlighter::highlightBlock(QTextBlock& b)
 {
 	b.setUserState( process(b.text()) );
+	
+	BlockData *blockData = BlockData::data(b);
+	
+	if ( !blockData )
+	{
+		blockData = new BlockData;
+		blockData->setToBlock(b);
+	}
+	
+	if (blockData->parenthesisMatchStart != -1)
+	{
+		QTextCharFormat fmt = format(blockData->parenthesisMatchStart);
+        blockData->parenthesisMatchingFormat.setProperty(
+        										ParenthesisMatcherPropertyId,
+        										qVariantFromValue(fmt) );
+        fmt.merge(blockData->parenthesisMatchingFormat);
+        setFormat(blockData->parenthesisMatchStart, 1, fmt);
+    }
+
+    if (blockData->parenthesisMatchEnd != -1)
+    {
+        QTextCharFormat fmt = format(blockData->parenthesisMatchEnd);
+        blockData->parenthesisMatchingFormat.setProperty(
+        										ParenthesisMatcherPropertyId,
+        										qVariantFromValue(fmt) );
+        fmt.merge(blockData->parenthesisMatchingFormat);
+        setFormat(blockData->parenthesisMatchEnd, 1, fmt);
+    }
+	
 }
 
 /*
@@ -417,7 +449,7 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 				if ( (i = text.indexOf('/', i)) == -1 )
 					break;
 				n = i;
-				switch ( str[++i].toLatin1() )
+				switch ( text.at(++i).toLatin1() )
 				{
 					case '/':
 						setFormat(n, len-n, fmts[comment]);

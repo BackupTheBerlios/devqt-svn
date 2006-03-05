@@ -22,63 +22,64 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#include "multilinestate.h"
 
-#include "dev.h"
+#include "coreedit.h"
+#include "normalstate.h"
 
-class DevEdit;
-class DevSettingsDialog;
+MultilineState* MultilineState::inst = 0;
 
-class DevSettings : public QSettings
+MultilineState* MultilineState::Instance()
 {
-	Q_OBJECT
+	if ( !inst )
+		inst = new MultilineState;
 	
-	friend class DevApp;
-	
-	public:
-		
-		enum Settings
+	return inst;
+}
+
+MultilineState::MultilineState()
+{
+	s = Multiline;
+}
+
+MultilineState::~MultilineState()
+{
+}
+
+QString MultilineState::name()
+{
+	return tr("multiline edition");
+}
+
+void MultilineState::paintEvent(CoreEdit *ctxt, QPaintEvent *e)
+{
+	NormalState::paintEvent(ctxt, e);
+}
+
+void MultilineState::keyPressEvent(CoreEdit *ctxt, QKeyEvent *e)
+{
+	if ( e->modifiers() & Qt::ControlModifier )
+	{
+		switch ( e->key() )
 		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
-		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
-		
-	private:
-		QHash<QAction*, QString> recents;
-		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
-};
+			case Qt::Key_Slash :
+				return ctxt->changeState( NormalState::Instance() );
+			
+			case Qt::Key_Asterisk :
+				//mixed state not implemented : disallow
+				return;
+			
+			default:
+				break;
+		}
+	}
+	
+	NormalState::keyPressEvent(ctxt, e);
+}
 
-
-#endif
+void MultilineState::paintSelection(CoreEdit *e, QPainter &p,
+					int xOffset, int yOffset,
+					QAbstractTextDocumentLayout::PaintContext &cxt)
+{
+	EditorState::paintSelection(e, p, xOffset, yOffset, e->persistent, cxt);
+}

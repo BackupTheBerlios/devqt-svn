@@ -27,16 +27,19 @@
 
 #include "dev.h"
 
+class DevGUI;
 class CoreEdit;
-class DevStatus;
-class DevLineNumber;
+class DevSettings;
 class DevHighlighter;
+class DevStandardPanel;
+class DevOverviewPanel;
 
 class DevEdit : public QWidget
 {
 	Q_OBJECT
 	
 	friend class DevGUI;
+	friend class DevSettings;
 	
 	public:
 		enum OpenType
@@ -159,8 +162,9 @@ class DevEdit : public QWidget
 		
 		QString n;
 		
-		QTextEdit *e;
-		DevLineNumber *l;
+		CoreEdit *e;
+		DevStandardPanel *s;
+		DevOverviewPanel *o;
 		
 		DevHighlighter *hl;
 };

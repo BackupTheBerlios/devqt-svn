@@ -48,7 +48,7 @@ DevApp::DevApp(int argc, char **argv)
  : QApplication(argc, argv)
 {
 	// Setup global app style
-	#ifdef WIN32
+	#ifdef Q_WS_WIN
 	setStyle("plastique");
 	setPalette(style()->standardPalette());
 	#endif
@@ -63,7 +63,7 @@ DevApp::DevApp(int argc, char **argv)
 	scr = DevSplash::Instance();
 	
 	// Setup Locale Language
-	scr->showMessage(tr("Initializing langage..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->showMessage("Initializing langage...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	
 	QTranslator *translator = new QTranslator(this);
 	
@@ -72,21 +72,20 @@ DevApp::DevApp(int argc, char **argv)
 	installTranslator(translator);
 	
 	// Get back app settings
-	scr->showMessage(tr("Getting back settings..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->showMessage("Getting back settings...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	
 	set = DEV_SETTINGS;
 	
 	// Setup main window
-	scr->showMessage(tr("Initializing UI..."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->showMessage("Initializing UI...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	gui = DEV_GUI;
-	scr->finish(gui);
 	gui->s->connection();
 	
-	
-	scr->showMessage(tr("DevQt initialized."), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->showMessage("DevQt initialized.", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	
 	gui->show();
 }
+
 
 void DevApp::killApp()
 {
@@ -99,7 +98,8 @@ void DevApp::killApp()
 
 DevApp::~DevApp()
 {
-	set->killSettings();
 	gui->killGUI();
-	qDebug("Shutting down application.");
+	set->killSettings();
+	qDebug("DevQt garbage cleaned!");
 }
+

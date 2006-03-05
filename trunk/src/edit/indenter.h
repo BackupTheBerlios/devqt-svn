@@ -22,63 +22,26 @@
 **
 ****************************************************************************/
 
-#ifndef _DEV_SETTINGS_H_
-#define _DEV_SETTINGS_H_
+#ifndef _INDENTER_H_
+#define _INDENTER_H_
 
 #include "dev.h"
 
-class DevEdit;
-class DevSettingsDialog;
+class CoreEdit;
 
-class DevSettings : public QSettings
+class Indenter : public QObject
 {
 	Q_OBJECT
 	
-	friend class DevApp;
-	
 	public:
+		Indenter(CoreEdit *e);
+		virtual ~Indenter();
 		
-		enum Settings
-		{
-			maxProjects = 5,
-			maxFiles = 15
-		};
-		
-		static DevSettings* Instance();
-		void killSettings();
-		
-		QMenu* recent();
-		void applyFormat(DevEdit *e);
-		
-		int tabStop();
-		
-		QString make();
-		QStringList environment(const QStringList& dirs = QStringList());
-		QStringList includes();
-		
-	public slots:
-		void execute();
-		void addRecent(const QString& n, bool project = false);
-		
-	protected slots:
-		void clearRecents();
-		void recent(QAction *a);
-		
-	protected:
-		DevSettings(QWidget *p = 0);
-		virtual ~DevSettings();
+		QString spaces(const QTextCursor& c);
 		
 	private:
-		QHash<QAction*, QString> recents;
+		QPointer<CoreEdit> edit;
 		
-		DevSettingsDialog *dlg;
-		
-		QMenu *m;
-		QAction *aClear;
-		
-		static DevSettings *inst;
-		static const QString PATH_VAR;
 };
-
 
 #endif

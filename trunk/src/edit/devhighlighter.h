@@ -27,8 +27,6 @@
 
 #include "dev.h"
 
-class BlockData;
-
 class DevHighlighter : public QObject
 {
 	Q_OBJECT
@@ -42,7 +40,10 @@ class DevHighlighter : public QObject
 			comment, 
 			preprocessor,
 			quote,
-			number
+			number,
+			current,
+			error,
+			breakpoint
 		};
 		
 		DevHighlighter(QObject *parent);
@@ -104,7 +105,7 @@ class CppHighlighter : public DevHighlighter
 		
 	private:
     	static const char *kwds[];
-    	QList<QTextCharFormat> fmts;
+    	QVector<QTextCharFormat> fmts;
 };
 
 #endif
