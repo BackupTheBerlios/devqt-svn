@@ -185,6 +185,8 @@ class DevVariable : public QHash<QString, DevValues>
 typedef QHash<QString, DevVariable>	DevVarsMap;
 
 class DevScope;
+class DevProject;
+
 typedef QHash<QString, DevScope*> 	DevScopeMap;
 
 

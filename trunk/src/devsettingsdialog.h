@@ -5,7 +5,7 @@
 #include <QDialog>
 #include "ui_configdialog.h"
 
-class DevSettingsDialog: public QDialog, private Ui::ConfigurationDlg
+class DevSettingsDialog: public QDialog, private Ui::ConfigDialog
 {
 	Q_OBJECT
 public:
