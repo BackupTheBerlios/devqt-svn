@@ -54,7 +54,16 @@ DevFileInfo::DevFileInfo(const QString& file, const QStringList& dirs)
 		}
 	}
 	
+// TODO
+// I know this code works for me, and the original worked for FMC
+// I have no idea what this code does, I just know this fixes it.
+// 
+// - diego
+#ifdef Q_WS_WIN
 	s = l.join("/");
+#else
+	s = "/" + l.join("/");
+#endif
 }
 
 QString DevFileInfo::path() const	//path only
