@@ -36,7 +36,11 @@ class DevSettingsDialog : public QDialog, private Ui::ConfigDialog
 	Q_OBJECT
 	
 	public:
-		DevSettingsDialog(DevSettings *s, QWidget *p);
+/*
+ TODO
+This is a temporary fix, the code must be fixed properly
+*/
+		DevSettingsDialog( /* DevSettings *s, */QWidget *p);
 		
 	public slots:
 		void apply();

@@ -29,8 +29,12 @@
 #include "devedit.h"
 #include "devsettings.h"
 
-DevSettingsDialog::DevSettingsDialog(DevSettings *s, QWidget *p)
- : QDialog(p), settings(s)
+/*
+ TODO
+This is a temporary fix, the code must be fixed properly
+*/
+DevSettingsDialog::DevSettingsDialog( /* DevSettings *s, */QWidget *p)
+ : QDialog(p)/*, settings(s)*/
 {
 	setupUi(this);
 	
