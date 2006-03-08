@@ -36,11 +36,7 @@ class DevSettingsDialog : public QDialog, private Ui::ConfigDialog
 	Q_OBJECT
 	
 	public:
-/*
- TODO
-This is a temporary fix, the code must be fixed properly
-*/
-		DevSettingsDialog( /* DevSettings *s, */QWidget *p);
+		DevSettingsDialog(QWidget *p);
 		
 	public slots:
 		void apply();
@@ -56,7 +52,6 @@ This is a temporary fix, the code must be fixed properly
 		void on_gutterSize_currentIndexChanged(const QString& text);
 		
 	private:
-		QPointer<DevSettings> settings;
 };
 
 #endif

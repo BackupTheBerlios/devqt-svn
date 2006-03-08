@@ -29,12 +29,8 @@
 #include "devedit.h"
 #include "devsettings.h"
 
-/*
- TODO
-This is a temporary fix, the code must be fixed properly
-*/
-DevSettingsDialog::DevSettingsDialog( /* DevSettings *s, */QWidget *p)
- : QDialog(p)/*, settings(s)*/
+DevSettingsDialog::DevSettingsDialog(QWidget *p)
+ : QDialog(p)
 {
 	setupUi(this);
 	
@@ -58,27 +54,27 @@ DevSettingsDialog::DevSettingsDialog( /* DevSettings *s, */QWidget *p)
 
 void DevSettingsDialog::apply()
 {
-	settings->beginGroup("edit");
+	DEV_SETTINGS->beginGroup("edit");
 	
-	settings->beginGroup("font");
+	DEV_SETTINGS->beginGroup("font");
 	
-	settings->setValue(	"editor",
+	DEV_SETTINGS->setValue(	"editor",
 						QFont(	editorFont->currentText(),
 								editorSize->currentText().toInt() ) );
-	settings->setValue("gutter",
+	DEV_SETTINGS->setValue("gutter",
 						QFont(	gutterFont->currentText(),
 								gutterSize->currentText().toInt() ) );
-	settings->endGroup();
+	DEV_SETTINGS->endGroup();
 	
-	settings->endGroup();
+	DEV_SETTINGS->endGroup();
 	
-	settings->applyFormat( DEV_GUI->e );
+	DEV_SETTINGS->applyFormat( DEV_GUI->e );
 }
 
 void DevSettingsDialog::setDefault()
 {
-	settings->remove("edit");
-	settings->remove("highlight");
+	DEV_SETTINGS->remove("edit");
+	DEV_SETTINGS->remove("highlight");
 	
 	editorFont->setCurrentIndex(editorFont->findText("Courier New"));
 	gutterFont->setCurrentIndex(gutterFont->findText(DevApp::font().family()));
@@ -93,14 +89,14 @@ void DevSettingsDialog::setCurrent()
 {
 	QFont editor, gutter;
 	
-	settings->beginGroup("edit");
+	DEV_SETTINGS->beginGroup("edit");
 	
-	settings->beginGroup("font");
-	editor = settings->value("editor").value<QFont>();
-	gutter = settings->value("gutter").value<QFont>();
-	settings->endGroup();
+	DEV_SETTINGS->beginGroup("font");
+	editor = DEV_SETTINGS->value("editor").value<QFont>();
+	gutter = DEV_SETTINGS->value("gutter").value<QFont>();
+	DEV_SETTINGS->endGroup();
 	
-	settings->endGroup();
+	DEV_SETTINGS->endGroup();
 	
 	editorFont->setCurrentIndex(editorFont->findText(editor.family()));
 	gutterFont->setCurrentIndex(gutterFont->findText(gutter.family()));

@@ -90,7 +90,7 @@ DevSettings* DevSettings::Instance()
 DevSettings::DevSettings(QWidget *p)
  : QSettings(p)
 {
-	dlg = new DevSettingsDialog( p);
+	dlg = new DevSettingsDialog(p);
 	
 	m = new QMenu(tr("&Reopen..."), p);
 	m->setIcon(QIcon(":/reopen.png"));
@@ -99,18 +99,6 @@ DevSettings::DevSettings(QWidget *p)
 	connect(aClear	, SIGNAL( triggered() ),
 			this	, SLOT  ( clearRecents() ) );
 	recent();
-	
-	if ( allKeys().isEmpty() )
-	{
-		//set default settings if it's the first time the app is ran
-		// TODO what's this?
-// 		dlg->setDefault();	
-	} else {
-		//get back settings and update the config dialog as needed
-		// TODO what's this?
-// 		dlg->setCurrent();
-	}
-	
 }
 
 DevSettings::~DevSettings()

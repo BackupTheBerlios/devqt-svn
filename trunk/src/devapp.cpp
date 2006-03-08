@@ -28,6 +28,7 @@
 #include "devsplash.h"
 #include "devstatus.h"
 #include "devsettings.h"
+#include "devsettingsdialog.h"
 
 DevApp* DevApp::_app = 0;
 
@@ -75,6 +76,28 @@ DevApp::DevApp(int argc, char **argv)
 	scr->showMessage("Getting back settings...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
 	
 	set = DEV_SETTINGS;
+	
+	// TODO : 
+	// I had to do this ouside of DevSettings constructor because, for an
+	// unknown reason, diego decided to drop the QPointer<DevSettings> stuff
+	// Thus, calling either setDefault() or setCurrent() inside the constructor
+	// caused a infinite recursion because the only alternative way of making
+	// DevSettings and DevSettingsDialog communicate is the singleton way...
+	
+	if ( set->allKeys().isEmpty() ) // return 1 if settings object is empty
+	{
+		//if it's the first time DevQt is ran on that computer :
+		
+		//set default config dialog settings
+		set->dlg->setDefault();
+		
+	} else {
+		//if DevQt has already been ran on that computer :
+		
+		//get back existing settings and update the config dialog as needed
+		set->dlg->setCurrent();
+		
+	}
 	
 	// Setup main window
 	scr->showMessage("Initializing UI...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);

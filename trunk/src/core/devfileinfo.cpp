@@ -59,6 +59,20 @@ DevFileInfo::DevFileInfo(const QString& file, const QStringList& dirs)
 // I have no idea what this code does, I just know this fixes it.
 // 
 // - diego
+
+// DONE :P
+// This code deals with settings proper filepath and providing informations
+// about them, unfortunately I was unable to test it on Unix...
+// The point is that Unix paths have an empty root (i.e. nothing before the
+// first directory separator '/' ). Thus, QString::SkipEmptyParts attribute
+// return a list without the mepty root. We could modify the splitting flag
+// but IMO the fix given by elcuco is much better!
+//
+// TODO :
+// Mac path ??? Unix, Windows or something else???
+//
+// - FullMetalCoder
+
 #ifdef Q_WS_WIN
 	s = l.join("/");
 #else
