@@ -1,4 +1,34 @@
- 23 February 2006 : Official beta 2
+
+ 3 March 2006 : Official beta 3 (0.0.3.0)
+	- rewrote editor widgets stuffs to comply with Thiago specs and allow, later :P, an implementation of persistent
+	selection, multiline edition and text folding.
+	- added a margin to the editor
+	- added real possibilities to manage project files : 
+		* deletion of files and folders
+		* renaming of files folders and scopes (only at .pro level)
+		* creation of new files and folders
+	- added compilation stuffs :
+		* compile project
+		* clean project
+		* run project
+		* compile and run project
+		* rebuild project
+		* compile current file (experimental and unstable!!!)
+	- added Drag & Drop support inside project tree : both files and folder can be moved
+	- added close and close all actions to the editor's context menu
+	- added tooltips to the label of the status bar
+	- added kind of programming doc in some headers (especially devscope.h)
+	- improved project and scopes comboboxes behaviour
+	- fixed a bug in the project parser (mixing ':' & '{' in scope declaration caused a crash)
+	- fixed a bug in project saving : an empty folder (no files, discarding about subfolders) made it crash the app
+	- fixed a bug in file saving
+	- fixed "close all" and "close project" connection
+	- Explorer and compiler dock widgets are now hidden at start, Explorer being shown at each project openning
+
+ Note :
+  * DevQt is now used to build itself! Enjoy!!!
+
+ 23 February 2006 : Official beta 2 (0.0.2.1)
 	- implemented the Damn Best Project Parser Ever!!! It took me a whole WE and now handles everything:
 		* scopes : all syntaxes (single line, multiline, mixed) and nested
 		* folders (which are nothing but special scopes)

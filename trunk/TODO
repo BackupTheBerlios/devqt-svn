@@ -3,10 +3,11 @@ TODO:
 	- implement the properties dialog
 	- implement compilation ( still a lot of work to do!!! )
 	- Implement debug
-	- add a dialog that deals with text editor properties and GUI style (singleton)
-	- Move the Opening of projects into the Project menu
-	- Ability to close projects, create new projects and saving them
+	- add settings to configuration dialog
+	- complete the apply(), setDefault() and setCurrent() ( currently only deals with fonts )
+	- Ability create new projects (crafting a template system could be interesting...)
 	- Add new files to the current project (via File->New->*)
+	- implement multiline edition and folding (good luck!!!)
 	
 	== Internal
 	- MDI library and dunamic menus + toolbars (diego)
@@ -16,6 +17,7 @@ TODO:
 
 	== General
 	- Need an icon for the project
+	- Need a better icon set
 	- Need help for the project
 	- Need Doxygen documentation
 

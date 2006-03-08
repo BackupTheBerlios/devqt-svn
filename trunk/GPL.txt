@@ -1,10 +1,13 @@
 
- Qt Script for Applications is Copyright (C) 2001-2002 Trolltech AS.
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
 
- You may use, distribute and copy Qt Script for Applications under the
- terms of GNU General Public License version 2, which is displayed
- below.
+ DevQt, (C) 2006 FullMetalCoder, is a free and open source IDE for Qt4
 
+ You may use, distribute and copy DevQt under the terms of GNU GPL version
+ 2 (General Public License) , which is displayed below.
+
+-------------------------------------------------------------------------
 -------------------------------------------------------------------------
 
 		    GNU GENERAL PUBLIC LICENSE
