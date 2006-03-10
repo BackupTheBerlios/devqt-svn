@@ -33,6 +33,8 @@ class EditorState : public QObject
 {
 	Q_OBJECT
 	
+	friend class CoreEdit;
+	
 	public:
 		
 		enum flag
@@ -74,6 +76,8 @@ class EditorState : public QObject
 		void message(const QString& msg, int id);
 		
 	protected:
+		virtual void signalTextCursor(CoreEdit *ctxt) = 0;
+		
 		void paintSelection(CoreEdit *e, QPainter& p,
 							int xOffset, int yOffset,
 							QTextCursor cursor,

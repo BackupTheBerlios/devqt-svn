@@ -29,6 +29,8 @@
 
 class NormalState : public EditorState
 {
+    Q_OBJECT
+    
 	public:
 		static NormalState* Instance();
 		

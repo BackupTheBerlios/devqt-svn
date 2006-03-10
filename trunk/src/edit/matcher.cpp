@@ -178,12 +178,13 @@ ParenMatcher::MatchType ParenMatcher::match(QTextCursor *cursor)
     cursor->clearSelection();
 
     QChar leftChar = charFromCursor(*cursor, QTextCursor::PreviousCharacter);
-    if (leftChar == QLatin1Char('{') || leftChar == QLatin1Char('(') || leftChar == QLatin1Char('['))
+    
+    if (leftChar == '{' || leftChar == '(' || leftChar =='[')
         return checkOpenParenthesis(cursor, leftChar);
         
-    if (leftChar == QLatin1Char('}') || leftChar == QLatin1Char(')') || leftChar == QLatin1Char(']'))
+    if (leftChar == '}' || leftChar == ')' || leftChar == ']')
         return checkClosedParenthesis(cursor, leftChar);
-    
+	
     return NoMatch;
 }
 

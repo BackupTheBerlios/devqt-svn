@@ -4,10 +4,15 @@
 #                              #
 ################################
 
+INCLUDEPATH += . \
+	core \
+	gui \
+	edit \
+	plugins
 
+OBJECTS_DIR = tmp/obj
 
 TARGET = devqt
-TEMPLATE = app
 
 CONFIG += qt \
 	release \
@@ -17,21 +22,18 @@ CONFIG += qt \
 	resources \
 	translations
 
-
 DESTDIR = ..
+
+QMAKE_RUN_CXX += -ansi
+
+UI_DIR = tmp/ui
+
+TEMPLATE = app
 
 MOC_DIR = tmp/moc
 
 RCC_DIR = tmp/rcc
 
-UI_DIR = tmp/ui
-
-OBJECTS_DIR = tmp/obj
-
-INCLUDEPATH += . core \
-	gui \
-	edit \
-	plugins
 
 sources {
 
@@ -69,6 +71,24 @@ sources {
 }
 
 
+win32 {
+
+	CONFIG += console
+
+}
+
+
+forms {
+
+	FORMS += ui/devgotodialog.ui \
+		ui/devfinddialog.ui \
+		ui/configdialog.ui \
+		ui/aboutdialog.ui \
+		ui/propertiesdialog.ui
+
+}
+
+
 headers {
 
 	HEADERS += dev.h \
@@ -102,19 +122,13 @@ headers {
 		edit/matcher.h \
 		edit/indenter.h
 
-
 }
 
-forms {
-	FORMS += ui/devgotodialog.ui \
-         	ui/devfinddialog.ui \
-         	ui/configdialog.ui
-}
 
 translations {
 
 	TRANSLATIONS = ../translations/fr_FR.ts \
-                	../translations/uk_UA.ts
+		../translations/uk_UA.ts
 
 }
 

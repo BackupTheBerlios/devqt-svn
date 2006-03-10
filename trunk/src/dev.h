@@ -69,13 +69,14 @@ namespace DevQt
 	
 	bool isNumber(char c, char base);
 	
-	static const QString supportedFiles = "DevQt projects ( *.pro);;C++ \
-source files( *.cpp *.cxx *.c);;C++ header files ( *.h *.hpp);;All Files (*)";
+	static const QString supportedFiles = QObject::tr("DevQt projects ( *.pro)\
+;;C++ source files( *.cpp *.cxx *.c);;C++ header files ( *.h *.hpp);;All Files (*)");
 
-	static const QString extFiles = "C++ sources( *.cpp *.cxx *.c);;C++ headers \
-( *.h *.hpp);;All Files (*)";
+    static const QString extFiles = QObject::tr("C++ sources( *.cpp *.cxx *.c)\
+;;C++ headers ( *.h *.hpp);;All Files (*)");
 
-	static const QString extProjects = "DevQt projects ( *.pro);;All Files (*)";
+static const QString extProjects = QObject::tr("DevQt projects ( *.pro);;\
+All Files (*)");
 	
 	static const int iVersion = 0x00000300;
 	static const QString sVersion = "0.0.3.0";

@@ -29,6 +29,8 @@
 
 class MultilineState : public NormalState
 {
+    Q_OBJECT
+    
 	public:
 		static MultilineState* Instance();
 		

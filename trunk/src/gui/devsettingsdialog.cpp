@@ -54,6 +54,38 @@ DevSettingsDialog::DevSettingsDialog(QWidget *p)
 
 void DevSettingsDialog::apply()
 {
+	// recent files/projects
+	DEV_SETTINGS->beginGroup("recent");
+	
+	DEV_SETTINGS->setValue("filecount", iFiles->value());
+	DEV_SETTINGS->setValue("projectcount", iProjects->value());
+	
+	DEV_SETTINGS->endGroup();
+	// !recent
+	
+	// openned files/projects
+	DEV_SETTINGS->beginGroup("openned");
+	
+	int rem =	bOFNone->isChecked() ? DevSettings::Forget : (
+				bOFCurrent->isChecked() ? DevSettings::Active : (
+				bOFAll->isChecked() ? DevSettings::All : false ) );
+	
+	DEV_SETTINGS->beginGroup("files");
+	DEV_SETTINGS->setValue("rem", rem);
+	DEV_SETTINGS->endGroup();
+	
+	rem =	bOPNone->isChecked() ? DevSettings::Forget : (
+			bOPCurrent->isChecked() ? DevSettings::Active : (
+			bOPAll->isChecked() ? DevSettings::All : false ) );
+	
+	DEV_SETTINGS->beginGroup("projects");
+	DEV_SETTINGS->setValue("rem", rem);
+	DEV_SETTINGS->endGroup();
+	
+	DEV_SETTINGS->endGroup();
+	// !openned
+	
+	// editor widget
 	DEV_SETTINGS->beginGroup("edit");
 	
 	DEV_SETTINGS->beginGroup("font");
@@ -66,7 +98,35 @@ void DevSettingsDialog::apply()
 								gutterSize->currentText().toInt() ) );
 	DEV_SETTINGS->endGroup();
 	
+	DEV_SETTINGS->beginGroup("margin");
+	DEV_SETTINGS->setValue("margin", iMargin->value());
+	DEV_SETTINGS->setValue("draws", cbMargin->isChecked());
+	//DEV_SETTINGS->setValue("brush").value<QBrush>() );
 	DEV_SETTINGS->endGroup();
+	
+	DEV_SETTINGS->beginGroup("tabs");
+	DEV_SETTINGS->setValue("size", iTab->value());
+	DEV_SETTINGS->setValue("replace", !cbTab->isChecked());
+	DEV_SETTINGS->endGroup();
+	
+	DEV_SETTINGS->beginGroup("wrap");
+	DEV_SETTINGS->setValue("word", cbWordWrap->isChecked());
+	DEV_SETTINGS->setValue("line", cbLineWrap->isChecked());
+	DEV_SETTINGS->endGroup();
+	
+	DEV_SETTINGS->setValue("ctrl", cbCTRL->isChecked());
+	DEV_SETTINGS->setValue("scroll", cbScroll->isChecked());
+	DEV_SETTINGS->setValue("indent", cbIndent->isChecked());
+	DEV_SETTINGS->setValue("autoclose", cbAutoClose->isChecked());
+	
+	DEV_SETTINGS->endGroup();
+	// !editor
+	
+	// highlighting
+	DEV_SETTINGS->beginGroup("highlight");
+	
+	DEV_SETTINGS->endGroup();
+	// !highlighting
 	
 	DEV_SETTINGS->applyFormat( DEV_GUI->e );
 }
@@ -96,6 +156,27 @@ void DevSettingsDialog::setCurrent()
 	gutter = DEV_SETTINGS->value("gutter").value<QFont>();
 	DEV_SETTINGS->endGroup();
 	
+	DEV_SETTINGS->beginGroup("margin");
+	iMargin->setValue( DEV_SETTINGS->value("margin").toInt() );
+	cbMargin->setChecked( DEV_SETTINGS->value("draws").toBool() );
+	//edit->setMarginBrush( value("brush").value<QBrush>() );
+	DEV_SETTINGS->endGroup();
+	
+	DEV_SETTINGS->beginGroup("tabs");
+	iTab->setValue( DEV_SETTINGS->value("size").toInt() );
+	cbTab->setChecked( !DEV_SETTINGS->value("replace").toBool() );
+	DEV_SETTINGS->endGroup();
+	
+	DEV_SETTINGS->beginGroup("wrap");
+	cbWordWrap->setChecked( DEV_SETTINGS->value("word").toBool() );
+	cbLineWrap->setChecked( DEV_SETTINGS->value("line").toBool() );
+	DEV_SETTINGS->endGroup();
+	
+	cbCTRL->setChecked( DEV_SETTINGS->value("ctrl").toBool() );
+	cbScroll->setChecked( DEV_SETTINGS->value("scroll").toBool() );
+	cbIndent->setChecked( DEV_SETTINGS->value("indent").toBool() );
+	cbAutoClose->setChecked( DEV_SETTINGS->value("autoclose").toBool() );
+	
 	DEV_SETTINGS->endGroup();
 	
 	editorFont->setCurrentIndex(editorFont->findText(editor.family()));
@@ -105,6 +186,12 @@ void DevSettingsDialog::setCurrent()
 													editor.pointSize() ) ) );
 	gutterSize->setCurrentIndex(gutterSize->findText(QString::number(
 													gutter.pointSize() ) ) );
+	
+	
+	DEV_SETTINGS->beginGroup("highlight");
+	
+	DEV_SETTINGS->endGroup();
+	
 }
 
 void DevSettingsDialog::on_DefaultButton_clicked()

@@ -26,8 +26,11 @@
 #define _DEV_DIALOGS_H_
 
 #include "dev.h"
+
+#include "ui_aboutdialog.h"
 #include "ui_devgotodialog.h"
 #include "ui_devfinddialog.h"
+#include "ui_propertiesdialog.h"
 
 //class holding "one shot" dialogs (new file, new folder...)
 class DevDialogs : public QObject
@@ -124,7 +127,7 @@ class DevReplaceDialog : public QDialog
 		QRadioButton *global, *selection, *forward, *backward, *cursor, *whole;
 };
 
-class DevAboutDialog : public QDialog
+class DevAboutDialog : public QDialog, private Ui::AboutDialog
 {
 	Q_OBJECT
 	
@@ -132,12 +135,11 @@ class DevAboutDialog : public QDialog
 		DevAboutDialog(QWidget *p = 0);
 		virtual ~DevAboutDialog();
 		
-	
-	private:
-		;
+	private slots:
+		void on_bOK_clicked() { accept(); }
 };
 
-class DevPropertiesDialog : public QDialog
+class DevPropertiesDialog : public QDialog, private Ui::PropertiesDialog
 {
 	Q_OBJECT
 	
@@ -148,8 +150,8 @@ class DevPropertiesDialog : public QDialog
 	public slots:
 		void execute(const QString& n);
 		
-	private:
-		QString name;
+	private slots:
+		void on_bOK_clicked() { accept(); }
 		
 };
 

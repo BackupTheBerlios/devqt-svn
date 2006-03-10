@@ -219,7 +219,7 @@ int DevHighlighter::previousBlockState() const
 
 void DevHighlighter::highlightBlock(QTextBlock& b)
 {
-	b.setUserState( process(b.text()) );
+	b.setUserState( process(b.text(), BlockData::data(b)) );
 }
 
 /*
@@ -285,8 +285,6 @@ void CppHighlighter::setupData()
 
 void CppHighlighter::highlightBlock(QTextBlock& b)
 {
-	b.setUserState( process(b.text()) );
-	
 	BlockData *blockData = BlockData::data(b);
 	
 	if ( !blockData )
@@ -295,25 +293,29 @@ void CppHighlighter::highlightBlock(QTextBlock& b)
 		blockData->setToBlock(b);
 	}
 	
+	b.setUserState( process(b.text(), blockData) );
+	
+	//if ( e-> )
+	
 	if (blockData->parenthesisMatchStart != -1)
 	{
 		QTextCharFormat fmt = format(blockData->parenthesisMatchStart);
-        blockData->parenthesisMatchingFormat.setProperty(
-        										ParenthesisMatcherPropertyId,
-        										qVariantFromValue(fmt) );
-        fmt.merge(blockData->parenthesisMatchingFormat);
-        setFormat(blockData->parenthesisMatchStart, 1, fmt);
-    }
-
-    if (blockData->parenthesisMatchEnd != -1)
-    {
-        QTextCharFormat fmt = format(blockData->parenthesisMatchEnd);
-        blockData->parenthesisMatchingFormat.setProperty(
-        										ParenthesisMatcherPropertyId,
-        										qVariantFromValue(fmt) );
-        fmt.merge(blockData->parenthesisMatchingFormat);
-        setFormat(blockData->parenthesisMatchEnd, 1, fmt);
-    }
+		blockData->parenthesisMatchingFormat.setProperty(
+												ParenthesisMatcherPropertyId,
+												qVariantFromValue(fmt) );
+		fmt.merge(blockData->parenthesisMatchingFormat);
+		setFormat(blockData->parenthesisMatchStart, 1, fmt);
+	}
+	
+	if (blockData->parenthesisMatchEnd != -1)
+	{
+		QTextCharFormat fmt = format(blockData->parenthesisMatchEnd);
+		blockData->parenthesisMatchingFormat.setProperty(
+												ParenthesisMatcherPropertyId,
+												qVariantFromValue(fmt) );
+		fmt.merge(blockData->parenthesisMatchingFormat);
+		setFormat(blockData->parenthesisMatchEnd, 1, fmt);
+	}
 	
 }
 
@@ -324,7 +326,8 @@ done (multi-lines string if '\' at EOL; comment after preprocessor...)
 
 */
 
-DevHighlighter::BlockState CppHighlighter::process(const QString& text)
+DevHighlighter::BlockState CppHighlighter::process(	const QString& text,
+													BlockData *bd)
 {
 	QChar c;
 	QString s;
@@ -440,7 +443,7 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 					break;
 			}
 		}
-		else if ( c=='#' )
+		else if ( c == '#' )
 		{
 			setFormat(n, len-n, fmts[preprocessor]);
 			
@@ -560,6 +563,16 @@ DevHighlighter::BlockState CppHighlighter::process(const QString& text)
 				continue;
 			
 			setFormat(n, s.count(), fmts[number]);
+		} else if ( c == '{' ) {
+			bd->parentheses << Parenthesis(Parenthesis::Open, c, i);
+			//TODO : add collapsing stuffs
+		} else if ( c == '(' || c == '[' ) {
+			bd->parentheses << Parenthesis(Parenthesis::Open, c, i);
+		} else if ( c == '}' ) {
+			bd->parentheses << Parenthesis(Parenthesis::Closed, c, i);
+			//TODO : add collapsing stuffs
+		} else if ( c == ')' ||  c == ']' ) {
+			bd->parentheses << Parenthesis(Parenthesis::Closed, c, i);
 		}
 	}
 	

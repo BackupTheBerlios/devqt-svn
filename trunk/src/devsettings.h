@@ -40,8 +40,15 @@ class DevSettings : public QSettings
 		
 		enum Settings
 		{
-			maxProjects = 5,
-			maxFiles = 15
+			//remember openned files and projects
+			Forget,				//none
+			Active,				//only active one
+			All,				//all
+			
+			//deprecated values
+			maxProjects = 5,	//max number of recent projects
+			maxFiles = 15		//max number of recent files
+			
 		};
 		
 		static DevSettings* Instance();

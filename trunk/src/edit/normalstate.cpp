@@ -73,7 +73,7 @@ void NormalState::paintEvent(CoreEdit *ctxt, QPaintEvent *e)
 	
 	if ( ctxt->drawMargin() )
 	{
-		int margin = ctxt->fontMetrics().width(" ") * (ctxt->margin() + 1);
+		int margin = QFontMetrics(ctxt->font()).width(" ") * (ctxt->margin() + 1);
 		
 		margin -= xOffset;
 		
@@ -304,7 +304,10 @@ void NormalState::keyPressEvent(CoreEdit *ctxt, QKeyEvent *e)
 			case Qt::Key_Enter :
 			case Qt::Key_Return :
 			{
-				QString tabs = ctxt->pIndenter->spaces(cur);
+				QString tabs = ctxt->pIndenter->spaces(	cur,
+														ctxt->replaceTab(),
+														ctxt->tabstop()
+														);
 				
 				cur.insertBlock();
 				cur.insertText(tabs);
@@ -315,26 +318,9 @@ void NormalState::keyPressEvent(CoreEdit *ctxt, QKeyEvent *e)
 			}
 			
 			case Qt::Key_BraceRight :
-				/*
-				cur.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
 				
-				if ( cur.selectedText() == "\t" )
-					cur.removeSelectedText();
-				else if ( cur.selectedText() == " " )
-				{
-					int n = 0;
-					while ( (cur.selectedText().startsWith(" ")) && (n++ < iTab) )
-						cur.movePosition(	QTextCursor::PreviousCharacter,
-											QTextCursor::KeepAnchor);
-					
-					if ( !cur.selectedText().startsWith(" ") )
-						cur.movePosition(	QTextCursor::NextCharacter,
-											QTextCursor::KeepAnchor);
-					
-					cur.removeSelectedText();
-				}
-				
-				*/
+				ctxt->pIndenter->backspace(	cur, ctxt->tabstop(),
+											Qt::Key_BraceRight );
 				
 				cur.insertText("}");
 				ctxt->setTextCursor(cur);

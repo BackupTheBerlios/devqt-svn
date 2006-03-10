@@ -32,9 +32,9 @@
 CoreEdit::CoreEdit(QWidget *p, const QString& s)
  : 	QTextEdit(p),
  	pState( NormalState::Instance() ), pMatcher( new ParenMatcher(this) ),
-	pIndenter( new Indenter(this) ), iTab(4), iMargin(80),
-	bLine(true), bBlock(false), bMatchParen(true), bMargin(true),
-	bTab(false), bAutoClose(false), bNavCTRL(true)
+	pIndenter( new Indenter(this) ), iTab(4), iMargin(80), bCursor(false),
+	bLine(true), bBlock(false), bIndent(true), bMatchParen(true),
+	bMargin(true), bTab(false), bAutoClose(false), bNavCTRL(true)
 {
 	setMouseTracking(true);
 	setLineWrapMode(NoWrap);
@@ -49,6 +49,9 @@ CoreEdit::CoreEdit(QWidget *p, const QString& s)
 	
 	connect(document()	, SIGNAL( modificationChanged(bool) ),
 			this		, SLOT  ( docModified(bool) ) );
+	
+	connect(pState	, SIGNAL( message(const QString&, int) ),
+			this	, SIGNAL( message(const QString&, int) ));
 	
 	blinker.start(QApplication::cursorFlashTime() / 2, this);
 }
@@ -85,6 +88,16 @@ int CoreEdit::column(const QTextCursor& c)
 void CoreEdit::gotoLine(int row, int col)
 {
 	;
+}
+
+bool CoreEdit::autoIndent() const
+{
+	return bIndent;
+}
+
+void CoreEdit::setAutoIndent(bool y)
+{
+	bIndent = y;
 }
 
 bool CoreEdit::parenMatching() const
@@ -144,7 +157,7 @@ QFont CoreEdit::font() const
 
 void CoreEdit::setFont(const QFont& f)
 {
-	QTextEdit::setFont(f);
+	//QTextEdit::setFont(f);
 	document()->setDefaultFont(f);
 	
 	setTabStopWidth(iTab*QFontMetrics(f).width(' '));
@@ -295,17 +308,7 @@ void CoreEdit::changeState(EditorState *s)
 
 void CoreEdit::textCursorPos()
 {
-	/*
-	QTextCursor c = textCursor();
-	
-	int x = column(c), y = line(c);
-	
-	QString col = QString::number(x);
-	QString row = QString::number(y);
-	
-	emit message(QString("Text :") + " Row " + row + ", Column " + col,
-				(int)DevQt::TextCursor);
-	*/
+	pState->signalTextCursor(this);
 }
 
 void CoreEdit::docModified(bool mod)

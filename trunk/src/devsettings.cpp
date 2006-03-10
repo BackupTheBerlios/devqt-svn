@@ -37,11 +37,15 @@ Settings map:
 	
 |		purpose			|		key				|			type			|
 |---------------------------------------------------------------------------|
+|	max nb of files : 	|	recent/filecount	|			int				|
 |	recent files : 		|	recent/files		|		QStringList			|
+|	max nb of projects :|	recent/projectcount	|			int				|
 |	recent projects : 	|	recent/projects		|		QStringList			|
 |-----------------------|-----------------------|---------------------------|
-|	openned files : 	|	openned/files		|		QStringList			|
-|	openned projects : 	|	openned/projects	|		QStringList			|
+|	remember files :	|	openned/files/rem	|			int				|
+|	openned files : 	|	openned/files/dat	|		QStringList			|
+|	openned projects : 	|	openned/projects/rem|			int				|
+|	openned projects : 	|	openned/projects/dat|		QStringList			|
 |-----------------------|-----------------------|---------------------------|
 |	main win state :	|	gui/state			|		Qt::WindowStates	|
 |	main win title : 	|	gui/title			|			QString			|
@@ -58,9 +62,11 @@ Settings map:
 |	gutter font			|	edit/font/gutter	|			QFont			|
 |	tab width			|	edit/tabs/size		|			int				|
 |	tab replace			|	edit/tabs/replace	|			bool			|
+|	word wrap			|	edit/wrap/word		|			bool			|
+|	line wrap			|	edit/wrap/line		|			bool			|
 |	draws margin		|	edit/margin/draws	|			bool			|
 |	margin size			|	edit/margin/margin	|			int				|
-|	margin color		|	edit/margin/color	|			QColor			|
+|	margin color		|	edit/margin/brush	|			QBrush			|
 |-----------------------|-----------------------|---------------------------|
 |	higlight formats	|	highlight/formats	|	QList<QTextCharFormat>	|
 |	higlight line		|	highlight/line		|			bool			|
@@ -164,6 +170,8 @@ void DevSettings::applyFormat(DevEdit *e)
 	if ( !e )
 		return;
 	
+	qDebug("applying format to %s...", e->name().toLatin1().data());
+	
 	CoreEdit *edit = e->e;
 	DevStandardPanel *s = e->s;
 	
@@ -174,6 +182,27 @@ void DevSettings::applyFormat(DevEdit *e)
 	s->l->setFont( value("gutter").value<QFont>() );
 	endGroup();
 	
+	beginGroup("margin");
+	edit->setMargin( value("margin", 80).toInt() );
+	edit->setDrawMargin( value("draws", true).toBool() );
+	//edit->setMarginBrush( value("brush").value<QBrush>() );
+	endGroup();
+	
+	beginGroup("tabs");
+	edit->setTabstop( value("size", 4).toInt() );
+	edit->setReplaceTab( value("replace", true).toBool() );
+	endGroup();
+	
+	beginGroup("wrap");
+	edit->setWordWrapMode( value("word", false).toBool()
+							? QTextOption::WordWrap : QTextOption::NoWrap );
+	edit->setLineWrapMode( value("line", false).toBool()
+							? QTextEdit::WidgetWidth : QTextEdit::NoWrap );
+	endGroup();
+	
+	edit->setAutoIndent( value("indent", true).toBool() );
+	edit->setAutoClose( value("autoclose", false).toBool() );
+	edit->setCtrlNavigation( value("ctrl", true).toBool() );
 	
 	endGroup();
 	
@@ -249,13 +278,15 @@ void DevSettings::addRecent(const QString& n, bool project)
 	QString s;
 	QStringList l;
 	
+	beginGroup("recent");
+	
 	if ( project )
 	{
-		max = maxProjects;
-		s = "recent/projects";
+		max = value("projectcount", 5).toInt();
+		s = "projects";
 	} else {
-		max = maxFiles;
-		s = "recent/files";
+		max = value("filecount", 15).toInt();
+		s = "files";
 	}
 	
 	l = value(s).toStringList();
@@ -270,6 +301,8 @@ void DevSettings::addRecent(const QString& n, bool project)
 		l.pop_back();
 	
 	setValue(s, l);
+	
+	endGroup();
 }
 
 void DevSettings::recent(QAction *a)

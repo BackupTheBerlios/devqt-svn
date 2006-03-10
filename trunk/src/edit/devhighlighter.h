@@ -27,6 +27,8 @@
 
 #include "dev.h"
 
+class BlockData;
+
 class DevHighlighter : public QObject
 {
 	Q_OBJECT
@@ -57,7 +59,7 @@ class DevHighlighter : public QObject
 		
 	protected:
 		virtual void highlightBlock(QTextBlock& b);
-		virtual BlockState process(const QString& text) = 0;
+		virtual BlockState process(const QString& text, BlockData *bd) = 0;
 		
 		int line(const QTextBlock& b) const;
 
@@ -99,7 +101,7 @@ class CppHighlighter : public DevHighlighter
 		
 		
 		virtual void highlightBlock(QTextBlock& b);
-		virtual BlockState process(const QString& text);
+		virtual BlockState process(const QString& text, BlockData *bd);
 		
 		void setupData();
 		

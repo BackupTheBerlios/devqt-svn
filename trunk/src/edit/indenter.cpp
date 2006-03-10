@@ -36,16 +36,70 @@ Indenter::~Indenter()
 {
 }
 
-QString Indenter::spaces(const QTextCursor& c)
+QString Indenter::spaces(const QTextCursor& c, bool rep, int size)
 {
-	int i = -1;
-	QString tabs = c.block().text();
+	int i = -1, n;
+	QString tabs = c.block().text(), suffix;
+	
+	if ( rep )
+		suffix = QString(' ', size);
+	else
+		suffix = "\t";
 	
 	while ( ++i < tabs.size() )
 	{
 		if ( !tabs.at(i).isSpace() )
-			return tabs.left(i);
+		{
+			QString txt = tabs.mid(i);
+			tabs = tabs.left(i);
+			
+			i = -1;
+			
+			while ( ++i < txt.size() )
+			{
+				if ( txt.at(i) == '{' )
+				{
+					tabs += suffix;
+				} else if ( txt.at(i) == '}' ) {
+					n = ( ( tabs.size() / size ) - 1 ) * size;
+					
+					if ( tabs.endsWith('\t') )
+					{
+						tabs.chop(1);
+						continue;
+					}
+					
+					while ( tabs.endsWith(' ') && --n)
+						tabs.chop(1);
+				}
+			}
+			
+			return tabs;
+		}
 	}
 	
 	return tabs;
 }
+
+void Indenter::backspace(QTextCursor& c, int size, Qt::Key k)
+{
+	c.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+	
+	if ( c.selectedText() == "\t" )
+		c.removeSelectedText();
+	else if ( c.selectedText() == " " )
+	{
+		int n = 0;
+		while ( (c.selectedText().startsWith(" ")) && (n++ < size) )
+			c.movePosition(	QTextCursor::PreviousCharacter,
+							QTextCursor::KeepAnchor);
+		
+		if ( !c.selectedText().startsWith(" ") )
+			c.movePosition(	QTextCursor::NextCharacter,
+							QTextCursor::KeepAnchor);
+		
+		c.removeSelectedText();
+	}
+	
+}
+

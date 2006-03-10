@@ -37,7 +37,8 @@ class Indenter : public QObject
 		Indenter(CoreEdit *e);
 		virtual ~Indenter();
 		
-		QString spaces(const QTextCursor& c);
+		QString spaces(const QTextCursor& c, bool rep = false, int size = 4);
+		void backspace(QTextCursor& c, int size = 4, Qt::Key k = Qt::Key_BraceRight);
 		
 	private:
 		QPointer<CoreEdit> edit;

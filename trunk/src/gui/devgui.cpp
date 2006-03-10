@@ -54,17 +54,17 @@ DevGUI::DevGUI()
 	Editor->setContextMenuPolicy(Qt::CustomContextMenu);
 	
 	connect(Editor	, SIGNAL( currentChanged(int) ),
-			this	, SLOT  ( editorChanged() ) );
+			this	, SLOT  ( editorChanged(int) ) );
 	connect(Editor	, SIGNAL( customContextMenuRequested(const QPoint&) ),
 			this	, SLOT  ( editorMenu(const QPoint&) ) );
 	
 	add = new QToolButton(Editor);
 	add->setIcon(QIcon(":/addtab.png"));
-	add->setFixedSize(22, 22);
+	add->setFixedSize(20, 20);
 	
 	rem = new QToolButton(Editor);
 	rem->setIcon(QIcon(":/close.png"));
-	rem->setFixedSize(22, 22);
+	rem->setFixedSize(20, 20);
 	
 	connect(add	, SIGNAL( clicked() ),
 			this, SLOT  ( fileNew() ) );
@@ -132,11 +132,29 @@ DevGUI::DevGUI()
 	{
 		QStringList fl;
 		
-		fl<<DEV_SETTINGS->value("openned/files").toStringList();
-		fl<<DEV_SETTINGS->value("openned/projects").toStringList();
+		DEV_SETTINGS->beginGroup("openned");
+		
+		DEV_SETTINGS->beginGroup("projects");
+		
+		if ( DEV_SETTINGS->value("rem", false).toBool() )
+			fl<<DEV_SETTINGS->value("dat").toStringList();
+		
+		DEV_SETTINGS->endGroup();
+		
+		
+		DEV_SETTINGS->beginGroup("files");
+		
+		if ( DEV_SETTINGS->value("rem", false).toBool() )
+			fl<<DEV_SETTINGS->value("dat").toStringList();
+			
+		DEV_SETTINGS->endGroup();
 		
 		foreach ( QString fn, fl )
 			load(fn);
+		
+		DEV_SETTINGS->endGroup();
+		
+		Editor->setCurrentIndex(0);
 		
 	} else {
 		for (int i = 1; i < DEV_APP->argc(); ++i)
@@ -145,26 +163,29 @@ DevGUI::DevGUI()
 	
 	// TODO: session managment - restore window state
 
-	// Load all GUI-related settings from conf file.
-
-	int winwidth = DEV_SETTINGS->value("gui/width").toInt();
-	int winheight = DEV_SETTINGS->value("gui/height").toInt();
+	// Load all GUI-related settings from conf
+	DEV_SETTINGS->beginGroup("gui");
+	
+	int winwidth = DEV_SETTINGS->value("width").toInt();
+	int winheight = DEV_SETTINGS->value("height").toInt();
 	
 	if ( winwidth && winheight )
 	{
 		resize(winwidth, winheight);
 		
-		QPoint winpos = DEV_SETTINGS->value("gui/pos").toPoint();
+		QPoint winpos = DEV_SETTINGS->value("pos").toPoint();
 		
 		if ( !winpos.isNull() )
 			move(winpos);
 		
-		int winstate = DEV_SETTINGS->value("gui/state").toInt();
+		int winstate = DEV_SETTINGS->value("state").toInt();
 		
 		if ( winstate )
 			setWindowState(Qt::WindowStates(winstate));
 		
 	} else setWindowState(Qt::WindowMaximized);
+	
+	DEV_SETTINGS->endGroup();
 	
 	setWindowTitle("DevQt " + DevQt::sVersion);
 }
@@ -191,27 +212,48 @@ DevGUI::~DevGUI()
 	
 	DEV_SETTINGS->endGroup();
 	
-	//getting openned files and projects names
-	QString fn;
-	QStringList fl, pl;
-	
-	while ( e )
-	{
-		fl<<e->name();
-		close();
-	}
-	
-	foreach ( fn, workspace->DevProjectMap::keys() )
-	{
-		pl<<fn;
-		workspace->closeProject(fn);
-	}
 	
 	//save openned files and projects name
 	DEV_SETTINGS->beginGroup("openned");
 	
-	DEV_SETTINGS->setValue("files", fl);
-	DEV_SETTINGS->setValue("projects", pl);
+	QString fn;
+	int perm, n = 0;
+	QStringList fl, pl;
+	
+	DEV_SETTINGS->beginGroup("files");
+	
+	perm = DEV_SETTINGS->value("rem").toInt();
+	
+	while ( e )
+	{
+		if (((perm != DevSettings::Active) && perm ) ||
+			((perm == DevSettings::Active) && !n++ ) )
+			fl<<e->name();
+		
+		close();
+	}
+	
+	DEV_SETTINGS->setValue("dat", fl);
+	
+	DEV_SETTINGS->endGroup();
+	
+	
+	DEV_SETTINGS->beginGroup("projects");
+	
+	n = 0;
+	perm = DEV_SETTINGS->value("rem").toInt();
+	
+	foreach ( fn, workspace->DevProjectMap::keys() )
+	{
+		if (((perm != DevSettings::Active) && perm ) ||
+			((perm == DevSettings::Active) && !n++ ) )
+			pl<<fn;
+		
+		workspace->closeProject(fn);
+	}
+	
+	
+	DEV_SETTINGS->setValue("dat", pl);
 	
 	DEV_SETTINGS->endGroup();
 }
@@ -705,13 +747,17 @@ void DevGUI::setupSettings()
 
 bool DevGUI::load(const QString &f)
 {
-    if (!QFile::exists(f))
+    if ( !QFile::exists(f) )
         return false;
     
-    if (f.endsWith(".pro"))
+    if ( f.endsWith(".pro") )
     	return loadProject(f);
-    
-    createEditor(f);
+    else if ( f.endsWith(".ui") )
+    	QProcess::startDetached("designer", QStringList(f));
+    else if ( f.endsWith(".ts") )
+    	QProcess::startDetached("linguist", QStringList(f));
+    else
+    	createEditor(f);
     
     DEV_SETTINGS->addRecent(f);
     
@@ -1209,7 +1255,7 @@ void DevGUI::clipboardDataChanged()
     aPaste->setEnabled(!QApplication::clipboard()->text().isEmpty());
 }
 
-void DevGUI::editorChanged()
+void DevGUI::editorChanged(int index)
 {
 	QTextDocument *doc;
 	
@@ -1244,11 +1290,13 @@ void DevGUI::editorChanged()
 		
 		disconnect(	e, SIGNAL( message(const QString&, int) ),
 					s, SLOT  ( message(const QString&, int) ) );
-    }
-
-    e = qobject_cast<DevEdit*>(Editor->currentWidget());
-    if ( !e )
-    {
+	}
+	
+	//e = qobject_cast<DevEdit*>(Editor->currentWidget());
+	e = qobject_cast<DevEdit*>(Editor->widget(index));
+	
+	if ( !e )
+	{
 		aSave->setEnabled(false);
     	aSaveAs->setEnabled(false);
     	aUndo->setEnabled(false);

@@ -132,7 +132,7 @@ class DevGUI : public QMainWindow
 		void aboutQt();
 		void QtAssistant();
 		
-		void editorChanged();
+		void editorChanged(int index);
 		void clipboardDataChanged();
 		
 		void editorModified(bool mod);

@@ -29,6 +29,8 @@
 
 class PersistentState : public NormalState
 {
+    Q_OBJECT
+    
 	public:
 		static PersistentState* Instance();
 		

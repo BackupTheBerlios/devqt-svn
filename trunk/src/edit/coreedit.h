@@ -57,6 +57,7 @@ class CoreEdit : public QTextEdit
 		
 		int  margin() const;
 		bool drawMargin() const;
+		bool autoIndent() const;
 		bool parenMatching() const;
 		bool highlightCurrentLine() const;
 		bool highlightCurrentBlock() const;
@@ -78,6 +79,7 @@ class CoreEdit : public QTextEdit
 		
 		void setMargin(int n);
 		void setDrawMargin(bool y);
+		void setAutoIndent(bool y);
 		void setParenMatching(bool y);
 		void setHighlightCurrentLine(bool y);
 		void setHighlightCurrentBlock(bool y);
@@ -143,6 +145,7 @@ class CoreEdit : public QTextEdit
 		
 		bool	bLine;				// highlight current line?
 		bool	bBlock;				// highlight current block ?
+		bool	bIndent;			// auto indent ?
 		bool	bMatchParen;		// parenthesis matching ?
 		bool	bMargin;			// draws margin ?
 		bool	bTab;				// replace tabs by spaces ?

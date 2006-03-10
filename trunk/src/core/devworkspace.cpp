@@ -366,7 +366,7 @@ void DevWorkSpace::focus(QTreeWidgetItem *i, int c)
 	DevEdit *e = f->e;
 	
 	if ( !e )
-		return (void)(f->e = DEV_GUI->createEditor(f->n, true));
+		return (void)(DEV_GUI->load(f->name()));
 	
 	if ( (index=edit->indexOf(e)) == -1 )
 		index = edit->addTab(e, QFileInfo(f->n).fileName());

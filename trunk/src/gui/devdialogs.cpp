@@ -589,7 +589,7 @@ void DevReplaceDialog::all()
 DevAboutDialog::DevAboutDialog(QWidget *p)
  : QDialog(p)
 {
-	;
+	setupUi(this);
 }
 
 DevAboutDialog::~DevAboutDialog()
@@ -600,7 +600,7 @@ DevAboutDialog::~DevAboutDialog()
 DevPropertiesDialog::DevPropertiesDialog(QWidget *p)
  : QDialog(p)
 {
-	;
+	setupUi(this);
 }
 
 DevPropertiesDialog::~DevPropertiesDialog()
@@ -610,8 +610,6 @@ DevPropertiesDialog::~DevPropertiesDialog()
 
 void DevPropertiesDialog::execute(const QString& n)
 {
-	name = n;
-	
 	exec();
 }
 

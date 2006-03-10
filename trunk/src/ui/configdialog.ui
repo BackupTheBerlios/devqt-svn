@@ -1,5 +1,5 @@
 <ui version="4.0" >
- <author></author>
+ <author>fullmetalcoder</author>
  <comment></comment>
  <exportmacro></exportmacro>
  <class>ConfigDialog</class>
@@ -9,7 +9,7 @@
     <x>0</x>
     <y>0</y>
     <width>620</width>
-    <height>528</height>
+    <height>607</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -365,9 +365,9 @@
            </widget>
           </item>
           <item row="2" column="1" >
-           <widget class="QCheckBox" name="checkBox_4" >
+           <widget class="QCheckBox" name="cbParen" >
             <property name="text" >
-             <string>CheckBox</string>
+             <string>Parenthesis matching</string>
             </property>
            </widget>
           </item>
@@ -520,7 +520,7 @@
      </widget>
      <widget class="QWidget" name="tabSyntax" >
       <attribute name="title" >
-       <string>Syntax</string>
+       <string>Highlighting</string>
       </attribute>
       <layout class="QVBoxLayout" >
        <property name="margin" >
@@ -541,14 +541,7 @@
           <property name="spacing" >
            <number>6</number>
           </property>
-          <item row="0" column="0" >
-           <widget class="QLabel" name="label_6" >
-            <property name="text" >
-             <string>Concerned files</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" >
+          <item rowspan="2" row="0" column="0" >
            <widget class="QGroupBox" name="cbLine" >
             <property name="title" >
              <string>Highlight current line</string>
@@ -559,9 +552,31 @@
             <property name="checked" >
              <bool>true</bool>
             </property>
+            <layout class="QGridLayout" >
+             <property name="margin" >
+              <number>9</number>
+             </property>
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <item row="0" column="1" >
+              <widget class="QToolButton" name="bLineColor" >
+               <property name="text" >
+                <string>Color ...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" >
+              <widget class="QToolButton" name="bLineBrush" >
+               <property name="text" >
+                <string>Brush ...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
-          <item row="1" column="1" >
+          <item rowspan="2" row="0" column="1" >
            <widget class="QGroupBox" name="cbBlock" >
             <property name="title" >
              <string>Highlight current block</string>
@@ -572,6 +587,28 @@
             <property name="checked" >
              <bool>true</bool>
             </property>
+            <layout class="QGridLayout" >
+             <property name="margin" >
+              <number>9</number>
+             </property>
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <item row="0" column="1" >
+              <widget class="QToolButton" name="bBlockColor" >
+               <property name="text" >
+                <string>Color ...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" >
+              <widget class="QToolButton" name="bBlockBrush" >
+               <property name="text" >
+                <string>Brush ...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -589,123 +626,24 @@
           <property name="spacing" >
            <number>6</number>
           </property>
-          <item row="1" column="1" >
-           <widget class="QToolButton" name="toolButton_2" >
-            <property name="text" >
-             <string>Set brush ... </string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" >
-           <widget class="QToolButton" name="toolButton" >
-            <property name="text" >
-             <string>Set color ... </string>
-            </property>
-           </widget>
-          </item>
-          <item rowspan="2" row="0" column="2" >
-           <widget class="QGroupBox" name="groupBox_13" >
-            <property name="sizePolicy" >
-             <sizepolicy>
-              <hsizetype>1</hsizetype>
-              <vsizetype>5</vsizetype>
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="title" >
-             <string>GroupBox</string>
-            </property>
-            <layout class="QVBoxLayout" >
-             <property name="margin" >
-              <number>9</number>
-             </property>
-             <property name="spacing" >
-              <number>6</number>
-             </property>
-             <item>
-              <widget class="QCheckBox" name="cbBold" >
-               <property name="text" >
-                <string>Bold</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="cbItalic" >
-               <property name="text" >
-                <string>Italic</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_3" >
-               <property name="text" >
-                <string>CheckBox</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item rowspan="2" row="0" column="0" >
-           <widget class="QListWidget" name="listWidget" >
-            <property name="sizePolicy" >
-             <sizepolicy>
-              <hsizetype>1</hsizetype>
-              <vsizetype>3</vsizetype>
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <item>
-             <property name="text" >
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>New Item</string>
-             </property>
-            </item>
-           </widget>
+          <item rowspan="2" row="0" column="1" >
+           <widget class="QListWidget" name="syntaxItems" />
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_6" >
+        <widget class="QGroupBox" name="cbOverview" >
          <property name="title" >
-          <string>Preview</string>
+          <string>Overview</string>
          </property>
          <property name="checkable" >
           <bool>true</bool>
          </property>
-         <layout class="QHBoxLayout" >
+         <property name="checked" >
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" >
           <property name="margin" >
            <number>9</number>
           </property>
@@ -771,6 +709,7 @@
    </item>
   </layout>
  </widget>
+ <layoutdefault spacing="2" margin="2" />
  <pixmapfunction></pixmapfunction>
  <resources>
   <include location="../DevEditor.qrc" />

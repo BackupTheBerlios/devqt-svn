@@ -26,6 +26,7 @@
 
 #include "coreedit.h"
 #include "blockdata.h"
+#include "devsettings.h"
 #include "devhighlighter.h"
 #include "devstandardpanel.h"
 #include "devoverviewpanel.h"
@@ -141,6 +142,7 @@ void DevEdit::setup()
 	connect(s	, SIGNAL( clicked(int) ),
 			this, SIGNAL( clicked(int) ) );
 	
+	DEV_SETTINGS->applyFormat(this);
 }
 
 QString DevEdit::name() const

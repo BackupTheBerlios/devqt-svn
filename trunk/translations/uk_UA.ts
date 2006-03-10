@@ -11,9 +11,49 @@
     </message>
 </context>
 <context>
-    <name>ConfigurationDlg</name>
+    <name>ConfigDialog</name>
     <message>
         <source>Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation type="unfinished">Загальні</translation>
+    </message>
+    <message>
+        <source>Recent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Files : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Projects : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Openned files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t remember</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Openned project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GroupBox</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -21,11 +61,47 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Display</source>
+        <source>Tabulations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show line number</source>
+        <source>Tab width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use tab character</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> spaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Margin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set margin brush ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set margin color ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CheckBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scrollbars as needed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto indent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -33,39 +109,51 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mark current line</source>
+        <source>Auto close chars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>...</source>
+        <source>Line wrap</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Editor font</source>
+        <source>Ctrl key navigation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Save backups</source>
+        <source>Fonts : </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>End of line</source>
+        <source>Font size : </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Don&apos;t modify</source>
+        <source>Font size :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unix</source>
+        <source>Font family</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Windows/DOS</source>
+        <source>Font family :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mac</source>
+        <source>Gutter : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Editor : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Editor Font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gutter Font</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -73,7 +161,47 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>PushButton</source>
+        <source>Concerned files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Highlight current line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Highlight current block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Formats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set brush ... </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set color ... </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set to default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -89,42 +217,124 @@
     <name>CoreEdit</name>
     <message>
         <source>Text: Row %1 Column %2</source>
-        <translation>Текст: Ряд %1 Колонка %2</translation>
+        <translation type="obsolete">Текст: Ряд %1 Колонка %2</translation>
     </message>
     <message>
         <source>Modified</source>
-        <translation>Змінений</translation>
+        <translation type="obsolete">Змінений</translation>
     </message>
     <message>
         <source>Overwrite</source>
-        <translation>Заміна</translation>
+        <translation type="obsolete">Заміна</translation>
     </message>
     <message>
         <source>Insert</source>
-        <translation>Вставка</translation>
+        <translation type="obsolete">Вставка</translation>
     </message>
     <message>
         <source>Mouse: Row %1 Column %2</source>
-        <translation>Миша: Ряд %1 Колонка %2</translation>
+        <translation type="obsolete">Миша: Ряд %1 Колонка %2</translation>
+    </message>
+    <message>
+        <source>Switched to </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DevApp</name>
     <message>
         <source>Initializing langage...</source>
-        <translation>Встановлення мови...</translation>
+        <translation type="obsolete">Встановлення мови...</translation>
     </message>
     <message>
         <source>Getting back settings...</source>
-        <translation>Відновлення налаштувань...</translation>
+        <translation type="obsolete">Відновлення налаштувань...</translation>
     </message>
     <message>
         <source>Initializing UI...</source>
-        <translation>Встановлення інтерфейсу користувача...</translation>
+        <translation type="obsolete">Встановлення інтерфейсу користувача...</translation>
     </message>
     <message>
         <source>DevQt initialized.</source>
-        <translation>DevQt готовий.</translation>
+        <translation type="obsolete">DevQt готовий.</translation>
+    </message>
+</context>
+<context>
+    <name>DevConsole</name>
+    <message>
+        <source>Enter command : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to start process...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process crashed...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time out ended...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to send data to process...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to recieve data from process...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An unknown error occured...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DevDialogs</name>
+    <message>
+        <source>New file :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Header</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resource</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New folder :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -314,7 +524,7 @@
     </message>
     <message>
         <source>&amp;Find</source>
-        <translation>&amp;Знайти</translation>
+        <translation type="obsolete">&amp;Знайти</translation>
     </message>
     <message>
         <source>Find &amp;Next</source>
@@ -322,11 +532,11 @@
     </message>
     <message>
         <source>R&amp;eplace</source>
-        <translation>З&amp;амінити</translation>
+        <translation type="obsolete">З&amp;амінити</translation>
     </message>
     <message>
         <source>&amp;Goto</source>
-        <translation>П&amp;ерейти</translation>
+        <translation type="obsolete">П&amp;ерейти</translation>
     </message>
     <message>
         <source>Toggle Brea&amp;kpoint</source>
@@ -378,11 +588,11 @@
     </message>
     <message>
         <source>&amp;Save...</source>
-        <translation>&amp;Зберегти...</translation>
+        <translation type="obsolete">&amp;Зберегти...</translation>
     </message>
     <message>
         <source>Sa&amp;ve All...</source>
-        <translation>З&amp;берегти все...</translation>
+        <translation type="obsolete">З&amp;берегти все...</translation>
     </message>
     <message>
         <source>Save &amp;As...</source>
@@ -458,31 +668,31 @@
     </message>
     <message>
         <source>&amp;Compile...</source>
-        <translation>&amp;Компілювати...</translation>
+        <translation type="obsolete">&amp;Компілювати...</translation>
     </message>
     <message>
         <source>&amp;Run...</source>
-        <translation>&amp;Виконати...</translation>
+        <translation type="obsolete">&amp;Виконати...</translation>
     </message>
     <message>
         <source>&amp;Params</source>
-        <translation>&amp;Параметри</translation>
+        <translation type="obsolete">&amp;Параметри</translation>
     </message>
     <message>
         <source>C&amp;ompile and run...</source>
-        <translation>К&amp;омпілювати і виконати...</translation>
+        <translation type="obsolete">К&amp;омпілювати і виконати...</translation>
     </message>
     <message>
         <source>R&amp;ebuild all...</source>
-        <translation>Пере&amp;будувати все...</translation>
+        <translation type="obsolete">Пере&amp;будувати все...</translation>
     </message>
     <message>
         <source>&amp;Syntax check...</source>
-        <translation>Перевірка &amp;синтаксису...</translation>
+        <translation type="obsolete">Перевірка &amp;синтаксису...</translation>
     </message>
     <message>
         <source>C&amp;lean...</source>
-        <translation>&amp;Очистити...</translation>
+        <translation type="obsolete">&amp;Очистити...</translation>
     </message>
     <message>
         <source>Compiler</source>
@@ -513,16 +723,76 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Text : Row 0, Column 0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mouse : Row 0, Column 0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Insert</source>
-        <translation>Вставка</translation>
+        <translation type="obsolete">Вставка</translation>
+    </message>
+    <message>
+        <source>&amp;Find...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R&amp;eplace...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Goto...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Compile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Co&amp;mpile current file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Run</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Parameters...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;ompile and run</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R&amp;ebuild all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Syntax check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;lean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compile log</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -559,7 +829,7 @@
     </message>
     <message>
         <source>C++ sources( *.cpp *.cxx *.c);;C++ headers ( *.h *.hpp);;All Files (*)</source>
-        <translation>Вихідні файли C++( *.cpp *.cxx *.c);;Заголовочні файли C++( *.h *.hpp);;Усі файли (*)</translation>
+        <translation type="unfinished">Вихідні файли C++( *.cpp *.cxx *.c);;Заголовочні файли C++( *.h *.hpp);;Усі файли (*)</translation>
     </message>
     <message>
         <source>DevQt projects ( *.pro);;All Files (*)</source>
@@ -706,6 +976,30 @@
         <source>Compiler</source>
         <translation>Компілятор</translation>
     </message>
+    <message>
+        <source>General pupose</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mouse cursor position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text cursor position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Modification state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Typing mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Number of lines in file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DevWorkSpace</name>
@@ -716,6 +1010,27 @@
     <message>
         <source>External</source>
         <translation>Зовнішня</translation>
+    </message>
+</context>
+<context>
+    <name>MultilineState</name>
+    <message>
+        <source>multiline edition</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NormalState</name>
+    <message>
+        <source>normal edition</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PersistentState</name>
+    <message>
+        <source>persistent selection</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
