@@ -5,7 +5,7 @@
 ################################
 
 INCLUDEPATH += . \
-	core \
+	core_ \
 	gui \
 	edit \
 	plugins
@@ -24,7 +24,7 @@ CONFIG += qt \
 
 DESTDIR = ..
 
-QMAKE_RUN_CXX += -ansi
+#QMAKE_RUN_CXX += -ansi
 
 UI_DIR = tmp/ui
 
@@ -49,11 +49,11 @@ sources {
 		gui/devstatus.cpp \
 		gui/devconsole.cpp \
 		gui/devsettingsdialog.cpp \
-		core/devfileinfo.cpp \
+		core_/devfileinfo.cpp \
 		devsettings.cpp \
-		core/devproject.cpp \
-		core/devscope.cpp \
-		core/devworkspace.cpp \
+		core_/devproject.cpp \
+		core_/devscope.cpp \
+		core_/devworkspace.cpp \
 		main.cpp \
 		edit/editorstate.cpp \
 		edit/normalstate.cpp \
@@ -103,11 +103,11 @@ headers {
 		gui/devstatus.h \
 		gui/devconsole.h \
 		gui/devsettingsdialog.h \
-		core/devfileinfo.h \
+		core_/devfileinfo.h \
 		devsettings.h \
-		core/devproject.h \
-		core/devscope.h \
-		core/devworkspace.h \
+		core_/devproject.h \
+		core_/devscope.h \
+		core_/devworkspace.h \
 		edit/editorstate.h \
 		edit/normalstate.h \
 		edit/multilinestate.h \
