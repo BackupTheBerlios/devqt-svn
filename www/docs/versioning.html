@@ -1,0 +1,101 @@
+<html>
+
+<head>
+<script>
+function drawMe()
+{
+	var u = parent.document.getElementById("idMainContent");
+	u.innerHTML = document.body.innerHTML;
+}
+</script>
+</head>
+
+<body onload='drawMe()'>
+  <h1>Instead of prologue</h1>
+  <p>
+    DevQt team are not young girls and boys in a sandbox anymore, playing developer games, proudly releasing
+    new versions of not yet ready, buggy software, called DevQt. That's why it is suggested to
+    choose the versioning scheme and decide how to make sure the next version is ready for release.
+  </p>
+
+  <h1>Assigning version numbers</h1>
+  <p>
+    As DevQt is tightly bound to Qt itself, so adopting Qt's versioning scheme looks reasonable. <br/>
+    This way each version will look like DevQt-X.Y.Z, where
+    <ul>
+      <li><strong>X</strong> &mdash; <em>MAJOR version number</em></li>
+      <li><strong>Y</strong> &mdash; <em>MINOR version number</em></li>
+      <li><strong>Z</strong> &mdash; <em>patch level</em></li>
+    </ul>
+
+  <h1>Releasing new version</h1>
+  <p>
+    DevQt exists for less then a month, but even now it has some unresolved bugs registered on
+    <a href="http://developer.berlios.de/bugs/?group_id=6155">BerliOS bugtraq</a>. Then why are
+    those new versions still released?
+    To solve this issue a brand-new version creation cycle suggested:
+    <ol>
+      <li>Defining TODO list for new version.</li>
+      <li>Implementing the TODO list. No new bells and whistles should be added except those,
+        noted in current TODO list.</li>
+      <li>Team testing. Fixing bugs. <em>Increase patch level, to see version number progress :)</em></li>
+      <li>Announcing new version on QtCentre. Testing by QtCentre inhabitants. Fixing bugs.
+        <em>Increase patch level, to see version number progress :)</em></li>
+      <li>Put some new screenshots on
+        <a href="https://developer.berlios.de/screenshots/?group_id=6155">BerliOS screenshot page</a>.</li>
+      <li>Build ready to use packages and put them on BerliOS download section.</li>
+    </ol>
+  </p>
+
+  <h1>Deploying DevQt as ready to use packages</h1>
+  <p>
+    The target audience of DevQt is developer community. As a developer one should be able to compile it himself,
+    but speed up getting started with DevQt for those, who cannot/doesn't want to do this for some reason,
+    maintaining prebuilt packages might be handy.
+    <br/>
+  </p>
+
+  <h1>Suggested packages list</h1>
+  <p>
+    <strong>Linux</strong>
+    <p>
+      Linux comes in a wide variety of distributions, so we might provide...
+      <ul>
+        <li><strong>Static binary package.</strong> For those, who haven't got Qt 4.1.x installed.</li>
+        <li><strong>Shared binary package.</strong> For those, who have :)</li>
+        <li><strong>Distribution specific packages:</strong> <br/>
+          <ul>
+            <li><strong>Debian package</strong></li>
+            <li><strong>RPM package</strong> Different RPM's for SuSE, Fedora, Mandrake and others...</li>
+            <li><strong>Gentoo ebuild</strong> <em>Being a proud Gentoo user, Cesar should cope with this ;)</em></li>
+          </ul>
+        </li>
+      </ul>
+    </p>
+
+    <strong>FreeBSD</strong>
+    <p>
+      <ul>
+        <li><strong>DevQt Ports entry</strong></li>
+      </ul>
+    </p>
+
+    <strong>Win32</strong>
+    <p>
+      Windows is a special case, we might use some sort of installer, maybe <a href="http://nsis.sourceforge.net/Main_Page">NSIS</a>.
+      <ul>
+        <li><strong>Static package installer</strong> For those, who haven't got Qt 4.1.x installed.</li>
+        <li><strong>Shared package installer</strong> For those, who have.</li>
+      </ul>
+    </p>
+
+    <strong>Mac</strong>
+    <p>
+      Any ideas appreciated!
+    </p>
+
+    <em><strong>Note:</strong> all these packages aren't a must, but just suggestions.</em>
+  </p>
+</body>
+</html>
+

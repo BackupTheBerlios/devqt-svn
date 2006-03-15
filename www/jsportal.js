@@ -127,11 +127,18 @@ function drawMenus( menus )
 	for (n=0; n<menus.length; n++)
 	{
 		var u, thisMenuName, thisMenuTitle, thisMenuLink;
+		var hidden = false;
 		u = menus[n].attributes;
 		thisMenuName  = u.getNamedItem("n").value;
 		thisMenuTitle = u.getNamedItem("t").value;
 
-		menuHTML+=  "<a class='clsMainMenuNormal' id='id" + thisMenuName + "' href='javascript:clickMenu( \"" + thisMenuName + "\" )'>" +
+		// "hidden" property is optional
+		try{hidden = u.getNamedItem("hidden").value == "1";}
+		catch(e){};
+			
+		menuHTML+=  "<a class='clsMainMenuNormal'" +
+			(hidden ? " style='display: none;'" : "" ) +
+			" id='id" + thisMenuName + "' href='javascript:clickMenu( \"" + thisMenuName + "\" )'>" +
 			"<span> " + thisMenuTitle + "</span></a>";
 	}
 	

@@ -1,8 +1,6 @@
 <root>
-	<menu n="home"     t="Home"          u="main.html">
-	</menu>
+	<menu n="home"     t="Home"          u="main.html" />
 	<menu n="download" t="Download"      u="download.html" />
-	
 	<menu n="doc"      t="Documentation" u="doc.html">
 		<submenu u="#top"	t="Top" />
 		<submenu u="#history"	t="Project history" />
@@ -10,4 +8,7 @@
 	</menu>
 	
 	<menu n="about"    t="About"         u="about.html" />
+
+	<menu n="doc/versioning" t="" u="docs/versioning.html" hidden="1" />
+	<menu n="doc/respons" t="" u="docs/responsibilities.html" hidden="1" />
 </root>
