@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/icons" >
+        <file alias="COPY" >images/copy.png</file>
+        <file alias="CUT" >images/cut.png</file>
+        <file alias="DELETE" >images/delete.png</file>
+        <file alias="FIND" >images/find.png</file>
+        <file alias="MULTILINEEDIT" >images/multilineedit.png</file>
+        <file alias="NEW" >images/new.png</file>
+        <file alias="NEXT" >images/next.png</file>
+        <file alias="OPEN" >images/open.png</file>
+        <file alias="PASTE" >images/paste.png</file>
+        <file alias="PERSISTENTSELECT" >images/persistentselection.png</file>
+        <file alias="PREV" >images/prev.png</file>
+        <file alias="PRINT" >images/print.png</file>
+        <file alias="REDO" >images/redo.png</file>
+        <file alias="SAVE" >images/save.png</file>
+        <file alias="SAVEAS" >images/saveas.png</file>
+        <file alias="UNDO" >images/undo.png</file>
+        <file alias="ZOOMIN" >images/zoomin.png</file>
+        <file alias="ZOOMOUT" >images/zoomout.png</file>
+    </qresource>
+    <qresource prefix="/marks" >
+        <file>images/annotationMark.png</file>
+        <file>images/bookmarkMark.png</file>
+        <file>images/breakpointMark.png</file>
+        <file>images/errorMark.png</file>
+        <file>images/infoMark.png</file>
+        <file>images/warningMark.png</file>
+    </qresource>
+</RCC>
