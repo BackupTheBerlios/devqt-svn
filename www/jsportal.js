@@ -11,8 +11,8 @@ var lastTimeOut = 0;
  * Menu related parts
  */
 var xmlMenu;
-var lastSelectedMenu;
-var lastSelectedSubMenu;
+var lastSelectedMenu = null;
+var lastSelectedSubMenu = null;
 
 function create_xml()
 {
@@ -43,12 +43,13 @@ function window_load( MenuXMLFileName, InfoXMLFileName )
 		xmlMenu = create_xml();
 		xmlMenu.async = false;
 		xmlMenu.validateOnParse = false;
-		xmlMenu.load( MenuXMLFileName );
+		xmlMenu.load( MenuXMLFileName ); /**/
 		drawMenus( xmlMenu.getElementsByTagName("menu") );
 	}
 	catch (e)
 	{
-		// opera is still undeupported. 		
+		// opera is still unsupported...
+		// the marked line will kill it
 		alert( "Error in jsportal.js line: "  + e.lineNumber + " \n\n"
 		  + e.code +" : "+ e.message );
 	}
@@ -136,10 +137,13 @@ function drawMenus( menus )
 		try{hidden = u.getNamedItem("hidden").value == "1";}
 		catch(e){};
 			
+		if ( (n > 0) && (!hidden) )
+			menuHTML += "|";
 		menuHTML+=  "<a class='clsMainMenuNormal'" +
 			(hidden ? " style='display: none;'" : "" ) +
 			" id='id" + thisMenuName + "' href='javascript:clickMenu( \"" + thisMenuName + "\" )'>" +
-			"<span> " + thisMenuTitle + "</span></a>";
+			"<span>" + thisMenuTitle + "</span></a>";
+		
 	}
 	
 	document.getElementById("idMainMenu").innerHTML = menuHTML;
@@ -183,9 +187,12 @@ function clickMenu( menuItem )
 		var menuURL   = menus[n].attributes.getNamedItem("u").value;
 		
 		if (menuURL!="")
-			menuHTML += "<a class='clsSubMenuNormal' href='" + menuURL + 
-				"' onclick='clickSubMenu(this)' " +
-				"><span>" + menuText + "</span></a>";
+		{
+			if ((menuURL.indexOf("http") == 0) || (menuURL.indexOf("#") == 0))
+				menuHTML += "<a class='clsSubMenuNormal' href='" + menuURL + "'><span>" + menuText + "</span></a>";
+			else
+				menuHTML += "<a class='clsSubMenuNormal' href='javascript:clickSubMenu( this, \"" + menuURL + "\" )'><span>" + menuText + "</span></a>";
+		}
 		else
 			menuHTML += "<p class='clsSubMenuTitle'>" + menuText + "</p>";
 	}
@@ -199,7 +206,29 @@ function clickMenu( menuItem )
 	var u = document.getElementById("idHiddenContent");
 	var v = document.getElementById("idMainContent");
 	
+	u.src = "";
 	u.src = subMenu.attributes.getNamedItem("u").value;
+	if (lastTimeOut!=0)
+		clearTimeout(lastTimeOut);
+	lastTimeOut = setTimeout("checkContent()",7000);
+}
+
+function clickSubMenu( subMenuItem, url )
+{
+	// select corresponding item
+	if (lastSelectedSubMenu != null)
+		lastSelectedSubMenu.className = "";
+	lastSelectedSubMenu = subMenuItem;
+	lastSelectedSubMenu.className = "thisPage";
+
+	document.getElementById("idMainContent").innerHTML =
+		"<div class='clsWaitingBanner'>"+ waitingStr +"</div>";
+	
+	// redirect main frame
+	var u = document.getElementById("idHiddenContent");
+	var v = document.getElementById("idMainContent");
+	
+	u.src = url;
 	if (lastTimeOut!=0)
 		clearTimeout(lastTimeOut);
 	lastTimeOut = setTimeout("checkContent()",7000);
@@ -211,12 +240,6 @@ function checkContent()
 	
 	if (text1.indexOf(waitingStr)!=-1)
 		document.getElementById("idMainContent").innerHTML = 
-			"<center><div class='clsError'>"+ msg404 +"</div></center>";			
+			"<center><div class='clsError'>"+ msg404 +"</div></center>";
 }
 
-function clickSubMenu( subMenuItem )
-{
-	// select corresponding item
-	//lastSelectedMenu = subMenuItem;
-	//subMenuItem.className = "thisPage";
-}

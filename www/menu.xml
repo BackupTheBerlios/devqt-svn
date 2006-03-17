@@ -2,9 +2,11 @@
 	<menu n="home"     t="Home"          u="main.html" />
 	<menu n="download" t="Download"      u="download.html" />
 	<menu n="doc"      t="Documentation" u="doc.html">
-		<submenu u="#top"	t="Top" />
-		<submenu u="#history"	t="Project history" />
-		<submenu u="#other"	t="Other" />
+		<submenu u="doc.html"	t="Top" />
+		<submenu u="docs/history.html"	t="Project history" />
+		<submenu u="docs/responsibilities.html" t="Resposabilities"  />
+		<submenu u="docs/coding.html" 	t="Coding standards"  />
+		<submenu u="docs/release.html"	t="Releasing a new version"  />
 	</menu>
 	
 	<menu n="about"    t="About"         u="about.html" />

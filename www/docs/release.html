@@ -1,0 +1,99 @@
+<html>
+
+<head>
+<script>
+function drawMe()
+{
+	var u = parent.document.getElementById("idMainContent");
+	u.innerHTML = document.body.innerHTML;
+}
+</script>
+
+<body onload='drawMe()'>
+
+
+<h1>Releasing a new version</h1>
+<p>
+	Releasing a new version is not something that shuold be done without carefull thinking.
+	This document will describe how to release a new version for DevQt.
+</p>
+
+<h1>Basic development plan</h1>
+<p>
+	<ol>
+		<li>	
+			Our goal is to move from developing unstable
+			software, to maintaining stable versions, and developing new versions. 
+		</li>
+		<li>
+			All versions until V 1.0 are considered <b>unstable</b>.
+		</li>
+		<li>
+			All the development is done in SVN trunk.
+		</li>
+		<li>
+			We will only maintain one stable version, and a development trunk. Until we reach
+			V 1.0 there will be no stable version nor branch.
+		</li>
+		<li>
+			When we release V 1.0, a new branch called DEVQT_1_0_X will be opened. All the commits
+			to this branch will be done only to fix existing bugs. When enough bugs will be closed 
+			(or an urgent release will be needed) the code will tagged as DEVQT_1_0_1 and released 
+			as version 1.0.1.<br>
+			On the other hand, all the development will be done on the trunk, and may be released
+			as a V 1.1.X. <br>
+			When the code on the trunk will be stable enough, the team will decide to make a feature freeze 
+			and no new features will be added. As on the stable branchs, the trunk will only have commits
+			for fixing bugs. When the code will be stable enough, it will be released as V 1.2.0, and a new 
+			stable branch will be opened DEVQT_1_2_X. <br>
+			Again, trunk contain the development branch 1.3.x, to become 1.4.0. The branch 1.2.x will only
+			have commits to fix bugs.<br>
+			... and so on...
+		</li>
+		<li>
+			When the team releases a new stable version (from trunk, not an update) the team will
+			decide to do a mini feature freeze, in which no new features will be added, and only bug
+			fixes will be done.<br>
+			Note that until we reach V 1.0, all releases are "unstable" and will have the same mini features
+			freeze.
+		</li>
+		<li>
+			A week before any release (from the unstable branch or the stable), the SVN will be in complete 
+			freeze. A release source will be made, and the release source will be tested under several platforms
+			by all the developers. If the code compiles and works (and not blocking bugs have been found in the
+			test time) the zip will be released as is. Otherwise, a commit will be done to the SVN and a new zip 
+			file will be created. If needed, more time will be added to the test time.
+		</li>
+	</ol>
+
+</p>
+
+<h1>Taks to do before a release</h1>
+<p>
+	<ol>
+		<li>
+			Create a release souce, and upload it to the tmp dir on the web server.
+			This zip file will be tested and if no blocking bugs have been found, we will continue
+			to the next phase.
+		</li>
+		<li>
+			Screen shots will be made of the new version, if possible under several operating systems.
+			The screen shots will be added to the screen shots folder on the web, and to the berlios
+			managment system.
+		</li>
+		<li>
+			The new version of the web site will be uploaded to the <b>SVN</b>, and if the team
+			agrees on the modifications made to the site, the site will be uploaded (only after the files
+			have been uploaded to berlios managment system).
+		</li>
+		<li>
+			If after a week of testing, no bugs have been found, and the team agrees on the new text 
+			for the web site, a new release will be defined the berlios managment system, and the web page
+			will be uploaded from the SVN to the real site.
+		</li>
+
+	</ol>
+</p>
+
+</body>
+</head>
