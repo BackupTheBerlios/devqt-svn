@@ -29,12 +29,12 @@
 EditorState::EditorState()
  : QObject(0)
 {
-	;
+	// dummy constructor
 }
 
 EditorState::~EditorState()
 {
-	;
+	// dummy destructor
 }
 
 bool EditorState::persistentSelection()
