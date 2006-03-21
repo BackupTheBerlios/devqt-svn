@@ -445,8 +445,11 @@ void DevWorkSpace::deletion(AbstractFile *o)
 				QComboBox *cb = DEV_GUI->project;
 				
 				int index = cb->findText(name);
-				
-				cb->removeItem( index );
+
+				// what if no index has been found?
+				// what if no project has been opened?
+				if (index>0)
+					cb->removeItem( index );
 				
 				if ( !DevProjectMap::size() )
 				{
