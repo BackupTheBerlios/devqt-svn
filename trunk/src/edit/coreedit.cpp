@@ -24,6 +24,13 @@
 
 #include "coreedit.h"
 
+#include <QWidget>
+#include <QString>
+#include <QBasicTimer>
+#include <QTextCursor>
+#include <QLine>
+
+#include "editorstate.h"
 #include "matcher.h"
 #include "indenter.h"
 #include "normalstate.h"

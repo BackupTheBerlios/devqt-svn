@@ -25,10 +25,14 @@
 #ifndef _CORE_EDIT_H_
 #define _CORE_EDIT_H_
 
-#include "dev.h"
+#include <QTextEdit>
+#include <QList>
 
-#include "editorstate.h"
+#include <QBasicTimer>
+#include <QTextCursor>
+#include <QLine>
 
+class EditorState;
 class Indenter;
 class ParenMatcher;
 
@@ -151,7 +155,6 @@ class CoreEdit : public QTextEdit
 		bool	bTab;				// replace tabs by spaces ?
 		bool	bAutoClose;			// auto close chars ( '{' => '}' ) ?
 		bool	bNavCTRL;			// Ctrl key navigation ?
-		
 };
 
 #endif

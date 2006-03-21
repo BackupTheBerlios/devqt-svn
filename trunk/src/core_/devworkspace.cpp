@@ -128,7 +128,8 @@ DevWorkSpace::~DevWorkSpace()
 }
 
 void DevWorkSpace::loadWorkSpace(const QString& name)
-{
+{	
+	n = name;
 	QFile f(n);
 	
 	if ( !f.open(QFile::ReadOnly | QFile::Text) )

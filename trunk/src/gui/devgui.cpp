@@ -466,8 +466,12 @@ void DevGUI::setupFileActions()
     connect(a	, SIGNAL( triggered() ),
 			qApp, SLOT  ( quit() ) );
     menu->addAction(a);
-    
-    tb->setIconSize( QSize(22, 22) );
+
+#if 0
+	// bad practice - always use operating system defaults,
+	// dont force your own
+	tb->setIconSize( QSize(22, 22) );
+#endif
 }
 
 void DevGUI::setupEditActions()
@@ -511,8 +515,12 @@ void DevGUI::setupEditActions()
     a->setEnabled(false);
     tb->addAction(a);
     menu->addAction(a);
-    
+
+#if 0
+    // bad practice - always use operating system defaults,
+    // dont force your own
     tb->setIconSize( QSize(22, 22) );
+#endif
 }
 
 void DevGUI::setupSearchActions()
@@ -599,7 +607,11 @@ void DevGUI::setupHelpActions()
     tb->addAction(a);
     menu->addAction(a);
     
+#if 0
+    // bad practice - always use operating system defaults,
+    // dont force your own
     tb->setIconSize( QSize(22, 22) );
+#endif
 }
 
 void DevGUI::setupExplorer()
@@ -690,8 +702,11 @@ void DevGUI::setupCompiler()
     a->setEnabled(false);
     menu->addAction(a);
     
+#if 0
+    // bad practice - always use operating system defaults,
+    // dont force your own
     tb->setIconSize( QSize(22, 22) );
-    
+#endif    
 	Compiler = new DevDock(tr("Compiler"), Qt::BottomDockWidgetArea, this);
 	tabCompiler = Compiler->Tab();
 	

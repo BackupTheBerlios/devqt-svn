@@ -48,11 +48,14 @@ DevApp* DevApp::Init(int argc, char **argv)
 DevApp::DevApp(int argc, char **argv)
  : QApplication(argc, argv)
 {
+	// 
+#if 0
 	// Setup global app style
 	#ifdef Q_WS_WIN
 	setStyle("plastique");
 	setPalette(style()->standardPalette());
 	#endif
+#endif	
 	
 	// Setup app stuffs needed for QSettings use
 	setApplicationName("DevQt");
@@ -105,6 +108,7 @@ DevApp::DevApp(int argc, char **argv)
 	gui->s->connection();
 	
 	scr->showMessage("DevQt initialized.", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	scr->finish( gui );
 	
 	gui->show();
 }

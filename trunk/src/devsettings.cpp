@@ -170,7 +170,8 @@ void DevSettings::applyFormat(DevEdit *e)
 	if ( !e )
 		return;
 	
-	qDebug("applying format to %s...", e->name().toLatin1().data());
+// 	TODO: do we really need this debug output...?	
+// 	qDebug("applying format to [%s]... ",	qPrintable(e->name()) );
 	
 	CoreEdit *edit = e->e;
 	DevStandardPanel *s = e->s;

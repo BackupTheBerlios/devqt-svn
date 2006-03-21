@@ -69,6 +69,9 @@ void DevEdit::setup()
 	*/
 	
 	QGridLayout *grid = new QGridLayout;
+	grid->setMargin( 0 );
+	grid->setSpacing( 0 );
+	
 	
 	grid->addWidget(s,  0, 0, 48,  1);
 	grid->addWidget(e,  0, 1, 48, 63);
@@ -171,10 +174,8 @@ void DevEdit::setText(const QString& s, DevEdit::OpenType t)
 		QFile f(s);
 		
 		if ( !f.open(QFile::ReadOnly) )
-			return (void)QMessageBox::warning(	this,
-												"Error!", 
-												"Unable to read file : "
-												+ n );
+			return (void)QMessageBox::warning( this,
+				"Error!", "Unable to read file : "+ n );
 		
 		e->setPlainText( f.readAll() );
 	}
