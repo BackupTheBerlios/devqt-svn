@@ -50,21 +50,20 @@ class EditorState : public QObject
 		virtual ~EditorState();
 		
 		virtual QString name() = 0;
+
+		virtual void paintEvent(CoreEdit *ctxt, QPaintEvent *e) = 0;
+		virtual void timerEvent(CoreEdit *ctxt, QTimerEvent *e) = 0;
+		virtual void keyPressEvent(CoreEdit *ctxt, QKeyEvent *e) = 0;
 		
-		virtual void paintEvent(CoreEdit *ctxt, QPaintEvent *e) {}
-		virtual void timerEvent(CoreEdit *ctxt, QTimerEvent *e) {}
+		virtual void dropEvent(CoreEdit *ctxt, QDropEvent *e) = 0;
+		virtual void dragMoveEvent(CoreEdit *ctxt, QDragMoveEvent *e) = 0;
+		virtual void dragEnterEvent(CoreEdit *ctxt, QDragEnterEvent *e) = 0;
+		virtual void dragLeaveEvent(CoreEdit *ctxt, QDragLeaveEvent *e) = 0;
 		
-		virtual void keyPressEvent(CoreEdit *ctxt, QKeyEvent *e) {}
-		
-		virtual void dropEvent(CoreEdit *ctxt, QDropEvent *e) {}
-		virtual void dragMoveEvent(CoreEdit *ctxt, QDragMoveEvent *e) {}
-		virtual void dragEnterEvent(CoreEdit *ctxt, QDragEnterEvent *e) {}
-		virtual void dragLeaveEvent(CoreEdit *ctxt, QDragLeaveEvent *e) {}
-		
-		virtual void mouseMoveEvent(CoreEdit *ctxt, QMouseEvent *e) {}
-		virtual void mousePressEvent(CoreEdit *ctxt, QMouseEvent *e) {}
-		virtual void mouseReleaseEvent(CoreEdit *ctxt, QMouseEvent *e) {}
-		virtual void mouseDoubleClickEvent(CoreEdit *ctxt, QMouseEvent *e) {}
+		virtual void mouseMoveEvent(CoreEdit *ctxt, QMouseEvent *e) = 0;
+		virtual void mousePressEvent(CoreEdit *ctxt, QMouseEvent *e) = 0;
+		virtual void mouseReleaseEvent(CoreEdit *ctxt, QMouseEvent *e) = 0;
+		virtual void mouseDoubleClickEvent(CoreEdit *ctxt, QMouseEvent *e) = 0;
 		
 		virtual QMimeData* createMimeDataFromSelection(const CoreEdit *ctxt) const = 0;
 		virtual void insertFromMimeData(CoreEdit *ctxt, const QMimeData * source) = 0;
