@@ -83,13 +83,12 @@ DevGUI::DevGUI()
 	rDlg = new DevReplaceDialog(Editor);
 	pDlg = new DevPropertiesDialog(Editor);
 
-	connect(QApplication::clipboard()	, SIGNAL(dataChanged()),
-			this						, SLOT  (clipboardDataChanged()) );
-	
 	s = new DevStatus;
 	setStatusBar(s);
 	
     setupMenu();
+    connect(QApplication::clipboard()	, SIGNAL(dataChanged()),
+			this						, SLOT  (clipboardDataChanged()) );
     
 	setupFileActions();
     setupEditActions();
@@ -163,7 +162,7 @@ DevGUI::DevGUI()
 	
 	// TODO: session managment - restore window state
 
-	// Load all GUI-related settings from conf
+	// Load all GUI-related settings from conf    
 	DEV_SETTINGS->beginGroup("gui");
 	
 	int winwidth = DEV_SETTINGS->value("width").toInt();
@@ -187,7 +186,7 @@ DevGUI::DevGUI()
 	
 	DEV_SETTINGS->endGroup();
 	
-	setWindowTitle("DevQt " + DevQt::sVersion);
+	setWindowTitle("DevQt " + DevQt::sVersion);    
 }
 
 void DevGUI::killGUI()
