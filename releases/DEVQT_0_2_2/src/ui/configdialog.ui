@@ -1,0 +1,751 @@
+<ui version="4.0" >
+ <author>fullmetalcoder</author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>ConfigDialog</class>
+ <widget class="QDialog" name="ConfigDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>620</width>
+    <height>607</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Configuration</string>
+  </property>
+  <property name="sizeGripEnabled" >
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tabWidget" >
+     <widget class="QWidget" name="tab" >
+      <attribute name="title" >
+       <string>General</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item row="3" column="2" >
+        <widget class="QGroupBox" name="gRecent" >
+         <property name="title" >
+          <string>Recent</string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="label_10" >
+            <property name="text" >
+             <string>Files : </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" >
+           <widget class="QLabel" name="label_9" >
+            <property name="text" >
+             <string>Projects : </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QSpinBox" name="iFiles" >
+            <property name="maximum" >
+             <number>25</number>
+            </property>
+            <property name="value" >
+             <number>15</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QSpinBox" name="iProjects" >
+            <property name="maximum" >
+             <number>10</number>
+            </property>
+            <property name="value" >
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="1" >
+        <widget class="QGroupBox" name="gOpennedFiles" >
+         <property name="title" >
+          <string>Openned files</string>
+         </property>
+         <layout class="QVBoxLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item>
+           <widget class="QRadioButton" name="bOFNone" >
+            <property name="text" >
+             <string>Don't remember</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="bOFCurrent" >
+            <property name="text" >
+             <string>Remember active</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="bOFAll" >
+            <property name="text" >
+             <string>Remember all</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="0" >
+        <widget class="QGroupBox" name="groupBox_8" >
+         <property name="title" >
+          <string>Openned project</string>
+         </property>
+         <layout class="QVBoxLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item>
+           <widget class="QRadioButton" name="bOPNone" >
+            <property name="text" >
+             <string>Don't remember</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="bOPCurrent" >
+            <property name="text" >
+             <string>Remember active</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="bOPAll" >
+            <property name="text" >
+             <string>Remember all</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="3" >
+        <widget class="QGroupBox" name="groupBox_9" >
+         <property name="title" >
+          <string>GroupBox</string>
+         </property>
+         <widget class="QGroupBox" name="groupBox_10" >
+          <property name="geometry" >
+           <rect>
+            <x>19</x>
+            <y>309</y>
+            <width>580</width>
+            <height>139</height>
+           </rect>
+          </property>
+          <property name="title" >
+           <string>GroupBox</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="3" >
+        <widget class="QGroupBox" name="groupBox_4" >
+         <property name="title" >
+          <string>GroupBox</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="3" >
+        <widget class="QGroupBox" name="groupBox_11" >
+         <property name="title" >
+          <string>GroupBox</string>
+         </property>
+         <widget class="QGroupBox" name="groupBox_12" >
+          <property name="geometry" >
+           <rect>
+            <x>19</x>
+            <y>309</y>
+            <width>580</width>
+            <height>139</height>
+           </rect>
+          </property>
+          <property name="title" >
+           <string>GroupBox</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabEditor" >
+      <attribute name="title" >
+       <string>Editor</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item row="0" column="1" >
+        <widget class="QGroupBox" name="gTabs" >
+         <property name="title" >
+          <string>Tabulations</string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="label" >
+            <property name="text" >
+             <string>Tab width :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="2" >
+           <widget class="QCheckBox" name="cbTab" >
+            <property name="text" >
+             <string>Use tab character</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QSpinBox" name="iTab" >
+            <property name="suffix" >
+             <string> spaces</string>
+            </property>
+            <property name="maximum" >
+             <number>15</number>
+            </property>
+            <property name="minimum" >
+             <number>1</number>
+            </property>
+            <property name="value" >
+             <number>4</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="1" >
+        <widget class="QGroupBox" name="cbMargin" >
+         <property name="title" >
+          <string>Margin</string>
+         </property>
+         <property name="checkable" >
+          <bool>true</bool>
+         </property>
+         <property name="checked" >
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="1" column="0" >
+           <widget class="QToolButton" name="bMarginBrush" >
+            <property name="text" >
+             <string>Set margin brush ...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QToolButton" name="bMarginColor" >
+            <property name="text" >
+             <string>Set margin color ...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QSpinBox" name="iMargin" >
+            <property name="suffix" >
+             <string> spaces</string>
+            </property>
+            <property name="maximum" >
+             <number>120</number>
+            </property>
+            <property name="value" >
+             <number>80</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" >
+           <widget class="QLabel" name="label_8" >
+            <property name="text" >
+             <string>Width : </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item rowspan="2" row="0" column="0" >
+        <widget class="QGroupBox" name="groupBox_2" >
+         <property name="title" >
+          <string>General</string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="3" column="1" >
+           <widget class="QCheckBox" name="checkBox_6" >
+            <property name="text" >
+             <string>CheckBox</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" >
+           <widget class="QCheckBox" name="cbScroll" >
+            <property name="text" >
+             <string>Scrollbars as needed</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" >
+           <widget class="QCheckBox" name="cbIndent" >
+            <property name="text" >
+             <string>Auto indent</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" >
+           <widget class="QCheckBox" name="cbParen" >
+            <property name="text" >
+             <string>Parenthesis matching</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" >
+           <widget class="QCheckBox" name="cbWordWrap" >
+            <property name="text" >
+             <string>Word wrap</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QCheckBox" name="cbAutoClose" >
+            <property name="text" >
+             <string>Auto close chars</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QCheckBox" name="cbLineWrap" >
+            <property name="text" >
+             <string>Line wrap</string>
+            </property>
+            <property name="checked" >
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QCheckBox" name="cbCTRL" >
+            <property name="text" >
+             <string>Ctrl key navigation</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2" >
+        <widget class="QGroupBox" name="groupBox_7" >
+         <property name="title" >
+          <string>Fonts : </string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="1" column="6" >
+           <widget class="QComboBox" name="gutterFont" />
+          </item>
+          <item row="2" column="5" >
+           <widget class="QLabel" name="label_4" >
+            <property name="text" >
+             <string>Font size : </string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" >
+           <widget class="QLabel" name="label_2" >
+            <property name="text" >
+             <string>Font size :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5" >
+           <widget class="QLabel" name="label_3" >
+            <property name="text" >
+             <string>Font family</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QComboBox" name="editorFont" />
+          </item>
+          <item row="2" column="6" >
+           <widget class="QComboBox" name="gutterSize" />
+          </item>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="label_font" >
+            <property name="text" >
+             <string>Font family :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5" >
+           <widget class="QLabel" name="label_7" >
+            <property name="text" >
+             <string>Gutter : </string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" >
+           <widget class="QComboBox" name="editorSize" />
+          </item>
+          <item row="0" column="0" >
+           <widget class="QLabel" name="label_5" >
+            <property name="text" >
+             <string>Editor : </string>
+            </property>
+           </widget>
+          </item>
+          <item rowspan="6" row="0" column="3" >
+           <widget class="Line" name="line" >
+            <property name="orientation" >
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
+          <item rowspan="3" row="3" column="0" colspan="2" >
+           <widget class="QLabel" name="editorOverview" >
+            <property name="frameShape" >
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow" >
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="text" >
+             <string>Editor Font</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item rowspan="3" row="3" column="5" colspan="2" >
+           <widget class="QLabel" name="gutterOverview" >
+            <property name="frameShape" >
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow" >
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="text" >
+             <string>Gutter Font</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabSyntax" >
+      <attribute name="title" >
+       <string>Highlighting</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="groupBox_5" >
+         <property name="title" >
+          <string>General</string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item rowspan="2" row="0" column="0" >
+           <widget class="QGroupBox" name="cbLine" >
+            <property name="title" >
+             <string>Highlight current line</string>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+            <layout class="QGridLayout" >
+             <property name="margin" >
+              <number>9</number>
+             </property>
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <item row="0" column="1" >
+              <widget class="QToolButton" name="bLineColor" >
+               <property name="text" >
+                <string>Color ...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" >
+              <widget class="QToolButton" name="bLineBrush" >
+               <property name="text" >
+                <string>Brush ...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item rowspan="2" row="0" column="1" >
+           <widget class="QGroupBox" name="cbBlock" >
+            <property name="title" >
+             <string>Highlight current block</string>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+            <layout class="QGridLayout" >
+             <property name="margin" >
+              <number>9</number>
+             </property>
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <item row="0" column="1" >
+              <widget class="QToolButton" name="bBlockColor" >
+               <property name="text" >
+                <string>Color ...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" >
+              <widget class="QToolButton" name="bBlockBrush" >
+               <property name="text" >
+                <string>Brush ...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3" >
+         <property name="title" >
+          <string>Formats</string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item rowspan="2" row="0" column="1" >
+           <widget class="QListWidget" name="syntaxItems" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="cbOverview" >
+         <property name="title" >
+          <string>Overview</string>
+         </property>
+         <property name="checkable" >
+          <bool>true</bool>
+         </property>
+         <property name="checked" >
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="DefaultButton" >
+       <property name="text" >
+        <string>Set to default</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>131</width>
+         <height>31</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="applyButton" >
+       <property name="text" >
+        <string>&amp;Apply</string>
+       </property>
+       <property name="icon" >
+        <iconset resource="../DevEditor.qrc" >:/images/ok.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="closeButton" >
+       <property name="text" >
+        <string>&amp;Close</string>
+       </property>
+       <property name="icon" >
+        <iconset resource="../DevEditor.qrc" >:/images/cancel.png</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="2" margin="2" />
+ <pixmapfunction></pixmapfunction>
+ <resources>
+  <include location="../DevEditor.qrc" />
+ </resources>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>369</x>
+     <y>253</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>179</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>applyButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>492</x>
+     <y>524</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>313</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

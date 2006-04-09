@@ -1,0 +1,90 @@
+
+ 9 March 2006 : Official beta 3 (0.0.3.0)
+	- rewrote editor widgets stuffs to comply with Thiago specs and allow, later :P, an implementation of persistent
+	selection, multiline edition and text folding.
+	- added a margin to the editor
+	- added real possibilities to manage project files : 
+		* deletion of files and folders
+		* renaming of files folders and scopes (only at .pro level)
+		* creation of new files and folders
+	- added compilation stuffs :
+		* compile project
+		* clean project
+		* run project
+		* compile and run project
+		* rebuild project
+		* compile current file (experimental and unstable!!!)
+	- added Drag & Drop support inside project tree : both files and folder can be moved
+	- added close and close all actions to the editor's context menu
+	- added tooltips to the label of the status bar
+	- added kind of programming doc in some headers (especially devscope.h)
+	- settings dialog now works fine and apply modifications!!!
+	- loading of *.ui files calls designer
+	- loading of *.ts files calls linguist
+	- improved project and scopes comboboxes behaviour
+	- fixed a bug in the project parser (mixing ':' & '{' in scope declaration caused a crash)
+	- fixed a bug in project saving : an empty folder (no files, discarding about subfolders) made it crash the app
+	- fixed a bug in file saving
+	- fixed "close all" and "close project" connection
+	- Explorer and compiler dock widgets are now hidden at start, Explorer being shown at each project openning
+
+ Note :
+  * DevQt is now used to build itself! Enjoy!!!
+
+ 23 February 2006 : Official beta 2 (0.0.2.1)
+	- implemented the Damn Best Project Parser Ever!!! It took me a whole WE and now handles everything:
+		* scopes : all syntaxes (single line, multiline, mixed) and nested
+		* folders (which are nothing but special scopes)
+		* variables : all operators and nested (using "$$")
+	- added a splash nice screen
+	- added support for translations (only a minimalistic french one is provided but feel free to add others!)
+	- added project saving
+	- added two buttons in the status bar for hidding/showing dock wigets
+	- added help menu
+		* about Qt
+		* Qt Assistant
+		* about DevQt (TODO...)
+		* Help on DevQt (may wait a very long time...)
+	- started settings use :
+		* added "reopen" action : 5 most recent projects and 15 most recents files (out of project)
+		* added a basic (non working) customization dialog
+	- find & replace dialogs aren't modals anymore (also removed stay on top hint)
+	- corner widget split in two part, modified icons and size of the toolbuttons.
+	- fixed toolbar size, should now fit in every resolution
+	- fixed a few highlighting bugs
+	- fixed a parser bug : space(s) after the last operand of an assignement operator added an empty string
+	- modified parser behaviour at variable level for more flexibility (each operator has its own QStringList)
+	- plastique isn't used as default style anymore (except under Win32 whose native style is definitely ugly!)
+	- changed a few icons
+	- improved action enabling/disabling depending to openned file or projects
+
+
+ 16 February 2006 : first open release that features kind of a roadmap
+	- find & replace dialogs use the damn useful stay on top (Thanks a lot to Cesar)
+	- added a corner widget for the tabwidget, 2 buttons :
+		* '+' creates anew empty editor
+		* '-' deletes the current active editor (close it actually)
+	- NEW (nowhere else!!!) : editor widget handles the insert key
+	- DevStatus moved inside DevGUI, now holds 6 labels, each having a different display purpose :
+		* number of lines in the widget
+		* position of the mouse cursor
+		* position of the text cursor (damn elcuco! you got it! Happy??? :P )
+		* Insert/Overwrite mode
+		* state of the QTextDocument (modified or not)
+		* general purpose, left for standard messages 
+		(please do not try to use the QStatusBar::message(const QString&) function :
+		it wouldn't display the given text but may disturb the display of labels)
+	- fixed undo/redo : for an unknown and weird reason, breakpoints and errors broke it
+	- fixed 2 highlighting bug reported by DAMN! I CAN'T REMEMBER HIS NAME...
+	- fixed an unreported highlighting bug : comments directly preceded by letters or numbers weren't highlighted
+	- fixed icon size troubles
+	- improved project files (.pro) handling
+	- improved save mechanism (prompt at close, save only if modified...)
+
+ Known bugs :
+	- when editing inside a multiline string, typing '\' freezes the program.
+	I think it comes from highlighting but don't manage to solve it!
+
+
+ So long ago : first version released
+	- lots of TODOs ;)
